@@ -1,0 +1,27 @@
+Core\Main\Domain\Model\User\User:
+  properties:
+    email:
+      exclude: false
+    password:
+      exclude: true
+    createdAt:
+      exclude: true
+      type: DateTime<'Y-m-d\TH:i:sP'>
+    emailVerified:
+      exclude: false
+    timezone:
+      type: string
+      exclude: false
+    locale:
+      type: string
+      exclude: false
+    currency:
+      type: string
+      exclude: false
+  relations:
+    -
+      rel: self
+      href:
+        route: users
+        parameters:
+          id: expr(object.getId())

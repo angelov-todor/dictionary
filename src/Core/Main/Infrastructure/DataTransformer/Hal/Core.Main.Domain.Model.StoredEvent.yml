@@ -1,0 +1,22 @@
+Core\Main\Domain\Model\StoredEvent:
+  read_only: true
+  access_type: public_method
+  properties:
+    eventId:
+      exclude: true
+    eventBody:
+      exclude: true
+    occurredOn:
+      type: DateTime<'Y-m-d\TH:i:sP'>
+    typeName:
+      type: string
+  virtual_properties:
+    getBodyArray:
+      inline: true
+  relations:
+    -
+       rel: self
+       href:
+         route: stored-events
+         parameters:
+           id: expr(object.eventId())

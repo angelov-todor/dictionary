@@ -1,0 +1,19 @@
+Ddd\Domain\Event\StoredEvent:
+  type: mappedSuperclass
+  id:
+    eventId:
+      type: integer
+      column: id
+      generator:
+        strategy: AUTO
+  fields:
+    eventBody:
+      column: event_body
+      type: text
+    typeName:
+      column: type_name
+      type: string
+      length: 255
+    occurredOn:
+      column: occurred_at
+      type: datetime

@@ -1,0 +1,8 @@
+Core\Main\Domain\Model\StoredEvent:
+  properties:
+    eventBody:
+      type: string
+    occurredOn:
+      type: DateTime
+    typeName:
+      type: string

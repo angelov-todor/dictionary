@@ -1,0 +1,15 @@
+{% block subject %}
+{% trans %}core:activation_email:subject{% endtrans %}
+{% endblock %}
+
+{% block body %}
+{{ include('inc/header.twig') }}
+{% trans %}core:activation_email:hello{% endtrans %}
+<br /><br />
+{% trans %}core:activation_email:almost{% endtrans %}
+<br /><br />
+{% trans %}core:activation_email:click{% endtrans %}
+{{ activation_link }}
+<br /><br />
+{{ include('inc/footer.twig') }}
+{% endblock %}

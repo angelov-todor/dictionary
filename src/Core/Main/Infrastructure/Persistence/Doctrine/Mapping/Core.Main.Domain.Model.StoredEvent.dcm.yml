@@ -1,0 +1,4 @@
+Core\Main\Domain\Model\StoredEvent:
+  type: entity
+  table: events
+  repositoryClass: Core\Main\Infrastructure\Application\Notification\DoctrineEventStore

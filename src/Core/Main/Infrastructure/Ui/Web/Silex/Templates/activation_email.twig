@@ -1,0 +1,17 @@
+{% block subject %}
+{% trans %}core:activation_email:subject{% endtrans %}
+{% endblock %}
+
+{% block body %}
+{{ include('inc/header.twig') }}
+{% trans %}core:activation_email:hello{% endtrans %}
+<br /><br />
+{% trans %}core:activation_email:welcome{% endtrans %}
+
+{% trans %}core:activation_email:note{% endtrans %}
+<br /><br />
+<a href="{{ base_url }}" title="localhost" target="_blank" style="color: #ff3400; text-decoration: underline;">{{ base_url }}</a>
+<br /><br />
+
+{{ include('inc/footer.twig') }}
+{% endblock %}

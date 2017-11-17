@@ -1,0 +1,252 @@
+# General
+monthly: monthly #variable
+month: month #variable
+
+core:email:sign: 'The team - <a href="https://localhost.com" title="localhost" target="_blank" style="color: #ff3400; text-edcoration: underline;">https://localhost.com</a>'
+core:email:sign-tenant: 'The localhost team - <a href="https://localhost.com/tenant-information" title="localhost" target="_blank" style="color: #ff3400; text-edcoration: underline;">https://localhost.com/tenant-information</a>'
+core:email:copyright: "&copy;2017 localhost - All rights reserved"
+
+core:header:info: "The easiest way to manage your leases"
+
+core:footer:social:hint: "Follow us on"
+
+January: January
+February: February
+March: March
+April: April
+May: May
+June: June
+July: July
+August: August
+September: September
+October: October
+November: November
+December: December
+
+from: From
+to: To
+property: Property
+unit: Unit
+note: Notes
+address: Address
+Your landlord: Your landlord
+your landlord: your landlord
+The landlord: The landlord
+the landlord: the landlord
+the property owner: the property owner
+
+pay:monthly:rent: "Pay monthly rent"
+pay:monthly:info: "localhost is specially designed for mobiles, thanks to which the renters pay <b>in just 46 seconds</b> on average."
+pay:monthly:backup: "If the previous button does not work copy and paste the following link:"
+
+# activation_email.twig + activation_email_link.twig
+core:activation_email:subject: Just one last step to start managing your leases in localhost
+core:activation_email:hello: Hello!
+core:activation_email:welcome: Welcome to localhost, the online platform that simplifies your rents.
+core:activation_email:note: Please click the link below to get started!
+
+core:activation_email:almost: "We're almost done with the setup process."
+core:activation_email:click: "Please click the link below to activate your email and we're ready to go!"
+
+# not_paid_payment_notification_email.twig
+core:not_paid_payment_notification_email:subject-payment%tenant%: "[Warning] %tenant% has not paid this month's rent"
+core:not_paid_payment_notification_email:hi: "Hi there,"
+core:not_paid_payment_notification_email:info%tenant%: "It looks like %tenant% has not paid this month's rent, even after we've sent him a gentle reminder."
+core:not_paid_payment_notification_email:details: "Here are the details:"
+core:not_paid_payment_notification_email:price_label: "Amount:"
+core:not_paid_payment_notification_email:price%currency% %amount%: "%currency% %amount%"
+core:not_paid_payment_notification_email:payment_label: "Payment:"
+core:not_paid_payment_notification_email:payment%serie% %total_series%: "#%serie% of %total_series%"
+core:not_paid_payment_notification_email:tenant-details: "And here are the tenant contact details:"
+core:not_paid_payment_notification_email:cheers: Cheers!
+core:not_paid_payment_notification_email:email_label: "Email:"
+core:not_paid_payment_notification_email:phone_label: "Phone:"
+
+# payment_failed_email.twig
+core:payment_failed_email:subject: Failed Payment - localhost.com
+core:payment_failed_email:details: "Here are the details:"
+core:payment_failed_email:bye: Have a nice day!
+core:payment_failed_email:tenant_label: "Tenant:"
+core:payment_failed_email:price_label: "Amount:"
+core:payment_failed_email:price%currency% %amount%: "%currency% %amount%"
+core:payment_failed_email:payment_label: "Payment:"
+core:payment_failed_email:payment%serie% %total_series%: "#%serie% of %total_series%"
+
+# payment_failed_tenant_email.twig
+core:payment_failed_tenant_email:hi%tenant%: "Hi %tenant%,"
+core:payment_failed_tenant_email:subject: Failed Payment - localhost.com
+core:payment_failed_tenant_email:intro%landlord_name%: "You chose to make the payment by bank transfer but unfortunately it has been declined. Please inform your bank or try again.
+                                         Remember that you can also pay your rent by credit card.
+                                         We also informed %landlord_name% that the rent has not been paid yet. Please contact them to make the payment as soon as possible."
+core:payment_failed_tenant_email:details: "Here are the details:"
+core:payment_failed_tenant_email:bye: Have a nice day!
+core:payment_failed_tenant_email:price_label: "Amount:"
+core:payment_failed_tenant_email:price%currency% %amount%: "%currency% %amount%"
+core:payment_failed_tenant_email:payment_label: "Payment:"
+core:payment_failed_tenant_email:payment%serie% %total_series%: "#%serie% of %total_series%"
+
+# payment_notification_email.twig
+core:payment_notification_email:subject-payment%frt% %about% %month%: "localhost %frt% payment – Here is the link to pay for %about% - %month%'s rent."
+core:payment_notification_email:subject-nopayment%frt% %month%: "localhost %frt% payment – You don't need to pay this %month%'s rent."
+core:payment_notification_email:hi%tenant%: "Hi %tenant%,"
+core:payment_notification_email:details: "Here are the details:"
+core:payment_notification_email:info%about%: "Your rent for the property %about% is due."
+core:payment_notification_email:info-no-payment%month%: "You don't need to pay this %month%'s rent."
+core:payment_notification_email:end: "That's all. There is no further action needed."
+core:payment_notification_email:click: "To pay click on the link bellow"
+core:payment_notification_email:cheers: "Cheers!"
+core:payment_notification_email:price_label: "Amount:"
+core:payment_notification_email:price%currency% %amount%: "%currency% %amount%"
+core:payment_notification_email:payment_label: "Payment:"
+core:payment_notification_email:payment%serie% %total_series%: "#%serie% of %total_series%"
+
+# payment_notification_reminder_email.twig
+core:payment_notification_reminder_email:subject-payment%month%: "localhost - Reminder for the rent of %month%"
+core:payment_notification_reminder_email:hi%tenant%: "Hi %tenant%,"
+core:payment_notification_reminder_email:info%landlord_name%: "This is a reminder. %landlord_name% is still waiting for the payment."
+core:payment_notification_reminder_email:details: "Here are the details:"
+core:payment_notification_reminder_email:price_label: "Total amount:"
+core:payment_notification_reminder_email:price%currency% %amount%: "%currency% %amount%"
+core:payment_notification_reminder_email:payment_label: "Payment:"
+core:payment_notification_reminder_email:payment%serie% %total_series%: "#%serie% of %total_series%"
+core:payment_notification_reminder_email:click: "localhost is here to facilitate the collection of the rent so you can click on the following link for paying it."
+core:payment_notification_reminder_email:cheers: "Cheers!"
+
+# payment_notification_second_reminder_email.twig
+core:payment_notification_second_reminder_email:subject-payment%month%: "localhost - 24 hours left for paying the rent of %month%"
+core:payment_notification_second_reminder_email:hi%tenant%: "Hi %tenant%,"
+core:payment_notification_second_reminder_email:info%landlord_name%: "You only have 24 hours left for paying your rent. After that, %landlord_name% will receive a notification for the unpaid rent."
+core:payment_notification_second_reminder_email:details: "Here are the details:"
+core:payment_notification_second_reminder_email:price_label: "Total amount:"
+core:payment_notification_second_reminder_email:price%currency% %amount%: "%currency% %amount%"
+core:payment_notification_second_reminder_email:payment_label: "Payment:"
+core:payment_notification_second_reminder_email:payment%serie% %total_series%: "#%serie% of %total_series%"
+core:payment_notification_second_reminder_email:click: "To pay click on the link bellow."
+core:payment_notification_second_reminder_email:cheers: "Cheers!"
+
+# payment_notification_third_reminder_email.twig
+core:payment_notification_third_reminder_email:subject-payment%month%: "localhost - The due date passed and you didn't pay the rent of %month%"
+core:payment_notification_third_reminder_email:hi%tenant%: "Hi %tenant%,"
+core:payment_notification_third_reminder_email:info%due%: "Each %due% of the month, the rent should be paid through localhost. You didn't pay the current rent whereas the monthly due day passed. You still have the chance to do it."
+core:payment_notification_third_reminder_email:details: "Here are the details:"
+core:payment_notification_third_reminder_email:click: "The following link will remain active throughout the whole month so you can proceed with the payment."
+core:payment_notification_third_reminder_email:cheers: "Cheers!"
+core:payment_notification_third_reminder_email:price_label: "Total amount:"
+core:payment_notification_third_reminder_email:price%currency% %amount%: "%currency% %amount%"
+core:payment_notification_third_reminder_email:payment_label: "Payment:"
+core:payment_notification_third_reminder_email:payment%serie% %total_series%: "#%serie% of %total_series%"
+
+# payment_succeeded_email.twig
+core:payment_succeeded_email:details: "Here are the details:"
+core:payment_succeeded_email:hi: "Hi there,"
+core:payment_succeeded_email:hi%tenant% %amount% %currency%: "Your tenant <b>%tenant%</b> just made a <b>%amount% %currency%</b> payment in localhost."
+core:payment_succeeded_email:bye: Have a nice day!
+core:payment_succeeded_email:tenant_label: "Tenant:"
+core:payment_succeeded_email:subject%tenant% %amount% %currency%: "localhost new payment – %tenant% just made a %amount% %currency% payment"
+core:payment_succeeded_email:payment_label: "Payment"
+core:payment_succeeded_email:payment%serie% %total_series%: "#%serie% of %total_series%"
+core:payment_succeeded_email:price_label: "Amount:"
+core:payment_succeeded_email:price%currency% %amount%: "%currency% %amount%"
+
+# payment_succeeded_tenant_email.twig
+core:payment_succeeded_tenant_email:subject: "localhost payment confirmation"
+core:payment_succeeded_tenant_email:hi%tenant%: "Dear %tenant%,"
+core:payment_succeeded_tenant_email:hi%amount% %currency%: "Your payment of <b>%amount% %currency%</b> has been received."
+core:payment_succeeded_tenant_email:details: "Thank you for paying your rent with localhost.
+                                              You will find below all the details of your payment as well as the details of the apartment."
+core:payment_succeeded_tenant_email:payment_label: "Payment"
+core:payment_succeeded_tenant_email:payment%serie% %total_series%: "#%serie% of %total_series%"
+core:payment_succeeded_tenant_email:price_label: "Amount:"
+core:payment_succeeded_tenant_email:price%currency% %amount%: "%currency% %amount%"
+core:payment_succeeded_tenant_email:bye: Have a nice day!
+
+# payment_pending_tenant_email.twig
+core:payment_pending_tenant_email:subject: "Thanks for paying your monthly rent through localhost"
+core:payment_pending_tenant_email:hi%tenant%: "Dear %tenant%,"
+core:payment_pending_tenant_email:info: "Thanks for making your rent payment through localhost.
+                                            As you selected the SEPA Direct Debit as the payment method, the process takes few days more before we send you the confirmation :)"
+core:payment_pending_tenant_email:details: "You will find below all the details of your payment as well as the details of the apartment."
+core:payment_pending_tenant_email:payment_label: "Payment"
+core:payment_pending_tenant_email:payment%serie% %total_series%: "#%serie% of %total_series%"
+core:payment_pending_tenant_email:price_label: "Amount:"
+core:payment_pending_tenant_email:price%currency% %amount%: "%currency% %amount%"
+core:payment_pending_tenant_email:bye: "Have a nice day!"
+
+# reset_password_email.twig
+core:reset_password_email:subject: Reset your localhost password
+core:reset_password_email:hi: Hi there,
+core:reset_password_email:info: "No worries, everyone forgets their router password every now and then :-)"
+core:reset_password_email:click: to reset your password, please click the link below
+
+# refund_landlord_email.twig
+core:refund_landlord_email:hi: "Hi there,"
+core:refund_landlord_email:info: "The tenant's payment has been refunded."
+core:refund_landlord_email:details: "Here are the details:"
+core:refund_landlord_email:subject%about% %month%: "localhost reversal - Information about %about% - %month%'s rent"
+core:refund_landlord_email:tenant_label: "Tenant:"
+core:refund_landlord_email:payment_label: "Payment"
+core:refund_landlord_email:payment%serie% %total_series%: "Payment #%serie% of %total_series%"
+core:refund_landlord_email:price-refunded_label: "Amount refunded:"
+core:refund_landlord_email:price-refunded%currency% %amount%: "%currency% %amount%"
+
+# welcome_tenant_email.twig
+core:welcome_tenant_email:subject: "Welcome to localhost"
+core:welcome_tenant_email:hello: "Hello"
+core:welcome_tenant_email:intro%landlord_name% %frt%: "%landlord_name% is using localhost, the online platform that simplifies your %frt% rent payments."
+core:welcome_tenant_email:info: "Each month we will send you an email with a link to our secure payment platform, so you can pay your monthly rent in a matter of seconds.
+                                No more messy bank transfers or dealing with cash, just pay your rent online."
+core:welcome_tenant_email:contract-title: "Here are the details of your contract:"
+core:welcome_tenant_email:bye%per%: "See you at the beginning of each %per% :-)"
+core:welcome_tenant_email:price_label: "Price:"
+core:welcome_tenant_email:price%currency% %amount% %per%: "%currency% %amount% per %per%"
+core:welcome_tenant_email:due: "Monthly due day"
+core:welcome_tenant_email:day%due%: "the %due%"
+
+# welcome_tenant_email_failed.twig
+core:welcome_tenant_email:subject%tenant% %email%: "Welcome email not delivered to %tenant% - %email%"
+core:welcome_tenant_email_failed:hello: Hello
+core:welcome_tenant_email_failed:intro%email%: "It looks like there was an error sending the welcome email to <b>%email%</b>."
+core:welcome_tenant_email_failed:info%tenant%: "Every time you create a new lease, we send the tenant a welcome email to explain him how localhost works. And it looks like this message didn't arrived to the tenant <b>%tenant%</b>."
+core:welcome_tenant_email_failed:details: "This happens usually because there was a typo in the email, so please double check there is no error in the email and verify with the tenant the address.
+                                           If you keep on having issues, you can always contact us at hello@localhost.com. We are happy to help!"
+core:welcome_tenant_email_failed:bye: Have a nice day!
+
+# refund_tenant_email.twig
+core:refund_tenant_email:subject%about% %month%: "localhost refund - Information about %about% - %month%'s rent"
+core:refund_tenant_email:hello: Hello
+core:refund_tenant_email:info: Your payment has been refunded.
+core:refund_tenant_email:details: "Here are the details:"
+core:refund_tenant_email:payment_label: "Payment"
+core:refund_tenant_email:payment%serie% %total_series%: "#%serie% of %total_series%"
+core:refund_tenant_email:price-refunded_label: "Amount refunded:"
+core:refund_tenant_email:price-refunded%currency% %amount%: "%currency% %amount%"
+core:refund_tenant_email:reason_label: "Reason:"
+
+# lease_terminated_tenant.twig
+core:lease_terminated_tenant:subject: "localhost notification - lease has been terminated"
+core:lease_terminated_tenant:hi: "Dear"
+core:lease_terminated_tenant:terminated: "Your lease has been terminated."
+core:lease_terminated_tenant:thanks: "Thank you for using localhost as a solution of payment for the rent."
+core:lease_terminated_tenant:details: "You will find below all the details of the lease."
+core:lease_terminated_tenant:best: "We wish you the best."
+core:lease_terminated_tenant:regards: "Kind regards,"
+
+# lease_end_modified_tenant.twig
+core:lease_end_modified_tenant:subject: "localhost - change in rental date."
+core:lease_end_modified_tenant:hi: "Dear"
+core:lease_end_modified_tenant:info%landlord_name%: "We let you know that %landlord_name% has modified the end date of your lease."
+core:lease_end_modified_tenant:details: "You will find below all the details of the lease."
+core:lease_end_modified_tenant:best: "We wish you the best."
+core:lease_end_modified_tenant:regards: "Kind regards,"
+
+core:landlord_summary:subject: "localhost summary"
+core:landlord_summary:hi: "Hello!"
+core:landlord_summary:info%month%: "This is the summary of %month%."
+core:landlord_summary:paid: "All these tenants have paid using localhost:"
+core:landlord_summary:paid_total%total%: "And the total amount paid is %total% &euro;, yay!"
+core:landlord_summary:not_paid: "There are some tenants that haven't paid using localhost:"
+core:landlord_summary:not_paid_info: "Remember that, if the tenants paid using another method than localhost, you can update the dashboard
+                                      and mark them as paid, so you can keep track of all your payments:"
+core:landlord_summary:marked_as_paid: "Payments that were marked as paid:"
+core:landlord_summary:canceled: "Payments that were canceled:"
+core:landlord_summary:bye: "Have a good day!"

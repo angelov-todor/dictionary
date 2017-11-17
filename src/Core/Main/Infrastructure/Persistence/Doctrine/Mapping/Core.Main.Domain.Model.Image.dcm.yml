@@ -1,0 +1,14 @@
+Core\Main\Domain\Model\Image:
+  type: entity
+  table: images
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\DoctrineImageRepository
+  id:
+    id:
+      column: id
+  fields:
+    src:
+      type: string
+  oneToMany:
+    imageMetadata:
+      targetEntity: Core\Main\Domain\Model\ImageMetadata
+      mappedBy: image

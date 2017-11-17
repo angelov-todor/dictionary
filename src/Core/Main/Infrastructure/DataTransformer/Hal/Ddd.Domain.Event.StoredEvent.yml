@@ -1,0 +1,11 @@
+Ddd\Domain\Event\StoredEvent:
+  read_only: true
+  properties:
+    eventId:
+      exclude: true
+    eventBody:
+      exclude: true
+    occurredOn:
+      type: DateTime<'Y-m-d\TH:i:sP'>
+    typeName:
+      type: string

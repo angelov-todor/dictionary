@@ -1,0 +1,54 @@
+Core\Main\Domain\Model\Dictionary\WordType:
+  type: entity
+  table: word_types
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\DoctrineWordTypeRepository
+  id:
+    id:
+      column: id
+  fields:
+    name:
+      type: string
+      length: 10
+      nullable: true
+    idiNumber:
+      column: idi_number
+      type: string
+      length: 5
+      nullable: true
+    speechPart:
+      column: speech_part
+      type: string
+      length: 60
+      nullable: true
+    comment:
+      type: string
+      nullable: true
+    meaning:
+      column: meaning
+      type: string
+      nullable: true
+    synonyms:
+      column: synonyms
+      type: string
+      nullable: true
+    classification:
+      column: classification
+      type: string
+      nullable: true
+    etymology:
+      column: etymology
+      type: string
+      nullable: true
+  manyToOne:
+    type:
+      targetEntity: Core\Main\Domain\Model\Dictionary\WordType
+      joinColumn:
+        name: type_id
+        referencedColumnName: id
+  oneToMany:
+    incorrectForms:
+      targetEntity: Core\Main\Domain\Model\Dictionary\IncorrectForm
+      mappedBy: correctWord
+    derivativeForms:
+      targetEntity: Core\Main\Domain\Model\Dictionary\DerivativeForm
+      mappedBy: baseWord

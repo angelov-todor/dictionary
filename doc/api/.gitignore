@@ -1,0 +1,9 @@
+# compiled output
+/dist/*
+/tmp
+
+# yarn/npm logs
+*.log
+
+# dependencies
+/node_modules

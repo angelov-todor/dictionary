@@ -1,0 +1,10 @@
+{
+  "name": "doc-api",
+  "scripts": {
+    "build:api-doc": "aglio -i api.apib -o dist/api.html",
+    "build": "npm run build:api-doc"
+  },
+  "devDependencies": {
+    "aglio": "^2.3.0"
+  }
+}

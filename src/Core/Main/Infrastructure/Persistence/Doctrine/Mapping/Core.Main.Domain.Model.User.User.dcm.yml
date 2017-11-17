@@ -1,0 +1,30 @@
+Core\Main\Domain\Model\User\User:
+  type: entity
+  id:
+    id:
+      column: id
+      type: guid
+  table: users
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\User\DoctrineUserRepository
+  fields:
+    email:
+      type: string
+    password:
+      type: password
+    createdAt:
+      type: datetime
+      column: created_at
+    emailVerified:
+      type: boolean
+      column: email_verified
+    timezone:
+      type: string
+      nullable: true
+    locale:
+      type: string
+      nullable: true
+    currency:
+      type: string
+      length: 20
+      options:
+        default: 'EUR'

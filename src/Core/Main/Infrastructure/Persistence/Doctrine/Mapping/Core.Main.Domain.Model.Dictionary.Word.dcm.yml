@@ -1,0 +1,56 @@
+Core\Main\Domain\Model\Dictionary\Word:
+  type: entity
+  table: words
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\DoctrineWordRepository
+  id:
+    id:
+      column: id
+  fields:
+    name:
+      type: string
+      length: 100
+      nullable: true
+    nameStressed:
+      column: name_stressed
+      type: string
+      length: 100
+      nullable: true
+    nameBroken:
+      column: name_broken
+      type: string
+      length: 120
+      nullable: true
+    nameCondensed:
+      column: name_condensed
+      type: string
+      length: 80
+      nullable: true
+    meaning:
+      column: meaning
+      type: string
+      nullable: true
+    synonyms:
+      column: synonyms
+      type: string
+      nullable: true
+    classification:
+      column: classification
+      type: string
+      nullable: true
+    etymology:
+      column: etymology
+      type: string
+      nullable: true
+  manyToOne:
+    type:
+      targetEntity: Core\Main\Domain\Model\Dictionary\WordType
+      joinColumn:
+        name: type_id
+        referencedColumnName: id
+  oneToMany:
+    incorrectForms:
+      targetEntity: Core\Main\Domain\Model\Dictionary\IncorrectForm
+      mappedBy: correctWord
+    derivativeForms:
+      targetEntity: Core\Main\Domain\Model\Dictionary\DerivativeForm
+      mappedBy: baseWord

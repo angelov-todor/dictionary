@@ -1,0 +1,92 @@
+{
+  "name": "togop/dictionary",
+  "description": "Base structure for PHP project base on DDD",
+  "scripts": {
+    "test:unit-tests": "echo 'No unit tests are available, skipping ...'",
+    "test:integration-tests": "@php -d memory_limit=512M bin/phpunit",
+    "test": [
+      "@test:unit-tests",
+      "@test:integration-tests"
+    ],
+    "lint:phpcs": "phpcs",
+    "fix-lint:phpcbf": "phpcbf",
+    "lint:phplint": "find {src,tests,config} -type f -name '*.php' -exec php -d display_errors=0 -l {} \\;",
+    "lint:phpcpd": "phpcpd src",
+    "lint:phpmd": "phpmd 'src,tests,config' text phpmd.xml",
+    "lint-fast": [
+      "@lint:phpcs",
+      "@lint:phpmd"
+    ],
+    "lint-full": [
+      "@lint-fast",
+      "@lint:phpcpd",
+      "@lint:phplint"
+    ],
+    "lint": "@lint-fast",
+    "db:migrate": "doctrine migrations:migrate -n",
+    "app:cache-warmup": "@php src/Core/Main/Infrastructure/Console/console.php cache:warmup",
+    "app:generate-proxies": "doctrine orm:generate-proxies",
+    "app:initialize": [
+      "@app:cache-warmup",
+      "@app:generate-proxies"
+    ],
+    "crontask:send:payment-notifications": "@php src/Core/Main/Infrastructure/Console/console.php send:payment-notifications",
+    "crontask:send:summaries": "@php src/Core/Main/Infrastructure/Console/console.php send:summaries",
+    "crontask:charge:subscriptions": "@php src/Core/Main/Infrastructure/Console/console.php charge:subscriptions"
+  },
+  "require": {
+    "php": ">=7.1",
+    "ramsey/uuid": "^3.4",
+    "beberlei/assert": "^2.5",
+    "psr/http-message": "^1.0",
+    "carlosbuenosvinos/ddd": "^1.6",
+    "doctrine/orm": "^2.0",
+    "silex/silex": "^2.0",
+    "pimple/pimple": "~3.0",
+    "php-amqplib/php-amqplib": "^2.6",
+    "symfony/yaml": "^3.2",
+    "firebase/php-jwt": "^4.0",
+    "symfony/security": "~2.8|~3.0",
+    "willdurand/hateoas": "dev-master#3026defaedb461096dade1002d8dd2a743d78a2f",
+    "zendframework/zend-crypt": "^3.2",
+    "caridea/http": "^2.1",
+    "zendframework/zend-diactoros": "^1.3",
+    "doctrine/data-fixtures": "^1.2",
+    "swiftmailer/swiftmailer": "^5.4",
+    "stripe/stripe-php": "^4.4",
+    "guzzlehttp/guzzle": "^6.2",
+    "syslogic/doctrine-json-functions": "~1.0",
+    "symfony/console": "~3.0",
+    "twig/twig": "^2.0",
+    "doctrine/migrations": "^1.5",
+    "rollbar/rollbar": "~1.1",
+    "symfony/translation": "^3.2",
+    "symfony/twig-bridge": "^3.2",
+    "beberlei/DoctrineExtensions": "^1.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^6.0",
+    "symfony/browser-kit": "^3.2",
+    "guzzlehttp/psr7": "^1.4",
+    "squizlabs/php_codesniffer": "^2.8",
+    "sebastian/phpcpd": "^3.0",
+    "phpmd/phpmd": "^2.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "": [
+        "src/"
+      ]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CoreTests\\": [
+        "tests/Core/"
+      ]
+    }
+  },
+  "config": {
+    "bin-dir": "bin"
+  }
+}

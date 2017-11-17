@@ -1,0 +1,22 @@
+Core\Main\Domain\Model\ImageMetadata:
+  type: entity
+  table: image_metadata
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\DoctrineImageMetadataRepository
+  id:
+    id:
+      column: id
+  fields:
+    value:
+      type: string
+  manyToOne:
+    image:
+      targetEntity: Core\Main\Domain\Model\Image
+      inversedBy: imageMetadata
+      joinColumn:
+        name: image_id
+        referencedColumnName: id
+    metadata:
+      targetEntity: Core\Main\Domain\Model\Metadata
+      joinColumn:
+        name: metadata_id
+        referencedColumnName: id

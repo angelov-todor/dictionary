@@ -1,0 +1,1189 @@
+FORMAT: 1A
+
+
+# RESTful API of Coreora
+
+## Hateoas
+
+Follow [HAL](http://stateless.co/hal_specification.html) specification.
+
+Single resource:
+
+```
+{
+    "_links": {
+        "self": {
+            "href": "/properties/1234"
+        }
+    },
+    "id": "1234",
+    "address": "Main street 1"
+}
+```
+
+Collection resources:
+
+```
+{
+    "_links": {
+        "self": {
+            "href": "/properties?page=3"
+        },
+        "first": {
+            "href": "/properties"
+        },
+        "prev": {
+            "href": "/properties?page=2"
+        },
+        "next": {
+            "href": "/properties?page=4"
+        },
+        "last": {
+            "href": "/properties?page=5"
+        }
+    },
+    "count": 2,
+    "total": 10,
+    "_embedded": {
+        "properties": [
+            {
+                "_links": {
+                    "self": {
+                        "href": "/properties/111"
+                    }
+                },
+                "id": "111",
+                "address": "Main street 1"
+            },
+            {
+                "_links": {
+                    "self": {
+                        "href": "/properties/222"
+                    }
+                },
+                "id": "222",
+                "address": "Main street 2"
+            },
+        ]
+    }
+}
+
+```
+
+## Status code
+
+The following HTTP status code are used in the API:
+
+- `200 OK`: standard response for successful HTTP request.
+- `201 Created`: the request has been satisfied and the result is a new resource created. Usually in `POST` indicating in the `Location` header the newly created resource.
+- `204 No Content`: server has satisfied the request and the response is empty. Usually in `PUT`
+- `401 Unauthorized`: authentication is required and has failed or has not yet been provided. Usually when not provide a correct `Authorization` header value.
+- `404 Not found`: the resource does not exist, however could exist in the future.
+- `409 Conflict`: request can not be processed. Usually when the state of the resource was already changed or can't be modified for some business rule.
+- `422 Unprocessable Entity`: request well formed but semantically wrong. Usually missing fields or wrong primitive values such a wrong email syntax.
+- `500 Internal Server Error`: unexpected condition occsurred.
+
+## Error Reporting
+
+Follow [Api Problem RFC](https://tools.ietf.org/html/rfc7807) specification.
+
+```
+HTTP/1.1 500 Internal Error
+Content-Type: application/problem+json
+
+{
+    "type"   : "http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html",
+    "detail" : "Status failed validation",
+    "status" : 500,
+    "title"  : "Internal Server Error",
+    "foo"    : "bar"
+}
+```
+
+Further information [ApiProblem](https://apigility.org/documentation/api-primer/error-reporting)
+
+## Versioning
+
+Follow **Media Type versioning** in order to use the same URI for multiple versions of an API.
+Specifying the version as part of the `Accept` media type.
+
+```
+GET /properties
+
+Accept: application/json; version=1
+```
+
+Further information [Versioning](https://apigility.org/documentation/api-primer/versioning)
+
+## Format
+
+As API is working with `JSON` and HAL every request must add the following headers:
+
+```http
+Accept: application/json, application/hal+json
+```
+
+And for request with body:
+
+```http
+Content-Type: application/json
+```
+
+# Group Properties & Units
+
+All request must be use the header:
+
+```http
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ
+```
+
+## Properties [/properties]
+
+### Create a property [POST]
+
++ Request (application/json)
+    + Attributes
+        + name: `Main Street 10, 3rd floor A` (string, required) - Property postal address
+        + timezone: `Europe/Madrid` (string, required) - Property timezone
+        + raw_address (object, optional) - The address object. All information provided will be stored
+            + formatted_address: `10 North Main Street, Santa Ana, CA, United States` (string, optional) - Property full address
+        + type: shared (enum[string]) - Property type
+            + `shared`
+            + `whole`
+
++ Response 201 (application/hal+json)
+    + Attributes (HAL Property with Units)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 409 (application/problem+json)
+    + Attributes (APIProblem409)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Property [/properties/{id}]
++ Parameters
+    + id: `6f8e839d-8721-499b-ba6e-9a58671d6840` (required, string) - The Property ID
+
+### Get a property [GET]
+
++ Response 200 (application/hal+json)
+    + Attributes (HAL Property with Units)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
+
+### Change property [PUT]
+
++ Request
+    + Attributes
+        + name: `Main Street 10, 3rd floor A` (string) - Property postal address
+        + raw_address (object, optional) - The address object. All information provided will be stored
+            + formatted_address: `10 North Main Street, Santa Ana, CA, United States` (string, optional) - Property full address
+        + type: shared (enum[string]) - Property type
+            + `shared`
+            + `whole`
+
++ Response 204 (application/hal+json)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
++ Response 409 (application/problem+json)
+    + Attributes (APIProblem409)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Property unit [/properties/{id}/unit]
+
++ Parameters
+    + id: `6f8e839d-8721-499b-ba6e-9a58671d6840` (required, string) - The Property ID
+
+### Add unit to property [POST]
+
++ Request
+    + Attributes
+        + name: 'Room A' (string) - Name of the unit
+        + type: room (enum[string])
+            + `whole`
+            + `room`
+            + `bed`
++ Response 201
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
++ Response 409 (application/problem+json)
+    + Attributes (APIProblem409)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Units [/units/{id}]
+
++ Parameters
+    + id: `6f8e839d-8721-499b-ba6e-9a58671d6840` (required, string) - The Property ID
+
+### Get unit [GET]
+
++ Response 200
+    + Attributes (HAL Unit)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
+
+### Change unit name [PUT]
+
++ Request
+    + Attributes
+        + name: Room 2 - Unit description
+
++ Response 204
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 409 (application/problem+json)
+    + Attributes (APIProblem409)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Units [/units?name={term}]
+
++ Parameters
+    + term: `Room` (optional, string) - The unit name to search by
+
+### Search a property by unit name [GET]
+
++ Response 200 (application/hal+json)
+    + Attributes (HAL Property Collection)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
+
+## Search properties [/properties?name={term}]
++ Parameters
+    + term: `Mel Street` (required, string) - The property name to search by
+
+### Search a property [GET]
+
++ Response 200 (application/json)
+    + Attributes (HAL Property Collection)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
+
+# Group Leases
+
+## Leases [/leases]
+
+### Lease a property [POST]
+
++ Request (application/json)
+    + Attributes (Lease Creation)
+
++ Response 201 (application/json)
+    + Attributes (HAL Lease with Unit)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Leases [/leases?page={page}&sort={sort}&limit={limit}&type={type}]
++ Parameters
+    + page: 1 (optional, number) - The page to retrieve
+    + sort: start (enum[string]) - The sort criteria
+        + `start`
+        + `-start`
+        + `end`
+        + `-end`
+        + `name`
+        + `-name`
+    + type: active (optional, enum[string]) - The type of lease
+        + `active`
+        + `inactive`
+        + `upcoming` - active + future
+        + `archived`
+    + limit: 100 (optional, number) - The limit parameter
+
+### Get leases [GET]
+
++ Request (application/json)
+
++ Response 200 (application/json)
+    + Attributes (HAL Leases Collection)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
+
+## Lease [/leases/{id}]
++ Parameters
+    + id: `23a5aqf83` (required, string) - The lease ID
+
+### Get a lease [GET]
+
++ Response 200 (application/json)
+    + Attributes (HAL Lease with Unit)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
+
+### Terminate a lease [DELETE]
+
++ Response 204
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
+
+## Lease [/leases/{id}/tenant]
+
+### Change tenant info [PUT]
+
++ Parameters
+    + id: `6f8e839d-8721-499b-ba6e-9a58671d6840` (required, string) - The lease ID
+
++ Request (application/json)
+    + Attributes
+        + tenant_name: John Smith (string)
+        + tenant_email: 23a5aqf83 (string)
+        + tenant_number: `+23 444555333` (string)
+
++ Response 204
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Lease [/leases/validate]
+
+### Validate lease [POST]
+
++ Request (application/json)
+    + Attributes
+        + start: `2017-07-27T21:59:59.000Z` (string)
+        + end: `2017-07-24T22:00:00.000Z` (string)
+        + unit_id: `bc7effef-6aa2-43d8-94f2-2df8213d02e0` (string)
+
++ Response 200 (application/problem+json)
+    + Attributes
+        + is_leased: `true` (boolean)
+        + is_long: `false` (boolean)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
+
+
+## Lease [/tenants/check-in-out]
+
+### Check ins/outs [GET]
+
++ Request (application/json)
+
++ Response 200 (application/hal+json)
+    + Body
+
+            [
+                {
+                    date: "2017-08-15T00:00:00+00:00",
+                    operation: "checkin",
+                    tenant: "John Doe",
+                    lease_id: "bc7effef-6aa2-43d8-94f2-2df8213d02e0",
+                    unit_name: "Unit 1",
+                    property_name: "Property 2"
+                },
+                {
+                    date: "2017-08-15T00:00:00+00:00",
+                    operation: "checkout",
+                    tenant: "Jane Doe",
+                    lease_id: "bc7effef-6aa2-43d8-94f2-2df8213d02e0",
+                    unit_name: "Unit 1",
+                    property_name: "Property 2"
+                },
+                {
+                    date: "2017-08-15T00:00:00+00:00",
+                    operation: "checkin",
+                    tenant: "John Doe",
+                    lease_id: "bc7effef-6aa2-43d8-94f2-2df8213d02e0",
+                    unit_name: "Unit 1",
+                    property_name: "Property 2"
+                }
+            ]
+
+
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
+
+## Lease [/leases/occupancy-rate]
+
+### Occupancy rate [GET]
+
++ Request (application/json)
+
++ Response 200 (application/hal+json)
+
+ + Body
+
+            {
+                rate: 78,
+                tenants: 27,
+                properties: 32
+            }
+
+## Lease extension [/leases/{id}/extension]
+
++ Parameters
+    + id: `6f8e839d-8721-499b-ba6e-9a58671d6840` (required, string) - The lease ID
+
+### Extend a lease [PUT]
+
++ Request (application/json)
+    + Attributes
+        + end: `2005-08-15T00:00:00+00:00` (string) - Date in ISO 8601
+
++ Response 204
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Lease shortening [/leases/{id}/shortening]
+
++ Parameters
+    + id: `6f8e839d-8721-499b-ba6e-9a58671d6840` (required, string) - The lease ID
+
+### Shorten a lease [PUT]
+
++ Request (application/json)
+    + Attributes
+        + end: `2005-08-15T00:00:00+00:00` (string) - Date in ISO 8601
+
++ Response 204
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Lease extension notification [/leases/{id}/extension/notification]
+
++ Parameters
+    + id: 6f8e839d-8721-499b-ba6e-9a58671d6840` (required, string) - The lease ID
+
+### Resume extension notification [PUT]
++ Request (application/json)
+    + Attributes
+        + days_before: 10 (number) - Number of days before end lease to send notification
+
++ Response 204
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
++ Response 422 (application/problem+json)
+  + Attributes (APIProblem422)
+
+### Cancel extension notification [DELETE]
+
++ Response 204
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
+
+## Leases revenue for month [/lease-payments/revenue?month={date}]
+
++ Parameters
+    + date: `2005-08-15T00:00:00+00:00` (string) - Date in ISO 8601
+
+### Get revenue for month [GET]
+
++ Response 200 (application/json)
+    + Attributes
+        + revenue: 1235000 (number)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
+
+## Leases revenue per month [/lease-payments/revenue-per-month?from={from}&to={to}]
+
++ Parameters
+    + from: `2005-08-15T00:00:00+00:00` (string) - Date in ISO 8601 starting month
+    + to: `2005-08-15T00:00:00+00:00` (string) - Date in ISO 8601 ending month
+
+### Get revenue per month [GET]
+
++ Response 200 (application/json)
+    + Attributes
+        + revenues (array[object])
+            + (Hal Lease payment revenue)
+            + (Hal Lease payment revenue)
+            + (Hal Lease payment revenue)
+            + (Hal Lease payment revenue)
+
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+# Group Timeline & Payments
+
+## Timeline [/timeline?after={after}&before={before}&page={page}&limit={limit}&types%5B%5D={types}&lease_id={lease_id}]
+
+### Read timeline [GET]
+
++ Parameters
+    + after: `2005-08-15T00:00:00+00:00` (optional, string) - Date in ISO 8601
+    + before: `2005-08-15T00:00:00+00:00` (optional, string) - Date in ISO 8601
+    + page: 1 (optional, number) - The page to retrieve
+    + limit: 20 (optional, number) - The limit of events (min: 1, max: 20)
+    + lease_id: `2aa3bc84-66be-4723-889a-a4fc6da5ea19` (optional, string) - Specific lease to show
+    + types: change_price, payment_notification (array, optional) - The types of events returned
+        + `change_price`
+        + `payment_notification`
+        + `welcome_email`
+        + `charge`
+        + `reminder`
+
++ Response 200 (application/hal+json)
+    + Attributes (HAL Timeline)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
+
+## Send payment notifications [/timeline/send-payment-notifications]
+### Send payment notifications [POST]
+
++ Request (application/json)
+    + Attributes (Timeline Send Notifications Request)
+
++ Response 204
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Stripe Publishable key [/stripe/publishable-key]
+
+### Get the Stripe Publishable key [GET]
+
++ Response 200 (application/hal+json)
+    + Attributes
+        + `publishable_key`: `pk_test_QAhylf2wG0cm7fIAjdrWbq5T` (string) - The Application publishable key
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
+
+## Stripe Account [/stripe/me/account]
+
+### Get the Stripe account [GET]
+
++ Response 200 (application/hal+json)
+    + Attributes (Stripe Account Response)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404(application/problem+json)
+    + Attributes (APIProblem404)
+
+### Create Stripe account [POST]
++ Request (application/json)
+    + Attributes (Stripe Account Create Request)
++ Response 201 (application/hal+json)
+    + Attributes (Stripe Account Response)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 409(application/problem+json)
+    + Attributes (APIProblem409)
++ Response 422(application/problem+json)
+    + Attributes (APIProblem422)
+
+### Update Stripe account [PUT]
++ Request (application/json)
+    + Attributes (Stripe Account Request)
++ Response 200 (application/hal+json)
+    + Attributes (Stripe Account Response)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 422(application/problem+json)
+    + Attributes (APIProblem422)
+
+## Charge for lease [/stripe/charge/{leasePaymentId}]
+
++ Parameters
+    + leasePaymentId: `4c556194-fc4c-43a0-8db4-6a29a8cd4b23` (required, string) - The lease payment ID
+
+### Charge information [GET]
+
++ Response 200 (application/hal+json)
+    + Attributes
+        + `lease_payment` (HAL Lease payment with related Property Unit and Lease)
+        + `public_key`: `pk_test_QAhylf2wG0cm7fIAjdrWbq5T` (string)
++ Response 404(application/problem+json)
+    + Attributes (APIProblem404)
++ Response 409 (application/problem+json)
+    + Attributes (APIProblem409)
+
+### Charge for lease [POST]
+
++ Request
+    + Attributes
+        + stripeToken: `__STRIPE_TOKEN__` (required, string)
+
++ Response 201
++ Response 404(application/problem+json)
+    + Attributes (APIProblem404)
++ Response 409 (application/problem+json)
+    + Attributes (APIProblem409)
++ Response 422(application/problem+json)
+    + Attributes (APIProblem422)
+
+## Stripe webhooks [/stripe/webhooks]
+
+### Stripe webhooks [POST]
+Stripe webhooks we listen to:
+* charge.refunded
+* charge.failed
+* transfer.reversed
+* transfer.created
+
++ Response 201
+
+## Dry run Timeline [/timeline/dry-run]
+
+### Dry run timeline [POST]
+
++ Request (application/json)
+  + Attributes (Timeline DryRun Request)
+
++ Response 200 (application/hal+json)
+    + Attributes (HAL Timeline DryRun)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
+
+### Lease payment [/lease-payments/{id}]
+
++ Parameters
+    + id: `6f8e839d-8721-499b-ba6e-9a58671d6840` (required, string) - The lease payment ID
+
+### View lease payment [GET]
+
++ Response 200 (application/hal+json)
+    + Attributes (HAL Lease payment )
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
+
+### Cancel lease payment [DELETE]
+
++ Request (application/json)
+    + Attributes
+        + note: `Additional note here` (optional, string) - The note that will be sent to the tenant
+
++ Response 200 (application/hal+json)
+    + Attributes (HAL Lease payment)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
+
+## Lease payment change price [/lease-payments/{id}/price]
++ Parameters
+    + id: `6f8e839d-8721-499b-ba6e-9a58671d6840` (required, string) - The lease payment ID
+
+### Change price [PUT]
+
++ Request (application/json)
+    + Attributes
+        + amount: 600 (number) - New price to charge in cents
+        + note: `Additional note here` (optional, string) - The note that will be sent to the tenant
+
++ Response 200 (application/hal+json)
+    + Attributes (HAL Lease payment)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
++ Response 409 (application/problem+json)
+    + Attributes (APIProblem409)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Lease payment mark as paid [/lease-payments/{id}/paid]
++ Parameters
+    + id: `6f8e839d-8721-499b-ba6e-9a58671d6840` (required, string) - The lease payment ID
+
+### Mark as paid [PUT]
+
++ Response 200 (application/hal+json)
+    + Attributes (HAL Lease payment)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
++ Response 409 (application/problem+json)
+    + Attributes (APIProblem409)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Find lease payment by lease and serie [/lease-payments?lease_id={id}&serie={serie}]
++ Parameters
+    + id: `6f8e839d-8721-499b-ba6e-9a58671d6840` (required, string) - The lease ID
+    + serie: 1 (required, number) - The serie
+
+### Find lease payment [GET]
+
++ Response 200 (application/hal+json)
+    + Attributes (HAL Lease payment)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
+
+## Send payment summary to landlord [/lease-payments/send-summary]
+
+### Send payment summary [POST]
++ Request (application/json)
+    + Attributes
+        + landlord_id: `6f8e839d-8721-499b-ba6e-9a58671d6840` (required, string) - The landlord ID
+
++ Response 204 (application/hal+json)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+# Group Users and Identity
+
+## User [/users]
+
+### Create user [POST]
+
++ Request (application/json)
+    + Attributes
+        + email: user@domain.com (string) - The user email
+        + password: 123456 (string) - The user password
+        + locale: `en-GB` (optional, string) - The preferred user locale, defaults to en-GB
+        + currency: `EUR` (optional, string) - The preferred currency for the user, defaults to EUR
+
++ Response 409 (application/problem+json)
+    + Attributes (APIProblem409)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## User [/users/{id}]
++ Parameters
+    + id: `d548af92-3fee-4a00-afa2-31ba6ce3645f` (required, string) - The user ID
+
+### Get user [GET]
+
++ Request (application/json)
+    + Header
+
+            Authorization: aa.bb.cc
+
++ Response 200 (application/hal+json)
+    + Attributes (HAL User)
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
+
+## User password [/me/password]
+
+### Change password [PUT]
+
++ Request (application/json)
+    + Header
+
+            Authorization: aa.bb.cc
+    + Attributes
+        + current_password: `123tre` (required, string) - The current password
+        + new_password: `456qwe` (required, string) - The new password
+
++ Response 204
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## User contact name [/me/contact-name]
+
+### Change contact name [PUT]
+
++ Request (application/json)
+    + Header
+
+            Authorization: aa.bb.cc
+    + Attributes
+        + contact_name: `123tre` (required, string) - The new contact name
+
++ Response 204
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## User timezone [/me/timezone]
+
+### Set timezone [PUT]
+
++ Request (application/json)
+    + Header
+
+            Authorization: aa.bb.cc
+    + Attributes
+        + timezone: `Europe/Madrid` (required, string) - The timezone
+
++ Response 204
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## User local [/me/locale]
+
+### Set locale [PUT]
+
++ Request (application/json)
+    + Header
+
+            Authorization: aa.bb.cc
+    + Attributes
+        + locale: `es-ES` (required, string) - The language tag
+
++ Response 204
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## User email [/me/email]
+
+### Change email [PUT]
+
++ Request (application/json)
+    + Header
+
+            Authorization: aa.bb.cc
+    + Body
+
+            {
+                "email": "new@domain.com"
+            }
+
++ Response 204
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 409(application/problem+json)
+    + Attributes (APIProblem409)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Email verification [/email/verification/{checksum}]
++ Parameters
+    + checksum: `abcabcabcabcabcabc` (required, string) - Checksum related to a change email
+
+### Verify email [PUT]
+
++ Response 204
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
+
+## Payments summary [/me/payments-summary?{from}=from&{to}=to]
+
++ Parameters
+    + from: `2017-07-01` (required, string) - Start date for the request
+    + to: `2017-08-01` (required, string) - End date for the request
+
+### Get payments summary [GET]
+
++ Response 200 (application/hal+json)
+    + Body
+
+            {
+              "page": 1,
+              "limit": 100,
+              "pages": 1,
+              "total": 6,
+              "count": 6,
+              "_links": {
+                "self": {
+                  "href": "/me/payments-summary?from=2017-07-01&to=2017-08-01&page=1"
+                },
+                "first": {
+                  "href": "/me/payments-summary?from=2017-07-01&to=2017-08-01&page=1"
+                },
+                "last": {
+                  "href": "/me/payments-summary?from=2017-07-01&to=2017-08-01&page=1"
+                }
+              },
+              "_embedded": {
+                "payments-summary": [
+                    {
+                      "property_type": "shared",
+                      "property_name": "Hotel",
+                      "unit_name": "Room 100",
+                      "unit_type": "room",
+                      "property_id": "c78df7a9-fd7c-4f7a-8516-93013d6376ef",
+                      "property_timezone": "Europe/Madrid",
+                      "unit_id": "8fc772f9-bcdc-4a83-a754-ee5182a0a332",
+                      "leases": [
+                        {
+                          "id": "2da2c53c-45f2-43f7-9b07-075ce9293879",
+                          "total_series": 0,
+                          "tenant": "Tenant Name",
+                          "tenant_email": "tenant@example.com",
+                          "tenant_phone": "0011223344",
+                          "start": "2017-09-01T12:31:20+0000",
+                          "end": "2017-09-01T12:31:20+0000",
+                          "due_day": 5,
+                          "lease_payments": [
+                            {
+                              "amount": 1300,
+                              "currency": "EUR",
+                              "status": "transferred",
+                              "id": "46bfe6b8-fc46-4634-bca0-273253b43006",
+                              "note": "this was paid",
+                              "serie": 1,
+                              "expected_at": "2017-09-01T12:31:20+0000",
+                              "can_be_canceled": false,
+                              "can_be_edited": false,
+                              "can_be_marked_as_paid": false
+                            },
+                            {
+                              "amount": 3900,
+                              "currency": "EUR",
+                              "status": "not_paid",
+                              "id": "67d98f85-3de0-49f3-964b-3fe7a97563a8",
+                              "note": "this was not paid",
+                              "serie": 5,
+                              "expected_at": "2017-09-06T12:31:20+0000",
+                              "can_be_canceled": true,
+                              "can_be_edited": false,
+                              "can_be_marked_as_paid": true
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "property_type": "shared",
+                      "property_name": "Hotel",
+                      "unit_name": "Room 101",
+                      "unit_type": "room",
+                      "property_id": "c78df7a9-fd7c-4f7a-8516-93013d6376ef",
+                      "property_timezone": "Europe/Madrid",
+                      "unit_id": "2b07725a-d283-402d-bec0-96d4008b98c7",
+                      "leases": [
+                        {
+                          "id": "425e7a75-29ab-4377-b2b9-f24dcd44a2d8",
+                          "total_series": 0,
+                          "tenant": "Tenant Name",
+                          "tenant_email": "tenant@example.com",
+                          "tenant_phone": "0011223344",
+                          "start": "2017-09-01T12:31:20+0000",
+                          "end": "2017-09-01T12:31:20+0000",
+                          "due_day": 5,
+                          "lease_payments": [
+                            {
+                              "amount": 8000,
+                              "currency": "EUR",
+                              "status": "transferred",
+                              "id": "076aa203-4c9f-467f-b2d5-c74eca34a89b",
+                              "note": "this was paid",
+                              "serie": 1,
+                              "expected_at": "2017-09-01T12:31:20+0000",
+                              "can_be_canceled": false,
+                              "can_be_edited": false,
+                              "can_be_marked_as_paid": false
+                            },
+                            {
+                              "amount": 5300,
+                              "currency": "EUR",
+                              "status": "not_paid",
+                              "id": "758cd175-308a-4c85-89f5-8978c715ac3b",
+                              "note": "this was not paid",
+                              "serie": 5,
+                              "expected_at": "2017-09-06T12:31:20+0000",
+                              "can_be_canceled": true,
+                              "can_be_edited": false,
+                              "can_be_marked_as_paid": true
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                ]
+              }
+            }
+
++ Response 200 (text/csv)
+     + Body
+
+            payment_id;status;payment_due_date;payment_paid_date;amount;currency;property;room;tenant;tenant_email;lease_start;lease_end
+            2dbfeece-e245-4154-9b6f-e2c674901bca;pending;2017-11-03T10:00:00+00:00;;5.00;EUR;another;;togop;todor.angelov@programista.pro;2017-08-31T22:00:00+00:00;2018-04-26T21:59:59+00:00
+            f3c9c935-0b34-4ad4-b06e-71535ffc02b0;paid;2017-10-03T09:00:00+00:00;2017-10-03T10:03:55+00:00;5.00;EUR;another;;togop;todor.angelov@programista.pro;2017-08-31T22:00:00+00:00;2018-04-26T21:59:59+00:00
+            46bfe6b8-fc46-4634-bca0-273253b43006;transferred;2017-09-01T12:31:20+00:00;2017-09-11T12:31:20+00:00;13.00;EUR;Hotel;"Room 100";"Tenant Name";tenant@example.com;2017-06-11T12:31:20+00:00;2017-12-11T12:31:20+00:00
+            67d98f85-3de0-49f3-964b-3fe7a97563a8;not_paid;2017-09-06T12:31:20+00:00;;39.00;EUR;Hotel;"Room 100";"Tenant Name";tenant@example.com;2017-06-11T12:31:20+00:00;2017-12-11T12:31:20+00:00
+            076aa203-4c9f-467f-b2d5-c74eca34a89b;transferred;2017-09-01T12:31:20+00:00;2017-09-11T12:31:20+00:00;80.00;EUR;Hotel;"Room 101";"Tenant Name";tenant@example.com;2017-06-11T12:31:20+00:00;2017-12-11T12:31:20+00:00
+            758cd175-308a-4c85-89f5-8978c715ac3b;not_paid;2017-09-06T12:31:20+00:00;;53.00;EUR;Hotel;"Room 101";"Tenant Name";tenant@example.com;2017-06-11T12:31:20+00:00;2017-12-11T12:31:20+00:00
+            85f1e59e-1c48-4d78-a699-6cdbd95f4733;not_paid;2017-09-06T12:31:20+00:00;;52.00;EUR;Hotel;"Room 102";"Tenant Name";tenant@example.com;2017-06-11T12:31:20+00:00;2017-12-11T12:31:20+00:00
+            ee135e9d-b763-4dc9-9fd0-ff5bdf0d594e;transferred;2017-09-01T12:31:20+00:00;2017-09-11T12:31:20+00:00;26.00;EUR;Hotel;"Room 102";"Tenant Name";tenant@example.com;2017-06-11T12:31:20+00:00;2017-12-11T12:31:20+00:00
+            4255190c-af79-4c6e-b4eb-4e88178e8ddc;transferred;2017-09-01T12:31:20+00:00;2017-09-11T12:31:20+00:00;43.00;EUR;Hotel;"Room 103";"Tenant Name";tenant@example.com;2017-06-11T12:31:20+00:00;2017-12-11T12:31:20+00:00
+            cb15658e-b6de-4d31-bc17-83f248c94c19;not_paid;2017-09-06T12:31:20+00:00;;52.00;EUR;Hotel;"Room 103";"Tenant Name";tenant@example.com;2017-06-11T12:31:20+00:00;2017-12-11T12:31:20+00:00
+            3a65e26b-3d2d-44a4-9217-8031ebce0da9;not_paid;2017-09-06T12:31:20+00:00;;58.00;EUR;Hotel;"Room 104";"Tenant Name";tenant@example.com;2017-06-11T12:31:20+00:00;2017-12-11T12:31:20+00:00
+            448dc3b4-8343-4313-ba3c-ae044f90cf33;transferred;2017-09-01T12:31:20+00:00;2017-09-11T12:31:20+00:00;49.00;EUR;Hotel;"Room 104";"Tenant Name";tenant@example.com;2017-06-11T12:31:20+00:00;201
+
+
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Reset password [/reset-password]
+
+### Reset password [POST]
+
++ Request (application/json)
+    + Body
+
+            {
+                "email" : "user@domain.com"
+            }
+
++ Response 201
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## View reset-password token info [/reset-password/{id}]
+
++ Parameters
+    + id: `44e31f70-e975-4792-a22e-a37945145ab9` (required, string) - The reset token ID
+
+### View reset token [GET]
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "expiration_date": "01/01/2000"
+            }
+
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
+
+## Reset password [/reset-password/{id}/password]
++ Parameters
+    + id: `68a5sdf67` (required, string) - The reset token ID
+
+### Set new password [PUT]
++ Request (application/json)
+    + Body
+
+            {
+                "password": "123456"
+            }
+
++ Response 204
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
++ Response 409 (application/problem+json)
+    + Attributes (APIProblem409)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Authentication [/authenticate]
+
+### Authenticate a user [POST]
++ Request (application/json)
+    + Body
+
+            {
+                "email" : "user@domain.com",
+                "password" : "foo123"
+            }
+
++ Response 201 (application/json)
+    + Body
+
+            {
+                "jwt" : "aa.bb.cc"
+            }
+
++ Response 404 (application/problem+json)
+    + Attributes (APIProblem404)
++ Response 422 (application/problem+json)
+    + Attributes (APIProblem422)
+
+## Token Info [/me]
+
+### JWT info [GET]
+
++ Request (application/json)
+    + Header
+
+            Authorization: aa.bb.cc
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "jwt" : {
+                    "header" : {
+                        "typ" : "JWT",
+                        "alg" : "RS256"
+                    },
+                    "payload" :
+                        "exp" : "1470220576",
+                        "iat" : "1470220533"
+                        "iss" : "dictionary",
+                        "user_id": "598b1084-20fc-4df2-b3e6-cd0cf2065848",
+                        "roles" : [
+                            "foo"
+                        ],
+                        "locale": "en-GB",
+                        "currency": "EUR"
+                }
+            }
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
+
+## Refreshment [/refresh-token]
+
+### Refresh authentication [POST]
++ Request (application/json)
+    + Header
+
+            Authorization: aa.bb.cc
+
++ Response 201 (application/json)
+    + Body
+
+            {
+                "jwt" : "dd.ee.ff"
+            }
++ Response 401 (application/problem+json)
+    + Attributes (APIProblem401)
+
+# Group System
+
+## Stored events [/stored-events?page={page}]
++ Parameters
+    + page: 1 (optional, number) - The page to retrieve
+
+### Stored events [GET]
+
++ Request (application/json)
+
++ Response 200 (application/hal+json)
+    + Attributes (HAL Stored events Collection)
+
+# Data Structures
+
+<!-- include(data-structures/hal.md) -->
+<!-- include(data-structures/property.md) -->
+<!-- include(data-structures/timeline.md) -->
+<!-- include(data-structures/lease.md) -->
+<!-- include(data-structures/api-problem.md) -->
+<!-- include(data-structures/user.md) -->
+<!-- include(data-structures/unit.md) -->
+<!-- include(data-structures/events.md) -->
+<!-- include(data-structures/stripe-account.md) -->
+<!-- include(data-structures/lease-payment.md) -->
