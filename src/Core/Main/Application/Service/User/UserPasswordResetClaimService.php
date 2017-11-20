@@ -8,7 +8,7 @@ use Assert\AssertionFailedException;
 use Core\Main\Application\Exception\RequestUnprocessableException;
 use Core\Main\Application\Exception\ResourceNotFoundException;
 use Core\Main\Domain\Model\ChecksumInterface;
-use Core\Main\Domain\Model\User\PasswordReseted;
+use Core\Main\Domain\Model\User\PasswordReset;
 use Core\Main\Domain\Model\User\ResetPassword;
 use Core\Main\Domain\Repository\UserRepositoryInterface;
 use Core\Main\Domain\Repository\UserResetPasswordRepositoryInterface;
@@ -79,7 +79,7 @@ class UserPasswordResetClaimService implements ApplicationService
         $resetHash = $this->passwordRepository->add($resetPassword);
 
         DomainEventPublisher::instance()->publish(
-            new PasswordReseted($resetPassword->getId())
+            new PasswordReset($resetPassword->getId())
         );
 
         return $resetHash;

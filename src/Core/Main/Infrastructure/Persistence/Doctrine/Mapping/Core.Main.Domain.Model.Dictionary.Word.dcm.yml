@@ -1,6 +1,6 @@
 Core\Main\Domain\Model\Dictionary\Word:
   type: entity
-  table: words
+  table: word
   repositoryClass: Core\Main\Infrastructure\Domain\Model\DoctrineWordRepository
   id:
     id:

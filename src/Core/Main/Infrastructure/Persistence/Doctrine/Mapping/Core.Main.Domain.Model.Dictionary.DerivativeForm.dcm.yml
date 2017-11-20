@@ -1,0 +1,37 @@
+Core\Main\Domain\Model\Dictionary\DerivativeForm:
+  type: entity
+  table: derivative_form
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\DoctrineDerivativeFormRepository
+  id:
+    id:
+      column: id
+  fields:
+    name:
+      type: string
+      length: 100
+      nullable: true
+    nameBroken:
+      column: name_broken
+      type: string
+      length: 120
+      nullable: true
+    nameCondensed:
+      column: name_condensed
+      type: string
+      length: 80
+      nullable: true
+    description:
+      type: string
+      length: 150
+      nullable: true
+    isInfinitive:
+      column: is_infinitive
+      type: boolean
+      nullable: true
+  manyToOne:
+    baseWord:
+      targetEntity: Core\Main\Domain\Model\Dictionary\Word
+      inversedBy: derivativeForms
+      joinColumn:
+        name: base_word_id
+        referencedColumnName: id

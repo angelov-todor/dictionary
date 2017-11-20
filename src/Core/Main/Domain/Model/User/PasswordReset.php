@@ -5,7 +5,7 @@ namespace Core\Main\Domain\Model\User;
 
 use Ddd\Domain\DomainEvent;
 
-class PasswordReseted implements DomainEvent
+class PasswordReset implements DomainEvent
 {
     /**
      * @var \DateTimeInterface
@@ -18,7 +18,7 @@ class PasswordReseted implements DomainEvent
     protected $id;
 
     /**
-     * PasswordReseted constructor.
+     * PasswordReset constructor.
      * @param string $id
      */
     public function __construct(string $id)

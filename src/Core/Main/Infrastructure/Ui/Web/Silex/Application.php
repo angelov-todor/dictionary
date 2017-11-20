@@ -103,36 +103,6 @@ class Application
                 'anonymous' => true,
                 'stateless' => true,
             ],
-            'stripe.connect' => [
-                'pattern' => new RequestMatcher('/stripe/connect', null, ['GET']),
-                'anonymous' => true,
-                'stateless' => true,
-            ],
-            'stripe.charge' => [
-                'pattern' => new RequestMatcher('/stripe/charge', null, ['GET', 'POST']),
-                'anonymous' => true,
-                'stateless' => true,
-            ],
-            'stripe' => [
-                'pattern' => new RequestMatcher('/stripe/webhooks', null, ['POST']),
-                'anonymous' => true,
-                'stateless' => true,
-            ],
-            'stripe.connected' => [
-                'pattern' => new RequestMatcher('/stripe/connected/webhooks', null, ['POST']),
-                'anonymous' => true,
-                'stateless' => true,
-            ],
-            'mandrill.webhooks' => [
-                'pattern' => new RequestMatcher('/mandrill/webhooks', null, ['POST']),
-                'anonymous' => true,
-                'stateless' => true,
-            ],
-            'email.templates' => [
-                'pattern' => new RequestMatcher('/email/templates', null, ['GET']),
-                'anonymous' => true,
-                'stateless' => true,
-            ],
             'secured' => [
                 'pattern' => '^.*$',
                 'jwt' => [
@@ -167,7 +137,13 @@ class Application
         });
 
         $app->register(new HALServiceProvider());
-        $app->register(new SecurityServiceProvider());
+        $app->register(new SecurityServiceProvider(), [
+            'security.access_rules' => [
+                ['authenticate|reset-password|^/email', 'IS_AUTHENTICATED_ANONYMOUSLY'],
+                [new RequestMatcher('^/users$', null, ['POST']), 'IS_AUTHENTICATED_ANONYMOUSLY'],
+                ['^.*$', 'ROLE_USER'],
+            ]
+        ]);
         $app->register(new JwtServiceProvider());
         $app->register(new ProblemDetailsProvider());
 

@@ -1,0 +1,19 @@
+Core\Main\Domain\Model\Dictionary\IncorrectForm:
+  type: entity
+  table: incorrect_form
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\DoctrineIncorrectFormRepository
+  id:
+    id:
+      column: id
+  fields:
+    name:
+      type: string
+      length: 100
+      nullable: true
+  manyToOne:
+    correctWord:
+      targetEntity: Core\Main\Domain\Model\Dictionary\Word
+      inversedBy: incorrectForms
+      joinColumn:
+        name: correct_word_id
+        referencedColumnName: id

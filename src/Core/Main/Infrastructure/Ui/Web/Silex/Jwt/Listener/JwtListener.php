@@ -81,9 +81,11 @@ class JwtListener implements ListenerInterface
         if (is_null($userId)) {
             throw new UsernameNotFoundException("User ID not provided");
         }
+        $user = new \Core\Main\Domain\Model\User\User($userId);
+        $user->setRoles($payload['roles']);
 
         // create new jwt token object
-        $token = new JwtToken(new User(new \Core\Main\Domain\Model\User\User($userId)));
+        $token = new JwtToken(new User($user));
 
         // authenticate token
         $authenticatedToken = $this->authenticationManager->authenticate($token);

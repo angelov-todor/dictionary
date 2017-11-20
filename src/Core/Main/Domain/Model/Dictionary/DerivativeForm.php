@@ -3,39 +3,30 @@ declare(strict_types=1);
 
 namespace Core\Main\Domain\Model\Dictionary;
 
-use Doctrine\ORM\Mapping as ORM;
-
 class DerivativeForm
 {
     /**
      * @var int The id of this word.
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
      */
     private $id;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $name;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=120, nullable=true)
      */
     private $nameBroken;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=80, nullable=true)
      */
     private $nameCondensed;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=150, nullable=true)
      */
     private $description;
 

@@ -11,10 +11,6 @@ use Core\Main\Application\Service\Payment\DisconnectedAccountException;
 use Core\Main\Infrastructure\Ui\ProblemDetails\ProblemDetailsFromException\DisconnectedAccountProblemDetails;
 
 return [
-    DisconnectedAccountException::class
-    => function (): ProblemDetailsFromExceptionInterface {
-        return new DisconnectedAccountProblemDetails();
-    },
     \Core\Main\Application\Exception\ResourceNotFoundExceptionInterface::class
     => function (): ProblemDetailsFromExceptionInterface {
         return new GenericProblemDetailsFromException([
@@ -79,6 +75,15 @@ return [
             'title' => Response::$statusTexts[Response::HTTP_NOT_FOUND],
             'status' => Response::HTTP_NOT_FOUND,
             'detail' => 'Resource not found'
+        ]);
+    },
+    \Symfony\Component\Security\Core\Exception\AccessDeniedException::class
+    => function (): ProblemDetailsFromExceptionInterface {
+        return new GenericProblemDetailsFromException([
+            'type' => new Uri('http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html'),
+            'title' => Response::$statusTexts[Response::HTTP_UNAUTHORIZED],
+            'status' => Response::HTTP_UNAUTHORIZED,
+            'detail' => 'Access denied.'
         ]);
     },
     // All other exceptions and errors

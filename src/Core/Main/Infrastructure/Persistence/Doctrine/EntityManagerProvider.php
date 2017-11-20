@@ -69,6 +69,7 @@ class EntityManagerProvider implements ServiceProviderInterface
                 ->getConfiguration()
                 ->setSQLLogger(new EchoSQLLogger());
         }
+
         $platform = $em->getConnection()->getDatabasePlatform();
         $em->getConfiguration()
             ->addCustomStringFunction(DqlFunctions\JsonExtract::FUNCTION_NAME, DqlFunctions\JsonExtract::class);
@@ -78,6 +79,7 @@ class EntityManagerProvider implements ServiceProviderInterface
         $em->getConfiguration()->addCustomStringFunction('MONTH', Month::class);
         $em->getConfiguration()->addCustomStringFunction('YEAR', Year::class);
         $platform->registerDoctrineTypeMapping('json', 'array');
+        $platform->registerDoctrineTypeMapping('enum', 'string');
 
         return $em;
     }

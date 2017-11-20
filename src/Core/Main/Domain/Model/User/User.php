@@ -28,7 +28,7 @@ class User
     /**
      * @var array
      */
-    private $roles;
+    private $roles = ['ROLE_USER'];
 
     /**
      * @var \DateTimeInterface
@@ -106,16 +106,17 @@ class User
      */
     public function getRoles(): array
     {
-        // TODO: remove this and return real user roles when implemented
-        return ['ROLE_USER'];
+        return $this->roles;
     }
 
     /**
      * @param array $roles
+     * @return User
      */
-    public function setRoles(array $roles)
+    public function setRoles(array $roles): User
     {
         $this->roles = $roles;
+        return $this;
     }
 
     /**

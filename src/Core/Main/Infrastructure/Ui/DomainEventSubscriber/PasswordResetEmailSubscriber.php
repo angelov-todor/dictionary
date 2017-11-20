@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Core\Main\Infrastructure\Ui\DomainEventSubscriber;
 
 use Core\Main\Application\Service\User\NotifyPasswordResetLinkRequest;
-use Core\Main\Domain\Model\User\PasswordReseted;
+use Core\Main\Domain\Model\User\PasswordReset;
 use Ddd\Application\Service\ApplicationService;
 use Ddd\Domain\DomainEvent;
 use Ddd\Domain\DomainEventSubscriber;
@@ -32,7 +32,7 @@ class PasswordResetEmailSubscriber implements DomainEventSubscriber
     }
 
     /**
-     * @param PasswordReseted $aDomainEvent
+     * @param PasswordReset $aDomainEvent
      */
     public function handle($aDomainEvent)
     {
@@ -49,6 +49,6 @@ class PasswordResetEmailSubscriber implements DomainEventSubscriber
      */
     public function isSubscribedTo($aDomainEvent)
     {
-        return is_a($aDomainEvent, PasswordReseted::class);
+        return is_a($aDomainEvent, PasswordReset::class);
     }
 }
