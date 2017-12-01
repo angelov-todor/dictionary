@@ -10,7 +10,9 @@ use Pimple\ServiceProviderInterface;
 
 class SwiftMailerServiceProvider implements ServiceProviderInterface
 {
-
+    /**
+     * @param Container $app
+     */
     public function register(Container $app)
     {
         if ($app->offsetExists(MailerServiceInterface::class)) {

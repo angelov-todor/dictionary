@@ -34,7 +34,7 @@ class StoredEventController implements ControllerProviderInterface
 
         /* @var $factory ControllerCollection */
         $factory = $this->app['controllers_factory'];
-        $factory->get('/stored-events', [$this, 'getEvents']);
+        $factory->get('/system/events', [$this, 'getEvents']);
 
         return $factory;
     }

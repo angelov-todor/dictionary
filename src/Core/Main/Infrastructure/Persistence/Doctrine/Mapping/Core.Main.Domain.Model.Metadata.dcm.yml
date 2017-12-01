@@ -5,6 +5,9 @@ Core\Main\Domain\Model\Metadata:
   id:
     id:
       column: id
+      type: integer
+      generator:
+        strategy: AUTO
   fields:
     name:
       type: string

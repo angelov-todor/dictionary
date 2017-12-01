@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Ui\Web\Silex\Controllers;
 
-use Core\Main\Application\Exception\RequestUnprocessableException;
 use Core\Main\Application\Service\User\UserPasswordResetClaimRequest;
 use Core\Main\Application\Service\User\UserPasswordResetClaimService;
 use Core\Main\Application\Service\User\UserPasswordResetService;
@@ -76,9 +75,7 @@ class ResetPasswordController implements ControllerProviderInterface
 
     /**
      * @param string $hash
-     *
      * @return Response
-     * @throws RequestUnprocessableException
      */
     public function resetPasswordTokenInfo(string $hash): Response
     {

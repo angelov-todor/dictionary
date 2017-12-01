@@ -1,0 +1,19 @@
+Core\Main\Domain\Model\Metadata:
+  properties:
+    id:
+      exclude: false
+    name:
+      exclude: false
+    type:
+      exclude: false
+    parent:
+      exclude: false
+    types:
+      exclude: true
+  relations:
+    -
+      rel: self
+      href:
+        route: metadata
+        parameters:
+          id: expr(object.getId())

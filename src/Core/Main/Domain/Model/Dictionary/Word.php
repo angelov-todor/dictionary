@@ -6,7 +6,7 @@ namespace Core\Main\Domain\Model\Dictionary;
 class Word
 {
     /**
-     * @var int The id of this word.
+     * @var int
      */
     private $id;
 
@@ -66,7 +66,6 @@ class Word
     private $derivativeForms;
 
     /**
-     * Get id
      * @return integer
      */
     public function getId()
@@ -75,18 +74,16 @@ class Word
     }
 
     /**
-     * Set name
      * @param string $name
      * @return Word
      */
-    public function setName($name)
+    public function setName($name): Word
     {
         $this->name = $name;
         return $this;
     }
 
     /**
-     * Get name
      * @return string
      */
     public function getName()
@@ -95,48 +92,42 @@ class Word
     }
 
     /**
-     * Set nameStressed
      * @param string $nameStressed
      * @return Word
      */
-    public function setNameStressed($nameStressed)
+    public function setNameStressed($nameStressed): Word
     {
         $this->nameStressed = $nameStressed;
-
         return $this;
     }
 
     /**
-     * Get nameStressed
      * @return string
      */
-    public function getNameStressed()
+    public function getNameStressed(): ?string
     {
         return $this->nameStressed;
     }
 
     /**
-     * Set nameBroken
      * @param string $nameBroken
      * @return Word
      */
-    public function setNameBroken($nameBroken)
+    public function setNameBroken($nameBroken): Word
     {
         $this->nameBroken = $nameBroken;
         return $this;
     }
 
     /**
-     * Get nameBroken
      * @return string
      */
-    public function getNameBroken()
+    public function getNameBroken(): ?string
     {
         return $this->nameBroken;
     }
 
     /**
-     * Set nameCondensed
      * @param string $nameCondensed
      * @return Word
      */

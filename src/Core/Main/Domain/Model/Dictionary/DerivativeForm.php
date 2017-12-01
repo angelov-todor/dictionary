@@ -32,22 +32,16 @@ class DerivativeForm
 
     /**
      * @var string
-     * @ORM\Column(type="boolean", nullable=true)
      */
     private $isInfinitive;
 
     /**
      * @var Word
-     * @ORM\ManyToOne(targetEntity="Word", inversedBy="derivativeForms")
-     * @ORM\JoinColumn(name="base_word_id", referencedColumnName="id")
      */
     private $baseWord;
 
-
     /**
-     * Get id
-     *
-     * @return integer
+     * @return int
      */
     public function getId()
     {
@@ -55,21 +49,16 @@ class DerivativeForm
     }
 
     /**
-     * Set name
-     *
      * @param string $name
-     *
      * @return DerivativeForm
      */
-    public function setName($name)
+    public function setName($name): DerivativeForm
     {
         $this->name = $name;
-
         return $this;
     }
 
     /**
-     * Get name
      * @return string
      */
     public function getName()
@@ -78,20 +67,16 @@ class DerivativeForm
     }
 
     /**
-     * Set nameBroken
-     *
      * @param string $nameBroken
      * @return DerivativeForm
      */
-    public function setNameBroken($nameBroken)
+    public function setNameBroken($nameBroken): DerivativeForm
     {
         $this->nameBroken = $nameBroken;
-
         return $this;
     }
 
     /**
-     * Get nameBroken
      * @return string
      */
     public function getNameBroken()
@@ -100,20 +85,16 @@ class DerivativeForm
     }
 
     /**
-     * Set nameCondensed
-     *
      * @param string $nameCondensed
      * @return DerivativeForm
      */
-    public function setNameCondensed($nameCondensed)
+    public function setNameCondensed($nameCondensed): DerivativeForm
     {
         $this->nameCondensed = $nameCondensed;
-
         return $this;
     }
 
     /**
-     * Get nameCondensed
      * @return string
      */
     public function getNameCondensed()
@@ -122,20 +103,16 @@ class DerivativeForm
     }
 
     /**
-     * Set description
-     *
      * @param string $description
      * @return DerivativeForm
      */
-    public function setDescription($description)
+    public function setDescription($description): DerivativeForm
     {
         $this->description = $description;
-
         return $this;
     }
 
     /**
-     * Get description
      * @return string
      */
     public function getDescription()
@@ -144,20 +121,16 @@ class DerivativeForm
     }
 
     /**
-     * Set isInfinitive
-     *
      * @param boolean $isInfinitive
      * @return DerivativeForm
      */
-    public function setIsInfinitive($isInfinitive)
+    public function setIsInfinitive($isInfinitive): DerivativeForm
     {
         $this->isInfinitive = $isInfinitive;
-
         return $this;
     }
 
     /**
-     * Get isInfinitive
      * @return boolean
      */
     public function getIsInfinitive()
@@ -166,21 +139,16 @@ class DerivativeForm
     }
 
     /**
-     * Set baseWord
-     *
      * @param Word $baseWord
      * @return DerivativeForm
      */
-    public function setBaseWord(Word $baseWord = null)
+    public function setBaseWord(Word $baseWord = null): DerivativeForm
     {
         $this->baseWord = $baseWord;
-
         return $this;
     }
 
     /**
-     * Get baseWord
-     *
      * @return Word
      */
     public function getBaseWord()

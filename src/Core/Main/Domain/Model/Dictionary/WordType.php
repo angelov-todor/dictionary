@@ -6,7 +6,7 @@ namespace Core\Main\Domain\Model\Dictionary;
 class WordType
 {
     /**
-     * @var int The id of this word.
+     * @var int
      */
     private $id;
 
@@ -46,7 +46,6 @@ class WordType
     private $exampleWord;
 
     /**
-     * Get id
      * @return integer
      */
     public function getId()
@@ -55,14 +54,12 @@ class WordType
     }
 
     /**
-     * Set name
      * @param string $name
      * @return WordType
      */
     public function setName($name)
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -76,7 +73,6 @@ class WordType
     }
 
     /**
-     * Set idiNumber
      * @param integer $idiNumber
      * @return WordType
      */
@@ -87,7 +83,6 @@ class WordType
     }
 
     /**
-     * Get idiNumber
      * @return integer
      */
     public function getIdiNumber()
@@ -96,7 +91,6 @@ class WordType
     }
 
     /**
-     * Set speechPart
      * @param string $speechPart
      * @return WordType
      */
@@ -107,7 +101,6 @@ class WordType
     }
 
     /**
-     * Get speechPart
      * @return string
      */
     public function getSpeechPart()
@@ -116,7 +109,6 @@ class WordType
     }
 
     /**
-     * Set comment
      * @param string $comment
      * @return WordType
      */
@@ -127,7 +119,6 @@ class WordType
     }
 
     /**
-     * Get comment
      * @return string
      */
     public function getComment()
@@ -136,7 +127,6 @@ class WordType
     }
 
     /**
-     * Set rules
      * @param string $rules
      * @return WordType
      */
@@ -147,7 +137,6 @@ class WordType
     }
 
     /**
-     * Get rules
      * @return string
      */
     public function getRules()
@@ -156,7 +145,6 @@ class WordType
     }
 
     /**
-     * Set rulesTest
      * @param string $rulesTest
      * @return WordType
      */
@@ -167,7 +155,6 @@ class WordType
     }
 
     /**
-     * Get rulesTest
      * @return string
      */
     public function getRulesTest()
@@ -176,7 +163,6 @@ class WordType
     }
 
     /**
-     * Set exampleWord
      * @param string $exampleWord
      * @return WordType
      */
@@ -187,7 +173,6 @@ class WordType
     }
 
     /**
-     * Get exampleWord
      * @return string
      */
     public function getExampleWord()

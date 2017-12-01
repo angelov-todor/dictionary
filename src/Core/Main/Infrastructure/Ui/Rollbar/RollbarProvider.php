@@ -60,12 +60,21 @@ class RollbarProvider implements ServiceProviderInterface
             header(sprintf('HTTP/1.0 %s', Response::HTTP_INTERNAL_SERVER_ERROR));
             header(sprintf('Content-Type: application/json', ProblemDetails::MIME_TYPE_JSON));
         }
+
+        $extensionsInfo = [
+            'exceptionType' => get_class($exception),
+            'exceptionCode' => $exception->getCode(),
+            'exceptionStacktrace' => $exception->getTraceAsString()
+        ];
+
         Rollbar::log(Level::EMERGENCY, $exception);
         $pd = new ProblemDetails(
             null,
             'Unhandled exception occurred!',
             Response::HTTP_INTERNAL_SERVER_ERROR,
-            $exception->getMessage()
+            $exception->getMessage(),
+            null,
+            $extensionsInfo
         );
 
         echo $pd;

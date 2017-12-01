@@ -3,14 +3,9 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Ui\Web\Silex\Provider;
 
-use Core\Main\Application\Service\User\ChangeContactNameService;
 use Core\Main\Application\Service\User\ChangeLocaleService;
-use Core\Main\Application\Service\User\Notifications\NotifyTenantChargeFailedService;
 use Core\Main\Application\Service\User\NotifyPasswordResetLinkService;
 use Core\Main\Application\Service\User\AuthenticateService;
-use Core\Main\Application\Service\User\NotifyLandlordPaymentFailedService;
-use Core\Main\Application\Service\User\NotifyLandlordPaymentSucceededService;
-use Core\Main\Application\Service\User\NotifyTenantPaymentSucceededService;
 use Core\Main\Application\Service\User\UserChangeEmailService;
 use Core\Main\Application\Service\User\UserChangePasswordService;
 use Core\Main\Application\Service\User\UserChangeTimezoneService;
@@ -25,9 +20,6 @@ use Core\Main\Domain\Model\ChecksumInterface;
 use Core\Main\Domain\Model\MailerServiceInterface;
 use Core\Main\Domain\Model\User\ResetPassword;
 use Core\Main\Domain\Model\User\User;
-use Core\Main\Domain\Repository\LeasePaymentRepositoryInterface;
-use Core\Main\Domain\Repository\LeaseRepositoryInterface;
-use Core\Main\Domain\Repository\PaymentRepositoryInterface;
 use Core\Main\Domain\Repository\UserRepositoryInterface;
 use Core\Main\Domain\Repository\UserResetPasswordRepositoryInterface;
 use Core\Main\Infrastructure\Services\PasswordHashEncryptionService;
@@ -161,44 +153,6 @@ class UserServicesProvider implements ServiceProviderInterface
                     $app[UserRepositoryInterface::class],
                     $app[MailerServiceInterface::class],
                     (object)$app['app-config']['email.options']
-                ),
-                $app['tx_session']
-            );
-        };
-
-        $app[NotifyLandlordPaymentSucceededService::class] = function () use ($app) {
-            return new NotifyLandlordPaymentSucceededService(
-                $app[MailerServiceInterface::class],
-                $app[LeasePaymentRepositoryInterface::class]
-            );
-        };
-
-        $app[NotifyTenantPaymentSucceededService::class] = function () use ($app) {
-            return new NotifyTenantPaymentSucceededService(
-                $app[MailerServiceInterface::class],
-                $app[PaymentRepositoryInterface::class],
-                $app[LeaseRepositoryInterface::class]
-            );
-        };
-
-        $app[NotifyLandlordPaymentFailedService::class] = function () use ($app) {
-            return new NotifyLandlordPaymentFailedService(
-                $app[MailerServiceInterface::class],
-                $app[PaymentRepositoryInterface::class]
-            );
-        };
-
-        $app[NotifyTenantChargeFailedService::class] = function () use ($app) {
-            return new NotifyTenantChargeFailedService(
-                $app[MailerServiceInterface::class],
-                $app[PaymentRepositoryInterface::class]
-            );
-        };
-
-        $app[ChangeContactNameService::class] = function () use ($app) {
-            return new TransactionalApplicationService(
-                new ChangeContactNameService(
-                    $app[UserRepositoryInterface::class]
                 ),
                 $app['tx_session']
             );

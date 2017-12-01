@@ -30,7 +30,7 @@ services:
           - MYSQL_DATABASE=core
           - MYSQL_RANDOM_ROOT_PASSWORD=true
         volumes:
-          - db-data:/var/lib/postgresql/data:rw
+          - db-data:/var/lib/mysql:rw
 volumes:
     db-data: {}
 #        # In production, you may want to use a managed database service

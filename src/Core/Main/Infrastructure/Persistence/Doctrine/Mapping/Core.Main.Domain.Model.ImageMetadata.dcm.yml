@@ -5,6 +5,8 @@ Core\Main\Domain\Model\ImageMetadata:
   id:
     id:
       column: id
+      generator:
+        strategy: AUTO
   fields:
     value:
       type: string

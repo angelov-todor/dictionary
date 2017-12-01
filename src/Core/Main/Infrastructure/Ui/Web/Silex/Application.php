@@ -3,27 +3,37 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Ui\Web\Silex;
 
+use Core\Main\Application\Service\Metadata\GenerateMetadataService;
 use Core\Main\Application\Service\User\NotifyPasswordResetLinkService;
 use Core\Main\Application\Service\User\NotifyUserValidationService;
 use Core\Main\Domain\Event\AppendEventStoreSubscriber;
 use Core\Main\Domain\Model\StoredEvent;
 use Core\Main\Infrastructure\Persistence\Doctrine\EntityManagerProvider;
+use Core\Main\Infrastructure\Ui\DomainEventSubscriber\ImageCreatedSubscriber;
 use Core\Main\Infrastructure\Ui\DomainEventSubscriber\PasswordResetEmailSubscriber;
 use Core\Main\Infrastructure\Ui\DomainEventSubscriber\UserValidateEmailSubscriber;
 use Core\Main\Infrastructure\Ui\Rollbar\RollbarProvider;
+use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\DictionaryController;
+use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\ImageController;
+use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\MetadataController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\ResetPasswordController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\IdentityController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\StoredEventController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\UserController;
+use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\WordController;
+use Core\Main\Infrastructure\Ui\Web\Silex\Provider\ImageServicesProvider;
+use Core\Main\Infrastructure\Ui\Web\Silex\Provider\ImagineServiceProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\StoredEventsServicesProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\SwiftMailerServiceProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\TwigServiceProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\UserServicesProvider;
+use Core\Main\Infrastructure\Ui\Web\Silex\Provider\WordServicesProvider;
 use JMS\Serializer\SerializerBuilder;
 use Silex\Provider\LocaleServiceProvider;
 use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
 use Symfony\Component\Debug\ErrorHandler;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\AuthController;
@@ -35,6 +45,7 @@ use Silex\Provider\DoctrineServiceProvider;
 use \Doctrine\Common\Annotations\AnnotationRegistry;
 use Ddd\Domain\DomainEventPublisher;
 use Core\Main\Infrastructure\Application\Serialization\Jms\Serializer;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
 
@@ -86,7 +97,9 @@ class Application
         });
 
         $app->register(new UserServicesProvider());
+        $app->register(new ImageServicesProvider());
         $app->register(new StoredEventsServicesProvider());
+        $app->register(new WordServicesProvider());
 
         $app['hateoas.config'] = $app['app-config']['hateoas.options'];
 
@@ -94,12 +107,17 @@ class Application
 
         $app['security.firewalls'] = [
             'login' => [
-                'pattern' => 'authenticate|reset-password|^/email',
+                'pattern' => 'authenticate|reset-password|^/email|^/image/',
                 'anonymous' => true,
                 'stateless' => true,
             ],
             'users' => [
                 'pattern' => new RequestMatcher('^/users$', null, ['POST']),
+                'anonymous' => true,
+                'stateless' => true,
+            ],
+            'options' => [
+                'pattern' => new RequestMatcher('^.*$', null, ['OPTIONS']),
                 'anonymous' => true,
                 'stateless' => true,
             ],
@@ -117,6 +135,7 @@ class Application
                 'stateless' => true,
             ],
         ];
+
 
         Serializer::instance()->setSerializer(
             SerializerBuilder::create()
@@ -140,13 +159,15 @@ class Application
         $app->register(new SecurityServiceProvider(), [
             'security.access_rules' => [
                 ['authenticate|reset-password|^/email', 'IS_AUTHENTICATED_ANONYMOUSLY'],
+                ['^/image/', 'IS_AUTHENTICATED_ANONYMOUSLY'],
                 [new RequestMatcher('^/users$', null, ['POST']), 'IS_AUTHENTICATED_ANONYMOUSLY'],
+                [new RequestMatcher('^.*$', null, ['OPTIONS']), 'IS_AUTHENTICATED_ANONYMOUSLY'],
                 ['^.*$', 'ROLE_USER'],
             ]
         ]);
         $app->register(new JwtServiceProvider());
         $app->register(new ProblemDetailsProvider());
-
+        $app->register(new ImagineServiceProvider(), ['imagine.driver' => 'Imagick']);
         $app->register(new LocaleServiceProvider());
         $app->register(new TranslationServiceProvider(), array(
             'locale_fallbacks' => array('en'),
@@ -160,11 +181,30 @@ class Application
         });
         $app->register(new TwigServiceProvider());
 
+        //  match all option requests
+        $app->options('/{section}', function () {
+            return new JsonResponse();
+        })->assert('section', '.*');
+
         $app->mount('/', new AuthController());
         $app->mount('/', new ResetPasswordController());
         $app->mount('/', new UserController());
         $app->mount('/', new IdentityController());
         $app->mount('/', new StoredEventController());
+        $app->mount('/', new ImageController());
+        $app->mount('/', new MetadataController());
+        $app->mount('/', new WordController());
+        $app->mount('/', new DictionaryController());
+
+        // cors requests
+        $app->after(function (Request $request, Response $response) {
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set(
+                'Access-Control-Allow-Headers',
+                'Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, Authorization, Origin'
+            );
+            $response->headers->set('Access-Control-Allow-Methods', 'POST, GET, PUT, OPTIONS, PATCH, DELETE');
+        });
 
         return $app;
     }
@@ -185,6 +225,9 @@ class Application
         );
         $domainSubscribers[] = DomainEventPublisher::instance()->subscribe(
             new UserValidateEmailSubscriber($app[NotifyUserValidationService::class])
+        );
+        $domainSubscribers[] = DomainEventPublisher::instance()->subscribe(
+            new ImageCreatedSubscriber($app[GenerateMetadataService::class])
         );
 
         return $domainSubscribers;

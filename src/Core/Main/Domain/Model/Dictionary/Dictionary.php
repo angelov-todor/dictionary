@@ -3,42 +3,30 @@ declare(strict_types=1);
 
 namespace Core\Main\Domain\Model\Dictionary;
 
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity
- */
 class Dictionary
 {
     /**
      * @var int The id of this word.
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer", name="ID")
      */
     private $id;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=200, nullable=false)
      */
     private $word;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=200, nullable=false)
      */
     private $characteristic;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=200, nullable=true)
      */
     private $rhymeform;
 
     /**
      * @var string
-     * @ORM\Column(type="string", length=200, nullable=false)
      */
     private $normalized;
 

@@ -24,6 +24,13 @@ RUN set -xe \
 	&& docker-php-ext-enable --ini-name 20-apcu.ini apcu \
 	&& apk del .build-deps
 
+RUN set -x \
+    && apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS imagemagick-dev libtool \
+    && pecl install imagick-3.4.3 \
+    && docker-php-ext-enable imagick \
+    && apk add --no-cache --virtual .imagick-runtime-deps imagemagick \
+    && apk del .phpize-deps
+
 COPY --from=0 /usr/bin/composer /usr/bin/composer
 COPY docker/php/php.ini /usr/local/etc/php/php.ini
 COPY docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint

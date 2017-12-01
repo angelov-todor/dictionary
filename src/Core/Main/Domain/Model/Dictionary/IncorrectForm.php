@@ -6,7 +6,7 @@ namespace Core\Main\Domain\Model\Dictionary;
 class IncorrectForm
 {
     /**
-     * @var int The id of this word.
+     * @var int
      */
     private $id;
 
@@ -21,7 +21,6 @@ class IncorrectForm
     private $correctWord;
 
     /**
-     * Get id
      * @return integer
      */
     public function getId()
@@ -30,18 +29,16 @@ class IncorrectForm
     }
 
     /**
-     * Set name
      * @param string $name
      * @return IncorrectForm
      */
-    public function setName($name)
+    public function setName($name): IncorrectForm
     {
         $this->name = $name;
         return $this;
     }
 
     /**
-     * Get name
      * @return string
      */
     public function getName()
@@ -50,14 +47,12 @@ class IncorrectForm
     }
 
     /**
-     * Set correctWord
      * @param Word $correctWord
      * @return IncorrectForm
      */
-    public function setCorrectWord(Word $correctWord = null)
+    public function setCorrectWord(Word $correctWord = null): IncorrectForm
     {
         $this->correctWord = $correctWord;
-
         return $this;
     }
 
@@ -65,7 +60,7 @@ class IncorrectForm
      * Get correctWord
      * @return Word
      */
-    public function getCorrectWord()
+    public function getCorrectWord(): ?Word
     {
         return $this->correctWord;
     }

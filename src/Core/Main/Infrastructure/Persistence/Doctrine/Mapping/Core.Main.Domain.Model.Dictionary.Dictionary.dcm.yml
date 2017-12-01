@@ -1,0 +1,29 @@
+Core\Main\Domain\Model\Dictionary\Dictionary:
+  type: entity
+  table: dictionary
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\DoctrineDictionaryRepository
+  id:
+    id:
+      column: id
+      generator:
+        strategy: AUTO
+  fields:
+    word:
+      type: string
+      length: 200
+      nullable: false
+    characteristic:
+      column: characteristic
+      type: string
+      length: 200
+      nullable: false
+    rhymeform:
+      column: rhymeform
+      type: string
+      length: 200
+      nullable: true
+    normalized:
+      column: normalized
+      type: string
+      length: 200
+      nullable: false

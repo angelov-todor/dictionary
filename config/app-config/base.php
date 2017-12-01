@@ -17,7 +17,7 @@ return [
     ],
     'hateoas.options' => [
         'metadataDir' => __DIR__ . '/../../src/Core/Main/Infrastructure/DataTransformer/Hal',
-        'cacheDir' => __DIR__ . '/../../src/Core/cache',
+        'cacheDir' => __DIR__ . '/../../var/cache',
         'debug' => false
     ],
     'jwt' => [
@@ -26,22 +26,29 @@ return [
         'public_key' => file_get_contents(__DIR__ . '/../../tests/resources/public_key.pem'),
         'private_key' => file_get_contents(__DIR__ . '/../../tests/resources/private_key.pem'),
     ],
+    'google' => [
+        'google_project_id' => 'doctor-degree',
+        'google_key_file_path' => __DIR__ . '/../../Doctor-9a5a32547500.json'
+    ],
     'mailer.options' => [
-        'sender_email' => 'new@gmail.com',
-        'sender_name' => 'admin',
+        'sender_email' => 'a@b.c',
+        'sender_name' => 'a@b.c',
         'host' => 'smtp.gmail.com',
         'port' => '587',
         'encryption' => 'tls',
-        'username' => 'new@gmail.com',
-        'password' => 'CoreDevSecretPassword',
+        'username' => 'a@b.c',
+        'password' => 'a@b.c',
     ],
     'email.options' => [
         'baseUrl' => 'http://localhost',
         'emailVerificationPath' => '/email/verification/{hash}',
-        'resetPasswordPath' => '/reset-password/{id}/password',
-        'chargePath' => '/tenant/charge/{leasePaymentId}'
+        'resetPasswordPath' => '/reset-password/{id}/password'
     ],
     'rollbar' => [
         'access_token' => 'dev-access-token-that-is-32-char'
-    ]
+    ],
+    'em.options' => [
+        'debug' => false,
+        'echosql' => false
+    ],
 ];

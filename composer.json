@@ -1,6 +1,6 @@
 {
   "name": "togop/dictionary",
-  "description": "Base structure for PHP project base on DDD",
+  "description": "Nothing so far",
   "scripts": {
     "test:unit-tests": "echo 'No unit tests are available, skipping ...'",
     "test:integration-tests": "@php -d memory_limit=512M bin/phpunit",
@@ -29,10 +29,7 @@
     "app:initialize": [
       "@app:cache-warmup",
       "@app:generate-proxies"
-    ],
-    "crontask:send:payment-notifications": "@php src/Core/Main/Infrastructure/Console/console.php send:payment-notifications",
-    "crontask:send:summaries": "@php src/Core/Main/Infrastructure/Console/console.php send:summaries",
-    "crontask:charge:subscriptions": "@php src/Core/Main/Infrastructure/Console/console.php charge:subscriptions"
+    ]
   },
   "require": {
     "php": ">=7.1",
@@ -62,7 +59,9 @@
     "rollbar/rollbar": "~1.1",
     "symfony/translation": "^3.2",
     "symfony/twig-bridge": "^3.2",
-    "beberlei/DoctrineExtensions": "^1.0"
+    "beberlei/DoctrineExtensions": "^1.0",
+    "imagine/imagine": "^0.7.1",
+    "google/cloud-vision": "^0.6.1"
   },
   "require-dev": {
     "phpunit/phpunit": "^6.0",

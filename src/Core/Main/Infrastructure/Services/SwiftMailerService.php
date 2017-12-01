@@ -40,26 +40,6 @@ class SwiftMailerService implements MailerServiceInterface
     protected $templateMap = [
         MailerServiceInterface::RESET_PASSWORD_EMAIL => 'reset_password_email.twig',
         MailerServiceInterface::ACTIVATION_EMAIL => 'activation_email.twig',
-        MailerServiceInterface::PAYMENT_SUCCEEDED_EMAIL => 'payment_succeeded_email.twig',
-        MailerServiceInterface::PAYMENT_SUCCEEDED_TENANT_EMAIL => 'payment_succeeded_tenant_email.twig',
-        MailerServiceInterface::PAYMENT_NOTIFICATION_EMAIL => 'payment_notification_email.twig',
-        MailerServiceInterface::WELCOME_TENANT_EMAIL => 'welcome_tenant_email.twig',
-        MailerServiceInterface::WELCOME_TENANT_EMAIL_FAILED => 'welcome_tenant_email_failed.twig',
-        MailerServiceInterface::REFUND_TENANT_EMAIL => 'refund_tenant_email.twig',
-        MailerServiceInterface::REFUND_LANDLORD_EMAIL => 'refund_landlord_email.twig',
-        MailerServiceInterface::PAYMENT_FAILED_EMAIL => 'payment_failed_email.twig',
-        MailerServiceInterface::PAYMENT_FAILED_TENANT_EMAIL => 'payment_failed_tenant_email.twig',
-        MailerServiceInterface::NOT_PAID_PAYMENT_NOTIFICATION_EMAIL => 'not_paid_payment_notification_email.twig',
-        MailerServiceInterface::PAYMENT_NOTIFICATION_REMINDER_EMAIL => 'payment_notification_reminder_email.twig',
-        MailerServiceInterface::PAYMENT_NOTIFICATION_SECOND_REMINDER_EMAIL =>
-            'payment_notification_second_reminder_email.twig',
-        MailerServiceInterface::PAYMENT_NOTIFICATION_THIRD_REMINDER_EMAIL =>
-            'payment_notification_third_reminder_email.twig',
-        MailerServiceInterface::LEASE_TERMINATED_TENANT => 'lease_terminated_tenant.twig',
-        MailerServiceInterface::LANDLORD_SUMMARY_EMAIL => 'landlord_summary_email.twig',
-        MailerServiceInterface::PAYMENT_PENDING_TENANT_EMAIL => 'payment_pending_tenant_email.twig',
-        MailerServiceInterface::LEASE_END_MODIFIED_TENANT => 'lease_end_modified_tenant.twig',
-        'encourage_users' => 'encourage_users.twig'
     ];
 
     /**
@@ -68,24 +48,6 @@ class SwiftMailerService implements MailerServiceInterface
     public static $templates = [
         MailerServiceInterface::RESET_PASSWORD_EMAIL,
         MailerServiceInterface::ACTIVATION_EMAIL,
-        MailerServiceInterface::PAYMENT_SUCCEEDED_EMAIL,
-        MailerServiceInterface::PAYMENT_SUCCEEDED_TENANT_EMAIL,
-        MailerServiceInterface::PAYMENT_NOTIFICATION_EMAIL,
-        MailerServiceInterface::WELCOME_TENANT_EMAIL,
-        MailerServiceInterface::WELCOME_TENANT_EMAIL_FAILED,
-        MailerServiceInterface::REFUND_TENANT_EMAIL,
-        MailerServiceInterface::REFUND_LANDLORD_EMAIL,
-        MailerServiceInterface::PAYMENT_FAILED_EMAIL,
-        MailerServiceInterface::PAYMENT_FAILED_TENANT_EMAIL,
-        MailerServiceInterface::NOT_PAID_PAYMENT_NOTIFICATION_EMAIL,
-        MailerServiceInterface::PAYMENT_NOTIFICATION_REMINDER_EMAIL,
-        MailerServiceInterface::PAYMENT_NOTIFICATION_SECOND_REMINDER_EMAIL,
-        MailerServiceInterface::PAYMENT_NOTIFICATION_THIRD_REMINDER_EMAIL,
-        MailerServiceInterface::LEASE_TERMINATED_TENANT,
-        MailerServiceInterface::LANDLORD_SUMMARY_EMAIL,
-        MailerServiceInterface::PAYMENT_PENDING_TENANT_EMAIL,
-        MailerServiceInterface::LEASE_END_MODIFIED_TENANT,
-        'encourage_users'
     ];
 
     /**

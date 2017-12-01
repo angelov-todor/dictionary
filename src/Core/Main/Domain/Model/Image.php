@@ -5,6 +5,8 @@ namespace Core\Main\Domain\Model;
 
 class Image
 {
+    const IMAGE_LOCATION = 'assets';
+
     /**
      * @var int
      */

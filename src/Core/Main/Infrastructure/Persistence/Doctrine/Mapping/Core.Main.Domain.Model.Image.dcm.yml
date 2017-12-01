@@ -5,6 +5,8 @@ Core\Main\Domain\Model\Image:
   id:
     id:
       column: id
+      generator:
+        strategy: AUTO
   fields:
     src:
       type: string
