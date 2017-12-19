@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Ui\DomainEventSubscriber;
 
+use Core\Main\Application\Service\Metadata\AddSourceMetadataRequest;
 use Core\Main\Application\Service\Metadata\GenerateMetadataRequest;
 use Core\Main\Domain\Model\ImageCreated;
 use Ddd\Application\Service\ApplicationService;
@@ -16,12 +17,21 @@ class ImageCreatedSubscriber implements DomainEventSubscriber
     protected $generateMetadataService;
 
     /**
+     * @var ApplicationService
+     */
+    protected $addSourceMetadataService;
+
+    /**
      * ImageMetadataCreatedSubscriber constructor.
      * @param ApplicationService $generateMetadataService
+     * @param ApplicationService $addSourceMetadataService
      */
-    public function __construct(ApplicationService $generateMetadataService)
-    {
+    public function __construct(
+        ApplicationService $generateMetadataService,
+        ApplicationService $addSourceMetadataService
+    ) {
         $this->generateMetadataService = $generateMetadataService;
+        $this->addSourceMetadataService = $addSourceMetadataService;
     }
 
     /**
@@ -32,6 +42,12 @@ class ImageCreatedSubscriber implements DomainEventSubscriber
         $this->generateMetadataService->execute(
             new GenerateMetadataRequest($aDomainEvent->getImageId())
         );
+
+        if ($aDomainEvent->getSource()) {
+            $this->addSourceMetadataService->execute(
+                new AddSourceMetadataRequest($aDomainEvent->getImageId(), $aDomainEvent->getSource())
+            );
+        }
     }
 
     /**

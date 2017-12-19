@@ -59,6 +59,7 @@ class ImageController implements ControllerProviderInterface
         $factory->get('/images', [$this, 'getImages']);
 
         $factory->post('/images-upload', [$this, 'imageUpload']);
+        $factory->post('/images-upload-external', [$this, 'uploadExternalImage']);
 
         $factory->get('/images/{id}', [$this, 'viewImage']);
         $factory->delete('/images/{id}', [$this, 'deleteImage']);
@@ -219,6 +220,7 @@ class ImageController implements ControllerProviderInterface
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        // TODO: check for valid extensions
         $uuidName = $this->getToken(40) . '.' . $ext;
         $location = Image::IMAGE_LOCATION . DIRECTORY_SEPARATOR . $uuidName;
         $file = getcwd() . DIRECTORY_SEPARATOR . $location;
@@ -229,7 +231,8 @@ class ImageController implements ControllerProviderInterface
         $this->getRepository()->add($image);
 
         DomainEventPublisher::instance()->publish(new ImageCreated(
-            $image->getId()
+            $image->getId(),
+            null
         ));
 
 
@@ -279,7 +282,7 @@ class ImageController implements ControllerProviderInterface
         return $token;
     }
 
-    protected function getThumb($file)
+    protected function thumbnail($file)
     {
         $image = $this->app['imagine']->open($file);
 
@@ -350,12 +353,12 @@ class ImageController implements ControllerProviderInterface
                 ], Response::HTTP_NOT_FOUND);
             }
         }
-
+        // TODO: use cache
         if ($filter == 'large') {
             return $this->large($path);
         }
 
-        return $this->getThumb($path);
+        return $this->thumbnail($path);
     }
 
     /**
@@ -380,5 +383,27 @@ class ImageController implements ControllerProviderInterface
         $response = file_get_contents($url);
 
         return new JsonResponse(json_decode($response));
+    }
+
+    public function uploadExternalImage(Request $request): Response
+    {
+        $imageLink = $request->get('link');
+        // TODO: check for valid extensions
+        $ext = pathinfo($imageLink, PATHINFO_EXTENSION);
+        $uuidName = $this->getToken(40) . '.' . $ext;
+        $location = Image::IMAGE_LOCATION . DIRECTORY_SEPARATOR . $uuidName;
+        $file = getcwd() . DIRECTORY_SEPARATOR . $location;
+
+        file_put_contents($file,file_get_contents($imageLink));
+        $image = new Image();
+        $image->setSrc($uuidName);
+        $this->getRepository()->add($image);
+
+        DomainEventPublisher::instance()->publish(new ImageCreated(
+            $image->getId(),
+            $imageLink
+        ));
+
+        return $this->app['haljson']($image, Response::HTTP_CREATED);
     }
 }

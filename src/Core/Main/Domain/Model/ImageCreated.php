@@ -18,12 +18,19 @@ class ImageCreated implements DomainEvent
     protected $imageId;
 
     /**
+     * @var null|string
+     */
+    protected $source;
+
+    /**
      * ImageCreated constructor.
      * @param int $imageId
+     * @param null|string $source
      */
-    public function __construct(int $imageId)
+    public function __construct(int $imageId, ?string $source)
     {
         $this->imageId = $imageId;
+        $this->source = $source;
         $this->occurredAt = new \DateTime();
     }
 
@@ -41,5 +48,13 @@ class ImageCreated implements DomainEvent
     public function getImageId(): int
     {
         return $this->imageId;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getSource()
+    {
+        return $this->source;
     }
 }

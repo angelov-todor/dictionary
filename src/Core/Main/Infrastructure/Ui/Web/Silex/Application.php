@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Ui\Web\Silex;
 
+use Core\Main\Application\Service\Metadata\AddSourceMetadataService;
 use Core\Main\Application\Service\Metadata\GenerateMetadataService;
 use Core\Main\Application\Service\User\NotifyPasswordResetLinkService;
 use Core\Main\Application\Service\User\NotifyUserValidationService;
@@ -227,7 +228,10 @@ class Application
             new UserValidateEmailSubscriber($app[NotifyUserValidationService::class])
         );
         $domainSubscribers[] = DomainEventPublisher::instance()->subscribe(
-            new ImageCreatedSubscriber($app[GenerateMetadataService::class])
+            new ImageCreatedSubscriber(
+                $app[GenerateMetadataService::class],
+                $app[AddSourceMetadataService::class]
+            )
         );
 
         return $domainSubscribers;

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Ui\Web\Silex\Provider;
 
+use Core\Main\Application\Service\Metadata\AddSourceMetadataService;
 use Core\Main\Application\Service\Metadata\GenerateMetadataService;
 use Core\Main\Domain\Model\Image;
 use Core\Main\Domain\Model\ImageMetadata;
@@ -55,5 +56,17 @@ class ImageServicesProvider implements ServiceProviderInterface
                 $app['app-config']['google']['google_key_file_path']
             );
         };
+
+        $app[AddSourceMetadataService::class] = function () use ($app) {
+            return new TransactionalApplicationService(
+                new AddSourceMetadataService(
+                    $app[MetadataRepositoryInterface::class],
+                    $app[ImageRepositoryInterface::class],
+                    $app[ImageMetadataRepositoryInterface::class]
+                ),
+                $app['tx_session']
+            );
+        };
+
     }
 }
