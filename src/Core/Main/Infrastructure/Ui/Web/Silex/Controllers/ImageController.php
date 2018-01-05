@@ -6,10 +6,13 @@ namespace Core\Main\Infrastructure\Ui\Web\Silex\Controllers;
 use Core\Main\Domain\Model\Image;
 use Core\Main\Domain\Model\ImageMetadata;
 use Core\Main\Domain\Model\ImageCreated;
+use Core\Main\Domain\Model\Metadata;
 use Core\Main\Domain\Repository\ImageMetadataRepositoryInterface;
 use Core\Main\Domain\Repository\ImageRepositoryInterface;
 use Core\Main\Domain\Repository\MetadataRepositoryInterface;
+use Core\Main\Infrastructure\Domain\Model\DoctrineImageMetadataRepository;
 use Core\Main\Infrastructure\Domain\Model\DoctrineImageRepository;
+use Core\Main\Infrastructure\Domain\Model\DoctrineMetadataRepository;
 use Ddd\Domain\DomainEventPublisher;
 use Doctrine\ORM\EntityManager;
 use Imagine\Filter\Transformation;
@@ -19,6 +22,7 @@ use Silex\Application;
 use Silex\Api\ControllerProviderInterface;
 use Silex\ControllerCollection;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,15 +35,17 @@ class ImageController implements ControllerProviderInterface
 
     protected $filters = [
         'thumb' => [
-            'quality' => 75,
-            'size' => [120, 90],
-            'mode' => 'inset',
+            'filter' => 'thumbnail',
+            'width' => 120,
+            'height' => 90,
+            'mode' => ImageInterface::THUMBNAIL_INSET,
             'allow_upscale' => true
         ],
         'large' => [
-            'quality' => 75,
-            'size' => [640, 480],
-            'mode' => 'inset',
+            'filter' => 'thumbnail',
+            'width' => 640,
+            'height' => 480,
+            'mode' => ImageInterface::THUMBNAIL_INSET,
             'allow_upscale' => true
         ],
     ];
@@ -68,15 +74,6 @@ class ImageController implements ControllerProviderInterface
 
         $factory->get('/image/{filter}/{resource}', [$this, 'getImage']);
 
-//        $app->match('/image-resize', function (Request $request) use ($app) {
-//            $app['imagine']
-//                ->open($request->files->get('image')->getPathname())
-//                ->resize(new Box(320, 240))
-//                ->save('/path/to/data/image-resized.jpg');
-//
-//            return 'Image resized !';
-//        });
-
         return $factory;
     }
 
@@ -97,7 +94,7 @@ class ImageController implements ControllerProviderInterface
     }
 
     /**
-     * @return MetadataRepositoryInterface
+     * @return DoctrineMetadataRepository
      */
     protected function getMetadataRepository()
     {
@@ -105,7 +102,7 @@ class ImageController implements ControllerProviderInterface
     }
 
     /**
-     * @return ImageMetadataRepositoryInterface
+     * @return DoctrineImageMetadataRepository
      */
     protected function getImageMetadataRepository()
     {
@@ -180,7 +177,7 @@ class ImageController implements ControllerProviderInterface
         $image = $this->getRepository()->find($id);
         $path = Image::IMAGE_LOCATION . DIRECTORY_SEPARATOR . $image->getSrc();
 
-        $imageRemoved = file_exists($path) && is_writable($path) && unlink($path);
+        file_exists($path) && is_writable($path) && unlink($path);
 
         $imageMetadataRepository = $this->getImageMetadataRepository();
         $imageRepository = $this->getRepository();
@@ -282,41 +279,12 @@ class ImageController implements ControllerProviderInterface
         return $token;
     }
 
-    protected function thumbnail($file)
-    {
-        $image = $this->app['imagine']->open($file);
-
-        $transformation = new Transformation();
-        $transformation->thumbnail(new Box(120, 90), ImageInterface::THUMBNAIL_INSET);
-        $image = $transformation->apply($image);
-
-        $format = pathinfo($file, PATHINFO_EXTENSION);
-
-        $response = new Response();
-        $response->headers->set('Content-type', 'image/' . $format);
-        $response->setContent($image->get($format));
-        return $response;
-    }
-
-    protected function large($file)
-    {
-        $image = $this->app['imagine']->open($file);
-
-        $transformation = new Transformation();
-        $transformation->thumbnail(new Box(640, 480));
-        $image = $transformation->apply($image);
-
-        $format = pathinfo($file, PATHINFO_EXTENSION);
-
-        $response = new Response();
-        $response->headers->set('Content-type', 'image/' . $format);
-        $response->setContent($image->get($format));
-        return $response;
-    }
 
     public function createMetadata($id, Request $request): Response
     {
+        /** @var Image $image */
         $image = $this->getRepository()->find($id);
+        /** @var Metadata $metadata */
         $metadata = $this->getMetadataRepository()->find($request->get('metadata'));
         $imageMetadata = new ImageMetadata();
         $imageMetadata->setImage($image)
@@ -331,6 +299,7 @@ class ImageController implements ControllerProviderInterface
 
     public function deleteMetadata($id): Response
     {
+        /** @var ImageMetadata $imageMetadata */
         $imageMetadata = $this->getImageMetadataRepository()->find($id);
         $this->getImageMetadataRepository()->remove($imageMetadata);
 
@@ -353,13 +322,46 @@ class ImageController implements ControllerProviderInterface
                 ], Response::HTTP_NOT_FOUND);
             }
         }
-        // TODO: use cache
+
         if ($filter == 'large') {
-            return $this->large($path);
+            return $this->dynamicImage('large', $path);
         }
 
-        return $this->thumbnail($path);
+        return $this->dynamicImage('thumb', $path);
     }
+
+    /**
+     * @param string $name
+     * @param string $file
+     * @return RedirectResponse
+     */
+    protected function dynamicImage(string $name, string $file): RedirectResponse
+    {
+        $options = $this->filters[$name];
+        $filter = $options['filter'];
+        $assets = '/var/cache/assets';
+        $cacheDir = $this->app['app-path'] . $assets;
+
+        $basename = pathinfo($file, PATHINFO_BASENAME);
+        $cacheImage = $cacheDir . DIRECTORY_SEPARATOR . $name . '-' . $basename;
+        if (!file_exists($cacheImage)) {
+            if (!file_exists($cacheDir)) {
+                @mkdir($cacheDir);
+            }
+            $format = pathinfo($file, PATHINFO_EXTENSION);
+            $image = $this->app['imagine']->open($file);
+
+            $transformation = new Transformation();
+            $transformation->$filter(new Box($options['width'], $options['height']), $options['mode']);
+            $image = $transformation->apply($image);
+
+            $imageBlob = $image->get($format);
+            file_put_contents($cacheImage, $imageBlob);
+        }
+        return new RedirectResponse($assets . $name . '-' . $basename, 301);
+    }
+
+// TODO: move variables to proper place
 
     /**
      * @var string
@@ -394,7 +396,7 @@ class ImageController implements ControllerProviderInterface
         $location = Image::IMAGE_LOCATION . DIRECTORY_SEPARATOR . $uuidName;
         $file = getcwd() . DIRECTORY_SEPARATOR . $location;
 
-        file_put_contents($file,file_get_contents($imageLink));
+        file_put_contents($file, file_get_contents($imageLink));
         $image = new Image();
         $image->setSrc($uuidName);
         $this->getRepository()->add($image);

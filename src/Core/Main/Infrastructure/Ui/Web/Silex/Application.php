@@ -64,6 +64,7 @@ class Application
         // and exceptions are then caught by Silex - some of them!
         ErrorHandler::register();
 
+        $app['app-path'] = realpath(__DIR__ . '/../../../../../../../');
         $app['app-config'] = include __DIR__ . '/../../../../../../../config/app-config.php';
 
         $app['debug'] = isset($app['app-config']['debug']) ? $app['app-config']['debug'] : false;
