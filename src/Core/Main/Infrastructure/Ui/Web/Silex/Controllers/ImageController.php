@@ -339,11 +339,11 @@ class ImageController implements ControllerProviderInterface
     {
         $options = $this->filters[$name];
         $filter = $options['filter'];
-        $assets = '/var/cache/assets';
+        $assets = '/var/cache/assets/';
         $cacheDir = $this->app['app-path'] . $assets;
 
         $basename = pathinfo($file, PATHINFO_BASENAME);
-        $cacheImage = $cacheDir . DIRECTORY_SEPARATOR . $name . '-' . $basename;
+        $cacheImage = $cacheDir . $name . '-' . $basename;
         if (!file_exists($cacheImage)) {
             if (!file_exists($cacheDir)) {
                 @mkdir($cacheDir);
