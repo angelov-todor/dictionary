@@ -10,6 +10,7 @@ use Assert\Assertion;
 
 class User
 {
+    const ROLE_USER = 'ROLE_USER';
     /**
      * @var string
      */
@@ -281,6 +282,7 @@ class User
         $user = new User(null, $email, $password);
         $user->setLocale($locale);
         $user->setCurrency($currency);
+        $user->setRoles([self::ROLE_USER]);
 
         return $user;
     }

@@ -44,11 +44,11 @@ class UserValidateEmailSubscriber
      */
     public function handle($aDomainEvent)
     {
-        $this->getService()->execute(
-            new NotifyUserValidationRequest(
-                $aDomainEvent->getId()
-            )
-        );
+//        $this->getService()->execute(
+//            new NotifyUserValidationRequest(
+//                $aDomainEvent->getId()
+//            )
+//        );
     }
 
     /**
