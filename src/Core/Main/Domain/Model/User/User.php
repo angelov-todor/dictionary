@@ -28,7 +28,7 @@ class User
     /**
      * @var array
      */
-    private $roles = ['ROLE_USER'];
+    private $roles;
 
     /**
      * @var \DateTimeInterface
@@ -60,6 +60,7 @@ class User
      * @param string|null $id
      * @param string $email
      * @param Password $password
+     * @throws AssertionFailedException
      */
     public function __construct(?string $id, string $email = null, Password $password = null)
     {
@@ -207,7 +208,12 @@ class User
      */
     public function setTimezone(string $timezone): User
     {
-        Assertion::inArray($timezone, \DateTimeZone::listIdentifiers(), null, 'timezone');
+        Assertion::inArray(
+            $timezone,
+            \DateTimeZone::listIdentifiers(),
+            null,
+            'timezone'
+        );
         $this->timezone = $timezone;
 
         return $this;
@@ -224,6 +230,7 @@ class User
     /**
      * @param string $locale
      * @return User
+     * @throws AssertionFailedException
      */
     public function setLocale(string $locale): User
     {

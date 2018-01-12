@@ -11,6 +11,8 @@ Core\Main\Domain\Model\User\User:
       type: string
     password:
       type: password
+    roles:
+      type: array
     createdAt:
       type: datetime
       column: created_at
