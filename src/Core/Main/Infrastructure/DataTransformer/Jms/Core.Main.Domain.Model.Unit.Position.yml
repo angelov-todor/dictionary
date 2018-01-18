@@ -1,0 +1,8 @@
+Core\Main\Domain\Model\Unit\Position:
+  properties:
+    column:
+      exclude: false
+      type: integer
+    row:
+      exclude: false
+      type: integer

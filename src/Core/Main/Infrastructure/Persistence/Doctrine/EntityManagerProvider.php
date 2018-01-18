@@ -3,8 +3,11 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Persistence\Doctrine;
 
+use Core\Main\Infrastructure\Persistence\Doctrine\Type\PositionType;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
 use Doctrine\DBAL\Types\Type;
+use Doctrine\ORM\ORMException;
 use DoctrineExtensions\Query\Mysql\Month;
 use DoctrineExtensions\Query\Mysql\Year;
 use Pimple\Container;
@@ -42,11 +45,14 @@ class EntityManagerProvider implements ServiceProviderInterface
      * @param $conn
      * @param array $entityManagerOptions
      * @return EntityManager
+     * @throws DBALException
+     * @throws ORMException
      */
     protected function build($conn, array $entityManagerOptions): EntityManager
     {
         $types = [
             'password' => Password::class,
+            'position' => PositionType::class
         ];
         foreach ($types as $type => $className) {
             if (!Type::hasType($type)) {

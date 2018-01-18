@@ -1,0 +1,31 @@
+Core\Main\Domain\Model\Unit\Unit:
+  type: entity
+  id:
+    id:
+      column: id
+      type: guid
+  table: units
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\Unit\DoctrineUnitRepository
+  fields:
+    text:
+      type: string
+      length: 255
+    rows:
+      type: integer
+    cols:
+      type: integer
+  oneToMany:
+    unitImages:
+      targetEntity: Core\Main\Domain\Model\Unit\UnitImage
+      mappedBy: unit
+  manyToMany:
+    categories:
+      targetEntity: Core\Main\Domain\Model\Unit\Category
+      joinTable:
+        name: units_categories
+        joinColumns:
+          unit_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          category_id:
+            referencedColumnName: id

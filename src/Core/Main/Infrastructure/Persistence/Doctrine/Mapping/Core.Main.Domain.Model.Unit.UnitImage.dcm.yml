@@ -1,0 +1,22 @@
+Core\Main\Domain\Model\Unit\UnitImage:
+  type: entity
+  id:
+    id:
+      column: id
+      type: guid
+  table: unit_images
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\Unit\DoctrineUnitImageRepository
+  fields:
+    position:
+      type: position
+  manyToOne:
+    image:
+      targetEntity: Core\Main\Domain\Model\Image
+      joinColumn:
+        name: image_id
+        referencedColumnName: id
+    unit:
+      targetEntity: Core\Main\Domain\Model\Unit\Unit
+      joinColumn:
+        name: unit_id
+        referencedColumnName: id

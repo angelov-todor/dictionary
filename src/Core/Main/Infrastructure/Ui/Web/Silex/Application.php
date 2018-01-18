@@ -20,6 +20,7 @@ use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\MetadataController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\ResetPasswordController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\IdentityController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\StoredEventController;
+use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\UnitController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\UserController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\WordController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\ImageServicesProvider;
@@ -27,6 +28,7 @@ use Core\Main\Infrastructure\Ui\Web\Silex\Provider\ImagineServiceProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\StoredEventsServicesProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\SwiftMailerServiceProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\TwigServiceProvider;
+use Core\Main\Infrastructure\Ui\Web\Silex\Provider\UnitServicesProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\UserServicesProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\WordServicesProvider;
 use JMS\Serializer\SerializerBuilder;
@@ -102,6 +104,7 @@ class Application
         $app->register(new ImageServicesProvider());
         $app->register(new StoredEventsServicesProvider());
         $app->register(new WordServicesProvider());
+        $app->register(new UnitServicesProvider());
 
         $app['hateoas.config'] = $app['app-config']['hateoas.options'];
 
@@ -197,6 +200,7 @@ class Application
         $app->mount('/', new MetadataController());
         $app->mount('/', new WordController());
         $app->mount('/', new DictionaryController());
+        $app->mount('/', new UnitController());
 
         // cors requests
         $app->after(function (Request $request, Response $response) {

@@ -67,6 +67,5 @@ class ImageServicesProvider implements ServiceProviderInterface
                 $app['tx_session']
             );
         };
-
     }
 }

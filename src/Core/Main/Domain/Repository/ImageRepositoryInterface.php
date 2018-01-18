@@ -22,4 +22,9 @@ interface ImageRepositoryInterface
      * @param Image $image
      */
     public function remove(Image $image): void;
+
+    /**
+     * @return Image
+     */
+    public function getRandomImage(): Image;
 }

@@ -11,7 +11,9 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class UserProvider implements UserProviderInterface
 {
-    /** @var  UserRepositoryInterface */
+    /**
+     * @var UserRepositoryInterface
+     */
     protected $userRepository;
 
     /**
