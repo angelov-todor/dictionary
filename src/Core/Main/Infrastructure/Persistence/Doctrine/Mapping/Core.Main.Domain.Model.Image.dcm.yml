@@ -5,6 +5,7 @@ Core\Main\Domain\Model\Image:
   id:
     id:
       column: id
+      type: integer
       generator:
         strategy: AUTO
   fields:
