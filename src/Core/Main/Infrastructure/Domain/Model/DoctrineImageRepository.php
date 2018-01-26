@@ -65,4 +65,33 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
 
         return $images[0];
     }
+
+    /**
+     * @param int $page
+     * @param int $limit
+     * @return array
+     */
+    public function viewBy(int $page, int $limit): array
+    {
+        $offset = ($page - 1) * $limit;
+
+        $qb = $this->createQueryBuilder('m')
+            ->setMaxResults($limit)
+            ->setFirstResult($offset);
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countBy(): int
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->select('count(m)');
+
+        return intval($qb->getQuery()->getSingleScalarResult());
+    }
 }

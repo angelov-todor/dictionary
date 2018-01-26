@@ -1,0 +1,23 @@
+Core\Main\Domain\Model\Test\Test:
+  type: entity
+  id:
+    id:
+      column: id
+      type: guid
+  table: tests
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\Test\DoctrineTestRepository
+  fields:
+    name:
+      type: string
+      length: 255
+  manyToMany:
+    units:
+      targetEntity: Core\Main\Domain\Model\Unit\Unit
+      joinTable:
+        name: test_units
+        joinColumns:
+          test_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          unit_id:
+            referencedColumnName: id

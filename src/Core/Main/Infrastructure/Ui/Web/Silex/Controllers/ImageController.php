@@ -10,11 +10,13 @@ use Core\Main\Domain\Model\Metadata;
 use Core\Main\Domain\Repository\ImageMetadataRepositoryInterface;
 use Core\Main\Domain\Repository\ImageRepositoryInterface;
 use Core\Main\Domain\Repository\MetadataRepositoryInterface;
+use Core\Main\Infrastructure\DataTransformer\PaginatedCollection;
 use Core\Main\Infrastructure\Domain\Model\DoctrineImageMetadataRepository;
 use Core\Main\Infrastructure\Domain\Model\DoctrineImageRepository;
 use Core\Main\Infrastructure\Domain\Model\DoctrineMetadataRepository;
 use Ddd\Domain\DomainEventPublisher;
 use Doctrine\ORM\EntityManager;
+use Hateoas\Representation\CollectionRepresentation;
 use Imagine\Filter\Transformation;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
@@ -154,11 +156,36 @@ class ImageController implements ControllerProviderInterface
     }
 
     /**
+     * @param Request $request
      * @return Response
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getImages(): Response
+    public function getImages(Request $request): Response
     {
-        return $this->app['haljson']($this->getRepository()->view());
+        $page = intval($request->get('page', 1));
+        $limit = intval($request->get('limit', 20));
+
+        $results = $this->getRepository()->viewBy($page, $limit);
+        $count = $this->getRepository()->countBy();
+
+        $paginatedCollection = new PaginatedCollection(
+            new CollectionRepresentation(
+                $results,
+                'images' // embedded rel
+            ),
+            'images', // route
+            $request->query->all(), // route parameters
+            $page,       // page number
+            $limit,      // limit
+            ceil($count / $limit), // total pages
+            'page', // page route parameter name, optional, defaults to 'page'
+            'limit', // limit route parameter name, optional, defaults to 'limit'
+            false, // generate relative URIs, optional, defaults to `false`
+            $count,       // total collection size, optional, defaults to `null`
+            count($results)//  current element count
+        );
+        return $this->app['haljson']($paginatedCollection);
     }
 
     public function viewImage($id): Response
@@ -200,6 +227,7 @@ class ImageController implements ControllerProviderInterface
     /**
      * @param Request $request
      * @return Response
+     * @throws \Doctrine\ORM\OptimisticLockException
      */
     public function imageUpload(Request $request): Response
     {
@@ -387,6 +415,11 @@ class ImageController implements ControllerProviderInterface
         return new JsonResponse(json_decode($response));
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function uploadExternalImage(Request $request): Response
     {
         $imageLink = $request->get('link');

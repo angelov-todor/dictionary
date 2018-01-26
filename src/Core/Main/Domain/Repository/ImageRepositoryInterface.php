@@ -27,4 +27,16 @@ interface ImageRepositoryInterface
      * @return Image
      */
     public function getRandomImage(): Image;
+
+    /**
+     * @param int $page
+     * @param int $limit
+     * @return array
+     */
+    public function viewBy(int $page, int $limit): array;
+
+    /**
+     * @return int
+     */
+    public function countBy(): int;
 }
