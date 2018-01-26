@@ -10,6 +10,7 @@ use Core\Main\Domain\Repository\ImageMetadataRepositoryInterface;
 use Core\Main\Domain\Repository\ImageRepositoryInterface;
 use Core\Main\Domain\Repository\MetadataRepositoryInterface;
 use Ddd\Application\Service\ApplicationService;
+use Rollbar\Rollbar;
 
 class GenerateAdditionalMetadataService implements ApplicationService
 {
@@ -113,11 +114,13 @@ class GenerateAdditionalMetadataService implements ApplicationService
         foreach ($processors as $processor) {
             $metadata = $this->getMetadataRepository()->byName($processor['metadata']);
             if (!$metadata) {
+                Rollbar::info(sprintf("Metadata `%s` not found", $processor['metadata']));
                 continue;
             }
 
             $metadataValue = $this->getWordTools()->{$processor['name']}($request->getImageMetadataValue());
             if (!$metadataValue) {
+                Rollbar::info(sprintf("Metadata value for `%s` not generated", $processor['metadata']));
                 continue;
             }
             $imageMetadata = new ImageMetadata();
