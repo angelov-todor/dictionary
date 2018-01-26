@@ -83,8 +83,8 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
             ->setFirstResult($offset);
         if ($term) {
             $qb->leftJoin('i.imageMetadata', 'im')
-                ->setParameter('term', $this->makeLikeParam($term))
-                ->where('im.value');
+                ->where("imm.value LIKE :term ESCAPE '!'")
+                ->setParameter('term', $this->makeLikeParam($term));
         }
 
         return $qb->getQuery()->getResult();
@@ -102,8 +102,8 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
             ->select('count(i)');
         if ($term) {
             $qb->leftJoin('i.imageMetadata', 'im')
-                ->setParameter('term', $this->makeLikeParam($term))
-                ->where('im.value');
+                ->where("imm.value LIKE :term ESCAPE '!'")
+                ->setParameter('term', $this->makeLikeParam($term));
         }
 
         return intval($qb->getQuery()->getSingleScalarResult());
