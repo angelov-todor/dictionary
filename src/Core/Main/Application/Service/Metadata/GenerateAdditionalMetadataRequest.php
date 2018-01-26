@@ -6,7 +6,7 @@ namespace Core\Main\Application\Service\Metadata;
 class GenerateAdditionalMetadataRequest
 {
     /**
-     * @var int
+     * @var string
      */
     protected $imageId;
 
@@ -17,19 +17,19 @@ class GenerateAdditionalMetadataRequest
 
     /**
      * GenerateAdditionalMetadataRequest constructor.
-     * @param int $imageId
+     * @param string $imageId
      * @param string $imageMetadataValue
      */
-    public function __construct(int $imageId, string $imageMetadataValue)
+    public function __construct(string $imageId, string $imageMetadataValue)
     {
         $this->imageId = $imageId;
         $this->imageMetadataValue = $imageMetadataValue;
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getImageId(): int
+    public function getImageId(): string
     {
         return $this->imageId;
     }

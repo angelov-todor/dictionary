@@ -107,7 +107,8 @@ class GenerateAdditionalMetadataService implements ApplicationService
                 'metadata' => 'Римоформа'
             ],
         ];
-        $image = $this->getImageRepository()->ofId($request->getImageId());
+        Rollbar::debug(sprintf("Image id: `%s`", $request->getImageId()));
+        $image = $this->getImageRepository()->ofId(intval($request->getImageId()));
         if (!$image) {
             throw new ResourceNotFoundException("Image not found");
         }
