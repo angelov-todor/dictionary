@@ -13,7 +13,7 @@ class ImageMetadataAdded implements DomainEvent
     protected $occurredAt;
 
     /**
-     * @var int
+     * @var string
      */
     protected $imageId;
 
@@ -39,14 +39,14 @@ class ImageMetadataAdded implements DomainEvent
 
     /**
      * ImageMetadataAdded constructor.
-     * @param int $imageId
+     * @param string $imageId
      * @param int $imageMetadataId
      * @param int $metadataId
      * @param string $metadataName
      * @param string $imageMetadataValue
      */
     public function __construct(
-        int $imageId,
+        string $imageId,
         int $imageMetadataId,
         int $metadataId,
         string $metadataName,
@@ -69,9 +69,9 @@ class ImageMetadataAdded implements DomainEvent
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getImageId(): int
+    public function getImageId(): string
     {
         return $this->imageId;
     }
