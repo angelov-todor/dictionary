@@ -111,12 +111,12 @@ class GenerateAdditionalMetadataService implements ApplicationService
             throw new ResourceNotFoundException("Image not found");
         }
         foreach ($processors as $processor) {
-            $metadata = $this->getMetadataRepository()->byName($processor['name']);
+            $metadata = $this->getMetadataRepository()->byName($processor['metadata']);
             if (!$metadata) {
                 continue;
             }
 
-            $metadataValue = $this->getWordTools()->{$processor}($request->getImageMetadataValue());
+            $metadataValue = $this->getWordTools()->{$processor['name']}($request->getImageMetadataValue());
             if (!$metadataValue) {
                 continue;
             }
