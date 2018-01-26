@@ -84,6 +84,7 @@ class MetadataController implements ControllerProviderInterface
         $parent = $request->get('parent');
         $parentMetadata = null;
         if ($parent) {
+            /** @var Metadata $parentMetadata */
             $parentMetadata = $this->getRepository()->find($parent);
         }
         $metadata = new Metadata();
@@ -98,6 +99,7 @@ class MetadataController implements ControllerProviderInterface
 
     public function removeMetadata($id): Response
     {
+        /** @var Metadata $metadata */
         $metadata = $this->getRepository()->find($id);
         if ($metadata) {
             // TODO: this might have children

@@ -31,14 +31,16 @@ interface ImageRepositoryInterface
     /**
      * @param int $page
      * @param int $limit
+     * @param null|string $term
      * @return array
      */
-    public function viewBy(int $page, int $limit): array;
+    public function viewBy(int $page, int $limit, ?string $term): array;
 
     /**
+     * @param null|string $term
      * @return int
      */
-    public function countBy(): int;
+    public function countBy(?string $term): int;
 
     /**
      * @param int $id

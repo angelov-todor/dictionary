@@ -5,11 +5,14 @@ namespace Core\Main\Infrastructure\Domain\Model;
 
 use Core\Main\Domain\Model\Image;
 use Core\Main\Domain\Repository\ImageRepositoryInterface;
+use Core\Main\Infrastructure\Persistence\Doctrine\LikeQueryHelpers;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 
 class DoctrineImageRepository extends EntityRepository implements ImageRepositoryInterface
 {
+    use LikeQueryHelpers;
+
     /**
      * @return array
      */
@@ -68,28 +71,40 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
     /**
      * @param int $page
      * @param int $limit
+     * @param null|string $term
      * @return array
      */
-    public function viewBy(int $page, int $limit): array
+    public function viewBy(int $page, int $limit, ?string $term): array
     {
         $offset = ($page - 1) * $limit;
 
-        $qb = $this->createQueryBuilder('m')
+        $qb = $this->createQueryBuilder('i')
             ->setMaxResults($limit)
             ->setFirstResult($offset);
+        if ($term) {
+            $qb->leftJoin('i.imageMetadata', 'im')
+                ->setParameter('term', $this->makeLikeParam($term))
+                ->where('im.value');
+        }
 
         return $qb->getQuery()->getResult();
     }
 
     /**
+     * @param null|string $term
      * @return int
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function countBy(): int
+    public function countBy(?string $term): int
     {
-        $qb = $this->createQueryBuilder('m')
-            ->select('count(m)');
+        $qb = $this->createQueryBuilder('i')
+            ->select('count(i)');
+        if ($term) {
+            $qb->leftJoin('i.imageMetadata', 'im')
+                ->setParameter('term', $this->makeLikeParam($term))
+                ->where('im.value');
+        }
 
         return intval($qb->getQuery()->getSingleScalarResult());
     }

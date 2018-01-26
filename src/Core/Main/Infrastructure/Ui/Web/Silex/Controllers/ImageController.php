@@ -164,11 +164,12 @@ class ImageController implements ControllerProviderInterface
      */
     public function getImages(Request $request): Response
     {
+        $termFilter = $request->get('term');
         $page = intval($request->get('page', 1));
         $limit = intval($request->get('limit', 20));
 
-        $results = $this->getRepository()->viewBy($page, $limit);
-        $count = $this->getRepository()->countBy();
+        $results = $this->getRepository()->viewBy($page, $limit, $termFilter);
+        $count = $this->getRepository()->countBy($termFilter);
 
         $paginatedCollection = new PaginatedCollection(
             new CollectionRepresentation(

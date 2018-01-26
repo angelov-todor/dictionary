@@ -7,6 +7,7 @@ use Core\Main\Domain\Model\Metadata;
 use Core\Main\Domain\Repository\MetadataRepositoryInterface;
 use Core\Main\Infrastructure\Persistence\Doctrine\LikeQueryHelpers;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\OptimisticLockException;
 
 class DoctrineMetadataRepository extends EntityRepository implements MetadataRepositoryInterface
 {
@@ -15,6 +16,7 @@ class DoctrineMetadataRepository extends EntityRepository implements MetadataRep
     /**
      * @param Metadata $metadata
      * @return Metadata
+     * @throws OptimisticLockException
      */
     public function add(Metadata $metadata): Metadata
     {
@@ -24,6 +26,10 @@ class DoctrineMetadataRepository extends EntityRepository implements MetadataRep
         return $metadata;
     }
 
+    /**
+     * @param Metadata $metadata
+     * @throws OptimisticLockException
+     */
     public function remove(Metadata $metadata): void
     {
         $this->getEntityManager()->remove($metadata);
@@ -43,6 +49,12 @@ class DoctrineMetadataRepository extends EntityRepository implements MetadataRep
         return $qb->getQuery()->getResult();
     }
 
+    /**
+     * @param null|string $string
+     * @return int
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     public function countBy(?string $string): int
     {
         $qb = $this->createQueryBuilder('m')
