@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Core\Main\Infrastructure\Ui\Web\Silex;
 
 use Core\Main\Application\Service\Metadata\AddSourceMetadataService;
+use Core\Main\Application\Service\Metadata\GenerateAdditionalMetadataService;
 use Core\Main\Application\Service\Metadata\GenerateMetadataService;
 use Core\Main\Application\Service\User\NotifyPasswordResetLinkService;
 use Core\Main\Application\Service\User\NotifyUserValidationService;
@@ -11,6 +12,7 @@ use Core\Main\Domain\Event\AppendEventStoreSubscriber;
 use Core\Main\Domain\Model\StoredEvent;
 use Core\Main\Infrastructure\Persistence\Doctrine\EntityManagerProvider;
 use Core\Main\Infrastructure\Ui\DomainEventSubscriber\ImageCreatedSubscriber;
+use Core\Main\Infrastructure\Ui\DomainEventSubscriber\ImageMetadataAddedSubscriber;
 use Core\Main\Infrastructure\Ui\DomainEventSubscriber\PasswordResetEmailSubscriber;
 use Core\Main\Infrastructure\Ui\DomainEventSubscriber\UserValidateEmailSubscriber;
 use Core\Main\Infrastructure\Ui\Rollbar\RollbarProvider;
@@ -236,6 +238,11 @@ class Application
             new ImageCreatedSubscriber(
                 $app[GenerateMetadataService::class],
                 $app[AddSourceMetadataService::class]
+            )
+        );
+        $domainSubscribers[] = DomainEventPublisher::instance()->subscribe(
+            new ImageMetadataAddedSubscriber(
+                $app[GenerateAdditionalMetadataService::class]
             )
         );
 

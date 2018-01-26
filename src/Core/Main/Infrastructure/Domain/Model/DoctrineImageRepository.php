@@ -5,7 +5,6 @@ namespace Core\Main\Infrastructure\Domain\Model;
 
 use Core\Main\Domain\Model\Image;
 use Core\Main\Domain\Repository\ImageRepositoryInterface;
-use Doctrine\Common\Util\Debug;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 
@@ -93,5 +92,16 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
             ->select('count(m)');
 
         return intval($qb->getQuery()->getSingleScalarResult());
+    }
+
+    /**
+     * @param int $id
+     * @return Image|null
+     */
+    public function ofId(int $id): ?Image
+    {
+        /** @var Image $image */
+        $image = $this->find($id);
+        return $image;
     }
 }

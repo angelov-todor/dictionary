@@ -6,6 +6,7 @@ namespace Core\Main\Infrastructure\Ui\Web\Silex\Controllers;
 use Core\Main\Domain\Model\Image;
 use Core\Main\Domain\Model\ImageMetadata;
 use Core\Main\Domain\Model\ImageCreated;
+use Core\Main\Domain\Model\ImageMetadataAdded;
 use Core\Main\Domain\Model\Metadata;
 use Core\Main\Domain\Repository\ImageMetadataRepositoryInterface;
 use Core\Main\Domain\Repository\ImageRepositoryInterface;
@@ -320,7 +321,13 @@ class ImageController implements ControllerProviderInterface
             ->setValue(strval($request->get('value')));
 
         $this->getImageMetadataRepository()->add($imageMetadata);
-
+        DomainEventPublisher::instance()->publish(new ImageMetadataAdded(
+            $image->getId(),
+            $imageMetadata->getId(),
+            $imageMetadata->getMetadata()->getId(),
+            $imageMetadata->getMetadata()->getName(),
+            $imageMetadata->getValue()
+        ));
 
         return $this->app['haljson']($imageMetadata, Response::HTTP_CREATED);
     }

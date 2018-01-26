@@ -8,7 +8,9 @@ use Core\Main\Domain\Model\Dictionary\Word;
 use Core\Main\Domain\Repository\DictionaryRepositoryInterface;
 use Core\Main\Domain\Repository\WordRepositoryInterface;
 use Core\Main\Infrastructure\DataTransformer\PaginatedCollection;
+use Core\Main\Infrastructure\Domain\Model\DoctrineWordRepository;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Hateoas\Representation\CollectionRepresentation;
 use Silex\Application;
 use Silex\Api\ControllerProviderInterface;
@@ -46,18 +48,21 @@ class WordController implements ControllerProviderInterface
     }
 
     /**
-     * @return WordRepositoryInterface
+     * @return DoctrineWordRepository
      */
     protected function getRepository()
     {
         return $this->app[WordRepositoryInterface::class];
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function getWord($id): Response
     {
         /** @var Word $word */
         $word = $this->getRepository()->find($id);
-
         return $this->app['haljson']($word);
     }
 
@@ -139,6 +144,7 @@ class WordController implements ControllerProviderInterface
     /**
      * @param Request $request
      * @return Response
+     * @throws NonUniqueResultException
      */
     public function getRhymeforms(Request $request): Response
     {
@@ -167,6 +173,7 @@ class WordController implements ControllerProviderInterface
     /**
      * @param Request $request
      * @return Response
+     * @throws NonUniqueResultException
      */
     public function getRhymes(Request $request): Response
     {

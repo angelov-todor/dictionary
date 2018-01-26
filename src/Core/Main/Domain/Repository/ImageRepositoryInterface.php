@@ -39,4 +39,10 @@ interface ImageRepositoryInterface
      * @return int
      */
     public function countBy(): int;
+
+    /**
+     * @param int $id
+     * @return Image|null
+     */
+    public function ofId(int $id): ?Image;
 }

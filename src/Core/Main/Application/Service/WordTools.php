@@ -44,6 +44,7 @@ class WordTools
     /**
      * @param $words
      * @return string
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function rhymeform($words)
     {

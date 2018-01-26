@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Core\Main\Infrastructure\Ui\Web\Silex\Provider;
 
 use Core\Main\Application\Service\Metadata\AddSourceMetadataService;
+use Core\Main\Application\Service\Metadata\GenerateAdditionalMetadataService;
 use Core\Main\Application\Service\Metadata\GenerateMetadataService;
+use Core\Main\Application\Service\WordTools;
 use Core\Main\Domain\Model\Image;
 use Core\Main\Domain\Model\ImageMetadata;
 use Core\Main\Domain\Model\Metadata;
@@ -60,6 +62,18 @@ class ImageServicesProvider implements ServiceProviderInterface
         $app[AddSourceMetadataService::class] = function () use ($app) {
             return new TransactionalApplicationService(
                 new AddSourceMetadataService(
+                    $app[MetadataRepositoryInterface::class],
+                    $app[ImageRepositoryInterface::class],
+                    $app[ImageMetadataRepositoryInterface::class]
+                ),
+                $app['tx_session']
+            );
+        };
+
+        $app[GenerateAdditionalMetadataService::class] = function () use ($app) {
+            return new TransactionalApplicationService(
+                new GenerateAdditionalMetadataService(
+                    $app[WordTools::class],
                     $app[MetadataRepositoryInterface::class],
                     $app[ImageRepositoryInterface::class],
                     $app[ImageMetadataRepositoryInterface::class]
