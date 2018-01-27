@@ -92,7 +92,7 @@ class GenerateMetadataService implements ApplicationService
     public function execute($request = null)
     {
         try {
-            $metadata = $this->findMetadataByName('label');
+            $metadata = $this->findMetadataByName('Описание');
         } catch (\Exception $e) {
             // TODO: should we
             return;
