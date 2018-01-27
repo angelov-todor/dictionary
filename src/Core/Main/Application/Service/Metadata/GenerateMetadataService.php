@@ -104,11 +104,11 @@ class GenerateMetadataService implements ApplicationService
         $file = getcwd() . DIRECTORY_SEPARATOR . Image::IMAGE_LOCATION . DIRECTORY_SEPARATOR . $image->getSrc();
 
         $labelDetection = $this->getVisionService()->execute($file);
-        foreach ($labelDetection as $entity) {
+        foreach ($labelDetection as $text) {
             $imageMetadata = new ImageMetadata();
             $imageMetadata->setImage($image);
             $imageMetadata->setMetadata($metadata);
-            $imageMetadata->setValue($entity->description());
+            $imageMetadata->setValue($text);
             $this->getImageMetadataRepository()->add($imageMetadata);
         }
     }

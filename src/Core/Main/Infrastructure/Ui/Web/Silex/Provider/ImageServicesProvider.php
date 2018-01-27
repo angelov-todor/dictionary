@@ -13,6 +13,7 @@ use Core\Main\Domain\Model\Metadata;
 use Core\Main\Domain\Repository\ImageMetadataRepositoryInterface;
 use Core\Main\Domain\Repository\ImageRepositoryInterface;
 use Core\Main\Domain\Repository\MetadataRepositoryInterface;
+use Core\Main\Infrastructure\Services\GoogleTranslateService;
 use Core\Main\Infrastructure\Services\GoogleVisionService;
 use Ddd\Application\Service\TransactionalApplicationService;
 use Pimple\Container;
@@ -54,6 +55,14 @@ class ImageServicesProvider implements ServiceProviderInterface
 
         $app[GoogleVisionService::class] = function () use ($app) {
             return new GoogleVisionService(
+                $app['app-config']['google']['google_project_id'],
+                $app['app-config']['google']['google_key_file_path'],
+                $app[GoogleTranslateService::class]
+            );
+        };
+
+        $app[GoogleTranslateService::class] = function () use ($app) {
+            return new GoogleTranslateService(
                 $app['app-config']['google']['google_project_id'],
                 $app['app-config']['google']['google_key_file_path']
             );

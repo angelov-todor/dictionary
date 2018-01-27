@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Services;
 
+use Google\Cloud\Core\Exception\GoogleException;
 use Google\Cloud\Vision\Annotation;
 use Google\Cloud\Vision\VisionClient;
 
@@ -19,19 +20,34 @@ class GoogleVisionService
     protected $keyFilePath;
 
     /**
+     * @var GoogleTranslateService
+     */
+    protected $googleTranslate;
+
+    /**
      * GoogleVisionService constructor.
      * @param string $projectId
      * @param string $keyFilePath
+     * @param GoogleTranslateService $googleTranslate
      */
-    public function __construct(string $projectId, string $keyFilePath)
+    public function __construct(string $projectId, string $keyFilePath, GoogleTranslateService $googleTranslate)
     {
         $this->projectId = $projectId;
         $this->keyFilePath = $keyFilePath;
+        $this->googleTranslate = $googleTranslate;
+    }
+
+    /**
+     * @return GoogleTranslateService
+     */
+    protected function getGoogleTranslate(): GoogleTranslateService
+    {
+        return $this->googleTranslate;
     }
 
     /**
      * @param string $fileName The name of the image file to annotate
-     * @return Annotation\Entity[]|null
+     * @return []
      */
     public function execute($fileName)
     {
@@ -48,6 +64,11 @@ class GoogleVisionService
 
         # Performs label detection on the image file
         $labels = $vision->annotate($image)->labels();
-        return $labels;
+        // translate the labels
+        $translatedLabels = [];
+        foreach ($labels as $entity) {
+            $translatedLabels[] = $this->getGoogleTranslate()->execute($entity->description());
+        }
+        return $translatedLabels;
     }
 }
