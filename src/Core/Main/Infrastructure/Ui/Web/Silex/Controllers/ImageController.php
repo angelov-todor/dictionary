@@ -41,14 +41,14 @@ class ImageController implements ControllerProviderInterface
             'filter' => 'thumbnail',
             'width' => 120,
             'height' => 90,
-            'mode' => ImageInterface::THUMBNAIL_INSET,
+            'mode' => ImageInterface::THUMBNAIL_OUTBOUND,
             'allow_upscale' => true
         ],
         'large' => [
             'filter' => 'thumbnail',
             'width' => 640,
             'height' => 480,
-            'mode' => ImageInterface::THUMBNAIL_INSET,
+            'mode' => ImageInterface::THUMBNAIL_OUTBOUND,
             'allow_upscale' => true
         ],
     ];
