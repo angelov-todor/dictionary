@@ -6,8 +6,10 @@ namespace Core\Main\Infrastructure\Domain\Model;
 use Core\Main\Domain\Model\Metadata;
 use Core\Main\Domain\Repository\MetadataRepositoryInterface;
 use Core\Main\Infrastructure\Persistence\Doctrine\LikeQueryHelpers;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 class DoctrineMetadataRepository extends EntityRepository implements MetadataRepositoryInterface
 {
@@ -17,6 +19,7 @@ class DoctrineMetadataRepository extends EntityRepository implements MetadataRep
      * @param Metadata $metadata
      * @return Metadata
      * @throws OptimisticLockException
+     * @throws ORMException
      */
     public function add(Metadata $metadata): Metadata
     {
@@ -29,6 +32,7 @@ class DoctrineMetadataRepository extends EntityRepository implements MetadataRep
     /**
      * @param Metadata $metadata
      * @throws OptimisticLockException
+     * @throws ORMException
      */
     public function remove(Metadata $metadata): void
     {
@@ -44,7 +48,8 @@ class DoctrineMetadataRepository extends EntityRepository implements MetadataRep
             ->where("m.name LIKE :term ESCAPE '!'")
             ->setParameter('term', $this->makeLikeParam($string))
             ->setMaxResults($limit)
-            ->setFirstResult($offset);
+            ->setFirstResult($offset)
+            ->orderBy('m.name', Criteria::ASC);
 
         return $qb->getQuery()->getResult();
     }
@@ -52,7 +57,6 @@ class DoctrineMetadataRepository extends EntityRepository implements MetadataRep
     /**
      * @param null|string $string
      * @return int
-     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countBy(?string $string): int

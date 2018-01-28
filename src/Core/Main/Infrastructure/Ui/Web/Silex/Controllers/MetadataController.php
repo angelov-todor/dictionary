@@ -7,6 +7,7 @@ use Core\Main\Domain\Model\Metadata;
 use Core\Main\Domain\Repository\MetadataRepositoryInterface;
 use Core\Main\Infrastructure\DataTransformer\PaginatedCollection;
 use Core\Main\Infrastructure\Domain\Model\DoctrineMetadataRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Hateoas\Representation\CollectionRepresentation;
 use Silex\Application;
 use Silex\Api\ControllerProviderInterface;
@@ -48,6 +49,7 @@ class MetadataController implements ControllerProviderInterface
     /**
      * @param Request $request
      * @return Response
+     * @throws NonUniqueResultException
      */
     public function getMetadata(Request $request): Response
     {
@@ -77,6 +79,12 @@ class MetadataController implements ControllerProviderInterface
         return $this->app['haljson']($paginatedCollection);
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function addMetadata(Request $request): Response
     {
         $name = $request->get('name');
@@ -97,6 +105,12 @@ class MetadataController implements ControllerProviderInterface
         return $this->app['haljson']($metadata, Response::HTTP_CREATED);
     }
 
+    /**
+     * @param $id
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
     public function removeMetadata($id): Response
     {
         /** @var Metadata $metadata */
