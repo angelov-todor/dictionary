@@ -36,5 +36,11 @@ interface MetadataRepositoryInterface
      * @param string $name
      * @return Metadata|null
      */
-    public function byName(string $name):?Metadata;
+    public function byName(string $name): ?Metadata;
+
+    /**
+     * @param Metadata $metadata
+     * @return Metadata
+     */
+    public function update(Metadata $metadata): Metadata;
 }

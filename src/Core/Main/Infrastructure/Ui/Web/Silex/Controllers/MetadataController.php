@@ -41,6 +41,7 @@ class MetadataController implements ControllerProviderInterface
         $factory = $this->app['controllers_factory'];
         $factory->get('/metadata', [$this, 'getMetadata']);
         $factory->post('/metadata', [$this, 'addMetadata']);
+        $factory->put('/metadata/{id}', [$this, 'updateMetadata']);
         $factory->delete('/metadata/{id}', [$this, 'removeMetadata']);
 
         return $factory;
@@ -103,6 +104,34 @@ class MetadataController implements ControllerProviderInterface
         $this->getRepository()->add($metadata);
 
         return $this->app['haljson']($metadata, Response::HTTP_CREATED);
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return Response
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function updateMetadata($id, Request $request): Response
+    {
+        $name = $request->get('name');
+        $type = $request->get('type');
+        $parent = $request->get('parent');
+        $parentMetadata = null;
+        if ($parent) {
+            /** @var Metadata $parentMetadata */
+            $parentMetadata = $this->getRepository()->find($parent);
+        }
+        /** @var Metadata $metadata */
+        $metadata = $this->getRepository()->find($id);
+        $metadata->setName($name)->setType($type);
+        if ($parentMetadata) {
+            $metadata->setParent($parentMetadata);
+        }
+        $this->getRepository()->update($metadata);
+
+        return $this->app['haljson']($metadata, Response::HTTP_NO_CONTENT);
     }
 
     /**

@@ -79,4 +79,16 @@ class DoctrineMetadataRepository extends EntityRepository implements MetadataRep
         $metadata = $this->findOneBy(['name' => $name]);
         return $metadata;
     }
+
+    /**
+     * @param Metadata $metadata
+     * @return Metadata
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    public function update(Metadata $metadata): Metadata
+    {
+        $this->getEntityManager()->flush($metadata);
+        return $metadata;
+    }
 }
