@@ -31,4 +31,26 @@ class DoctrineUnitImageRepository extends EntityRepository implements UnitImageR
         $this->getEntityManager()->remove($unitImage);
         $this->getEntityManager()->flush($unitImage);
     }
+
+    /**
+     * @param string $id
+     * @return UnitImage|null
+     */
+    public function ofId(string $id): ? UnitImage
+    {
+        /** @var UnitImage $unitImage */
+        $unitImage = $this->find($id);
+        return $unitImage;
+    }
+
+    /**
+     * @param UnitImage $unitImage
+     * @return UnitImage
+     * @throws OptimisticLockException
+     */
+    public function update(UnitImage $unitImage): UnitImage
+    {
+        $this->getEntityManager()->flush($unitImage);
+        return $unitImage;
+    }
 }

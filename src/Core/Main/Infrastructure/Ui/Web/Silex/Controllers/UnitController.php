@@ -37,6 +37,7 @@ class UnitController implements ControllerProviderInterface
         $factory->get('/units', [$this, 'viewUnits']);
         $factory->get('/units/{id}', [$this, 'viewUnit']);
         $factory->delete('/units/{id}', [$this, 'deleteUnit']);
+        $factory->put('/unit_images/{id}', [$this, 'updateUnitImage']);
 
         return $factory;
     }
@@ -129,5 +130,19 @@ class UnitController implements ControllerProviderInterface
             count($results)//  current element count
         );
         return $this->app['haljson']($paginatedCollection);
+    }
+
+    public function updateUnitImage($id, Request $request): Response
+    {
+        $image = $request->get('image');
+        $imageId = $image['id'];
+        $unitImage = $this->getUnitImageRepository()->ofId($id);
+
+        $image = $this->getImageRepository()->ofId($imageId);
+
+        $unitImage->setImage($image);
+        $this->getUnitImageRepository()->update($unitImage);
+
+        return $this->app['haljson'](null, Response::HTTP_NO_CONTENT);
     }
 }

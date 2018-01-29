@@ -17,4 +17,16 @@ interface UnitImageRepositoryInterface
      * @param UnitImage $unitImage
      */
     public function remove(UnitImage $unitImage): void;
+
+    /**
+     * @param string $id
+     * @return UnitImage|null
+     */
+    public function ofId(string $id): ? UnitImage;
+
+    /**
+     * @param UnitImage $unitImage
+     * @return UnitImage
+     */
+    public function update(UnitImage $unitImage): UnitImage;
 }
