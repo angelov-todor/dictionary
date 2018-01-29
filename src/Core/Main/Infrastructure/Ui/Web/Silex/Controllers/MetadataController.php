@@ -91,13 +91,16 @@ class MetadataController implements ControllerProviderInterface
         $name = $request->get('name');
         $type = $request->get('type');
         $parent = $request->get('parent');
+        $values = $request->get('values');
         $parentMetadata = null;
         if ($parent) {
             /** @var Metadata $parentMetadata */
             $parentMetadata = $this->getRepository()->find($parent);
         }
         $metadata = new Metadata();
-        $metadata->setName($name)->setType($type);
+        $metadata->setName($name)
+            ->setType($type)
+            ->setValues($values);
         if ($parentMetadata) {
             $metadata->setParent($parentMetadata);
         }
@@ -118,6 +121,7 @@ class MetadataController implements ControllerProviderInterface
         $name = $request->get('name');
         $type = $request->get('type');
         $parent = $request->get('parent');
+        $values = $request->get('values');
         $parentMetadata = null;
         if ($parent) {
             /** @var Metadata $parentMetadata */
@@ -125,10 +129,16 @@ class MetadataController implements ControllerProviderInterface
         }
         /** @var Metadata $metadata */
         $metadata = $this->getRepository()->find($id);
-        $metadata->setName($name)->setType($type);
+        $metadata->setName($name)
+            ->setType($type)
+            ->setValues($values);
+        if ($metadata->getParent()) {
+            $metadata->setParent(null);
+        }
         if ($parentMetadata) {
             $metadata->setParent($parentMetadata);
         }
+
         $this->getRepository()->update($metadata);
 
         return $this->app['haljson']($metadata, Response::HTTP_NO_CONTENT);
