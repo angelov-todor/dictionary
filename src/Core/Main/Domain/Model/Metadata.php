@@ -39,6 +39,11 @@ class Metadata
     protected $parent;
 
     /**
+     * @var string
+     */
+    protected $values;
+
+    /**
      * @return int
      */
     public function getId(): int
@@ -100,6 +105,24 @@ class Metadata
     public function setParent(?Metadata $parent): Metadata
     {
         $this->parent = $parent;
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getValues(): ?string
+    {
+        return $this->values;
+    }
+
+    /**
+     * @param null|string $values
+     * @return Metadata
+     */
+    public function setValues(?string $values): Metadata
+    {
+        $this->values = $values;
         return $this;
     }
 }

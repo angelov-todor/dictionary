@@ -15,6 +15,10 @@ Core\Main\Domain\Model\Metadata:
     type:
       type: string
       length: 20
+    values:
+      type: string
+      length: 255
+      nullable: true
   manyToOne:
     parent:
       targetEntity: Core\Main\Domain\Model\Metadata
