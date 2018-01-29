@@ -18,6 +18,7 @@ Core\Main\Domain\Model\Metadata:
     values:
       type: string
       length: 255
+      column: `values`
       nullable: true
   manyToOne:
     parent:
