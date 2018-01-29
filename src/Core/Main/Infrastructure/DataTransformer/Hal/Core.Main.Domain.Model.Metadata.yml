@@ -10,6 +10,8 @@ Core\Main\Domain\Model\Metadata:
       exclude: false
     types:
       exclude: true
+    values:
+      exclude: false
   relations:
     -
       rel: self
