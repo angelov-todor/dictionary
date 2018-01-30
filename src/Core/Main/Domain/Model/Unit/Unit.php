@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Core\Main\Domain\Model\Unit;
 
+use Core\Main\Domain\Model\Test\CognitiveType;
 use Ramsey\Uuid\Uuid;
 
 class Unit
@@ -36,6 +37,16 @@ class Unit
      * @var Category[]
      */
     protected $categories;
+
+    /**
+     * @var CognitiveType
+     */
+    protected $cognitiveType;
+
+    /**
+     * @var null|CognitiveType
+     */
+    protected $cognitiveSubtype;
 
     /**
      * Unit constructor.
