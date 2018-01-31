@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Ui\Web\Silex\Provider;
 
-use Core\Main\Domain\Model\Unit\Category;
 use Core\Main\Domain\Model\Unit\Unit;
 use Core\Main\Domain\Model\Unit\UnitImage;
-use Core\Main\Domain\Repository\CategoryRepositoryInterface;
 use Core\Main\Domain\Repository\UnitImageRepositoryInterface;
 use Core\Main\Domain\Repository\UnitRepositoryInterface;
 use Pimple\Container;
@@ -26,10 +24,6 @@ class UnitServicesProvider implements ServiceProviderInterface
     {
         $app[UnitRepositoryInterface::class] = function () use ($app) {
             return $app['em']->getRepository(Unit::class);
-        };
-
-        $app[CategoryRepositoryInterface::class] = function () use ($app) {
-            return $app['em']->getRepository(Category::class);
         };
         $app[UnitImageRepositoryInterface::class] = function () use ($app) {
             return $app['em']->getRepository(UnitImage::class);

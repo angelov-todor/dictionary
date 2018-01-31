@@ -18,14 +18,14 @@ Core\Main\Domain\Model\Unit\Unit:
     unitImages:
       targetEntity: Core\Main\Domain\Model\Unit\UnitImage
       mappedBy: unit
-  manyToMany:
-    categories:
-      targetEntity: Core\Main\Domain\Model\Unit\Category
-      joinTable:
-        name: units_categories
-        joinColumns:
-          unit_id:
-            referencedColumnName: id
-        inverseJoinColumns:
-          category_id:
-            referencedColumnName: id
+  manyToOne:
+    cognitiveType:
+      targetEntity: Core\Main\Domain\Model\Test\CognitiveType
+      joinColumn:
+        name: cognitive_type_id
+        referencedColumnName: id
+    cognitiveSubtype:
+      targetEntity: Core\Main\Domain\Model\Test\CognitiveType
+      joinColumn:
+        name: cognitive_subtype_id
+        referencedColumnName: id

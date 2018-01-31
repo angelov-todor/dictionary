@@ -1,0 +1,19 @@
+Core\Main\Domain\Model\Test\CognitiveType:
+  type: entity
+  id:
+    id:
+      column: id
+      type: guid
+  table: cognitive_types
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\Test\DoctrineCognitiveTypeRepository
+  fields:
+    name:
+      type: string
+      length: 500
+  manyToOne:
+    parent:
+      targetEntity: Core\Main\Domain\Model\Test\CognitiveType
+      joinColumn:
+        name: parent_id
+        referencedColumnName: id
+

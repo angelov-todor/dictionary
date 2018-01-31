@@ -34,11 +34,6 @@ class Unit
     protected $unitImages;
 
     /**
-     * @var Category[]
-     */
-    protected $categories;
-
-    /**
      * @var CognitiveType
      */
     protected $cognitiveType;
@@ -136,20 +131,46 @@ class Unit
     }
 
     /**
-     * @return Category[]
+     * @return string
      */
-    public function getCategories(): array
+    public function getId(): string
     {
-        return $this->categories;
+        return $this->id;
     }
 
     /**
-     * @param Category[] $categories
+     * @return CognitiveType
+     */
+    public function getCognitiveType(): CognitiveType
+    {
+        return $this->cognitiveType;
+    }
+
+    /**
+     * @return CognitiveType|null
+     */
+    public function getCognitiveSubtype(): ?CognitiveType
+    {
+        return $this->cognitiveSubtype;
+    }
+
+    /**
+     * @param CognitiveType $cognitiveType
      * @return Unit
      */
-    public function setCategories(array $categories): Unit
+    public function setCognitiveType(CognitiveType $cognitiveType): Unit
     {
-        $this->categories = $categories;
+        $this->cognitiveType = $cognitiveType;
+        return $this;
+    }
+
+    /**
+     * @param CognitiveType|null $cognitiveSubtype
+     * @return Unit
+     */
+    public function setCognitiveSubtype(?CognitiveType $cognitiveSubtype): Unit
+    {
+        $this->cognitiveSubtype = $cognitiveSubtype;
         return $this;
     }
 }
