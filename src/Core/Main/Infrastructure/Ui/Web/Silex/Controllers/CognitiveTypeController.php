@@ -60,7 +60,7 @@ class CognitiveTypeController implements ControllerProviderInterface
         $paginatedCollection = new PaginatedCollection(
             new CollectionRepresentation(
                 $results,
-                'cognitive_type' // embedded rel
+                'cognitive_types' // embedded rel
             ),
             'cognitive-type', // route
             $request->query->all(), // route parameters
