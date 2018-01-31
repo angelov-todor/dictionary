@@ -16,6 +16,7 @@ use Core\Main\Infrastructure\Ui\DomainEventSubscriber\ImageMetadataAddedSubscrib
 use Core\Main\Infrastructure\Ui\DomainEventSubscriber\PasswordResetEmailSubscriber;
 use Core\Main\Infrastructure\Ui\DomainEventSubscriber\UserValidateEmailSubscriber;
 use Core\Main\Infrastructure\Ui\Rollbar\RollbarProvider;
+use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\CognitiveTypeController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\DictionaryController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\ImageController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\MetadataController;
@@ -29,6 +30,7 @@ use Core\Main\Infrastructure\Ui\Web\Silex\Provider\ImageServicesProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\ImagineServiceProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\StoredEventsServicesProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\SwiftMailerServiceProvider;
+use Core\Main\Infrastructure\Ui\Web\Silex\Provider\TestServicesProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\TwigServiceProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\UnitServicesProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\UserServicesProvider;
@@ -107,6 +109,7 @@ class Application
         $app->register(new StoredEventsServicesProvider());
         $app->register(new WordServicesProvider());
         $app->register(new UnitServicesProvider());
+        $app->register(new TestServicesProvider());
 
         $app['hateoas.config'] = $app['app-config']['hateoas.options'];
 
@@ -142,7 +145,6 @@ class Application
                 'stateless' => true,
             ],
         ];
-
 
         Serializer::instance()->setSerializer(
             SerializerBuilder::create()
@@ -203,6 +205,7 @@ class Application
         $app->mount('/', new WordController());
         $app->mount('/', new DictionaryController());
         $app->mount('/', new UnitController());
+        $app->mount('/', new CognitiveTypeController());
 
         // cors requests
         $app->after(function (Request $request, Response $response) {

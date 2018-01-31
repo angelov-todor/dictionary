@@ -1,0 +1,15 @@
+Core\Main\Domain\Model\Test\CognitiveType:
+  properties:
+    id:
+      exclude: false
+    name:
+      exclude: false
+    parent:
+      exclude: false
+  relations:
+    -
+      rel: self
+      href:
+        route: cognitive-type
+        parameters:
+          id: expr(object.getId())
