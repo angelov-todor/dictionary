@@ -6,6 +6,7 @@ namespace Core\Main\Infrastructure\Ui\Web\Silex\Controllers;
 use Core\Main\Domain\Model\Unit\Position;
 use Core\Main\Domain\Model\Unit\Unit;
 use Core\Main\Domain\Model\Unit\UnitImage;
+use Core\Main\Domain\Repository\CognitiveTypeRepositoryInterface;
 use Core\Main\Domain\Repository\ImageRepositoryInterface;
 use Core\Main\Domain\Repository\UnitImageRepositoryInterface;
 use Core\Main\Domain\Repository\UnitRepositoryInterface;
@@ -51,6 +52,14 @@ class UnitController implements ControllerProviderInterface
     }
 
     /**
+     * @return CognitiveTypeRepositoryInterface
+     */
+    protected function getCognitiveTypeRepository(): CognitiveTypeRepositoryInterface
+    {
+        return $this->app[CognitiveTypeRepositoryInterface::class];
+    }
+
+    /**
      * @return ImageRepositoryInterface
      */
     protected function getImageRepository(): ImageRepositoryInterface
@@ -71,7 +80,8 @@ class UnitController implements ControllerProviderInterface
         $text = $request->get('text');
         $cols = $request->get('cols');
         $rows = $request->get('rows');
-        $cognitiveType = $request->get('cognitive_type');
+        $cognitiveTypeId = $request->get('cognitive_type_id');
+        $cognitiveType = $this->getCognitiveTypeRepository()->ofId($cognitiveTypeId);
 
         $unit = new Unit(null, $text, $rows, $cols, $cognitiveType);
 
