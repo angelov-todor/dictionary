@@ -71,8 +71,9 @@ class UnitController implements ControllerProviderInterface
         $text = $request->get('text');
         $cols = $request->get('cols');
         $rows = $request->get('rows');
+        $cognitiveType = $request->get('cognitive_type');
 
-        $unit = new Unit(null, $text, $rows, $cols);
+        $unit = new Unit(null, $text, $rows, $cols, $cognitiveType);
 
         $this->getRepository()->add($unit);
 

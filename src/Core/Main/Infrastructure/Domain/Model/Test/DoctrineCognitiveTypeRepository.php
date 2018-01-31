@@ -5,6 +5,7 @@ namespace Core\Main\Infrastructure\Domain\Model\Test;
 
 use Core\Main\Domain\Model\Test\CognitiveType;
 use Core\Main\Domain\Repository\CognitiveTypeRepositoryInterface;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -29,6 +30,7 @@ class DoctrineCognitiveTypeRepository extends EntityRepository implements Cognit
 
         $qb = $this->createQueryBuilder('c')
             ->setMaxResults($limit)
+            ->orderBy('c.name', Criteria::ASC)
             ->setFirstResult($offset);
 
         return $qb->getQuery()->getResult();

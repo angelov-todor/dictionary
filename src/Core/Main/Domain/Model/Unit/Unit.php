@@ -49,13 +49,15 @@ class Unit
      * @param string $text
      * @param int $rows
      * @param int $cols
+     * @param CognitiveType $cognitiveType
      */
-    public function __construct(?string $id, string $text, int $rows, int $cols)
+    public function __construct(?string $id, string $text, int $rows, int $cols, CognitiveType $cognitiveType)
     {
         $this->id = $id ?? Uuid::uuid4()->toString();
         $this->setText($text)
             ->setRows($rows)
-            ->setCols($cols);
+            ->setCols($cols)
+            ->setCognitiveType($cognitiveType);
     }
 
     /**
