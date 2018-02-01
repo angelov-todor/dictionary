@@ -16,6 +16,7 @@ use Core\Main\Infrastructure\Ui\DomainEventSubscriber\ImageMetadataAddedSubscrib
 use Core\Main\Infrastructure\Ui\DomainEventSubscriber\PasswordResetEmailSubscriber;
 use Core\Main\Infrastructure\Ui\DomainEventSubscriber\UserValidateEmailSubscriber;
 use Core\Main\Infrastructure\Ui\Rollbar\RollbarProvider;
+use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\CognitiveSkillController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\CognitiveTypeController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\DictionaryController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\ImageController;
@@ -206,6 +207,7 @@ class Application
         $app->mount('/', new DictionaryController());
         $app->mount('/', new UnitController());
         $app->mount('/', new CognitiveTypeController());
+        $app->mount('/', new CognitiveSkillController());
 
         // cors requests
         $app->after(function (Request $request, Response $response) {

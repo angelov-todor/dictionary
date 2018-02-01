@@ -25,6 +25,11 @@ class Test
     protected $units;
 
     /**
+     * @var CognitiveSkill
+     */
+    protected $cognitiveSkill;
+
+    /**
      * @var User
      */
     protected $creator;
@@ -34,14 +39,16 @@ class Test
      * @param string $id
      * @param string $name
      * @param Unit[] $units
+     * @param CognitiveSkill $cognitiveSkill
      * @param User $creator
      */
-    public function __construct(?string $id, string $name, array $units, User $creator)
+    public function __construct(?string $id, string $name, array $units, CognitiveSkill $cognitiveSkill, User $creator)
     {
         $this->id = $id ?? Uuid::uuid4()->toString();
         $this->name = $name;
         $this->units = $units;
         $this->creator = $creator;
+        $this->cognitiveSkill = $cognitiveSkill;
     }
 
     /**
@@ -83,6 +90,24 @@ class Test
     public function addUnit(Unit $unit): Test
     {
         $this->units[] = $unit;
+        return $this;
+    }
+
+    /**
+     * @return CognitiveSkill
+     */
+    public function getCognitiveSkill(): CognitiveSkill
+    {
+        return $this->cognitiveSkill;
+    }
+
+    /**
+     * @param CognitiveSkill $cognitiveSkill
+     * @return Test
+     */
+    public function setCognitiveSkill(CognitiveSkill $cognitiveSkill): Test
+    {
+        $this->cognitiveSkill = $cognitiveSkill;
         return $this;
     }
 }

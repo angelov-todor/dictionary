@@ -21,3 +21,9 @@ Core\Main\Domain\Model\Test\Test:
         inverseJoinColumns:
           unit_id:
             referencedColumnName: id
+  manyToOne:
+    cognitiveSkill:
+      targetEntity: Core\Main\Domain\Model\Test\CognitiveSkill
+      joinColumn:
+        name: cognitive_skill_id
+        referencedColumnName: id

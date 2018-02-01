@@ -1,0 +1,13 @@
+Core\Main\Domain\Model\Test\CognitiveSkill:
+  type: entity
+  id:
+    id:
+      column: id
+      type: guid
+  table: cognitive_skills
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\Test\DoctrineCognitiveSkillRepository
+  fields:
+    name:
+      type: string
+      length: 500
+

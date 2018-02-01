@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Ui\Web\Silex\Provider;
 
+use Core\Main\Domain\Model\Test\CognitiveSkill;
 use Core\Main\Domain\Model\Test\CognitiveType;
+use Core\Main\Domain\Repository\CognitiveSkillRepositoryInterface;
 use Core\Main\Domain\Repository\CognitiveTypeRepositoryInterface;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
@@ -22,6 +24,9 @@ class TestServicesProvider implements ServiceProviderInterface
     {
         $app[CognitiveTypeRepositoryInterface::class] = function () use ($app) {
             return $app['em']->getRepository(CognitiveType::class);
+        };
+        $app[CognitiveSkillRepositoryInterface::class] = function () use ($app) {
+            return $app['em']->getRepository(CognitiveSkill::class);
         };
     }
 }
