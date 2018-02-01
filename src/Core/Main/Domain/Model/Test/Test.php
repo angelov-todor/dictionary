@@ -30,6 +30,11 @@ class Test
     protected $cognitiveSkill;
 
     /**
+     * @var null|Methodology
+     */
+    protected $methodology;
+
+    /**
      * @var User
      */
     protected $creator;
@@ -40,15 +45,23 @@ class Test
      * @param string $name
      * @param Unit[] $units
      * @param CognitiveSkill $cognitiveSkill
+     * @param null|Methodology $methodology
      * @param User $creator
      */
-    public function __construct(?string $id, string $name, array $units, CognitiveSkill $cognitiveSkill, User $creator)
-    {
+    public function __construct(
+        ?string $id,
+        string $name,
+        array $units,
+        CognitiveSkill $cognitiveSkill,
+        ?Methodology $methodology,
+        User $creator
+    ) {
         $this->id = $id ?? Uuid::uuid4()->toString();
         $this->name = $name;
         $this->units = $units;
         $this->creator = $creator;
         $this->cognitiveSkill = $cognitiveSkill;
+        $this->methodology = $methodology;
     }
 
     /**
@@ -108,6 +121,24 @@ class Test
     public function setCognitiveSkill(CognitiveSkill $cognitiveSkill): Test
     {
         $this->cognitiveSkill = $cognitiveSkill;
+        return $this;
+    }
+
+    /**
+     * @return Methodology|null
+     */
+    public function getMethodology(): ?Methodology
+    {
+        return $this->methodology;
+    }
+
+    /**
+     * @param Methodology|null $methodology
+     * @return Test
+     */
+    public function setMethodology(?Methodology $methodology): Test
+    {
+        $this->methodology = $methodology;
         return $this;
     }
 }

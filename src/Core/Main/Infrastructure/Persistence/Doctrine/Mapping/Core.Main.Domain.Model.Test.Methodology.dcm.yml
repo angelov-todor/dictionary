@@ -1,0 +1,13 @@
+Core\Main\Domain\Model\Test\Methodology:
+  type: entity
+  id:
+    id:
+      column: id
+      type: guid
+  table: methodologies
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\Test\DoctrineMethodologyRepository
+  fields:
+    name:
+      type: string
+      length: 250
+

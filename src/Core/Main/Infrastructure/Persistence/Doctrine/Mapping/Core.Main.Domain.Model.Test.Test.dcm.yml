@@ -27,3 +27,8 @@ Core\Main\Domain\Model\Test\Test:
       joinColumn:
         name: cognitive_skill_id
         referencedColumnName: id
+    methodology:
+      targetEntity: Core\Main\Domain\Model\Test\Methodology
+      joinColumn:
+        name: methodology_id
+        referencedColumnName: id
