@@ -10,6 +10,30 @@ Core\Main\Domain\Model\Test\Test:
     name:
       type: string
       length: 255
+    gradingScale:
+      type: string
+      length: 255
+      column: grading_scale
+    minAge:
+      type: integer
+      column: min_age
+      nullable: true
+    maxAge:
+      type: integer
+      column: max_age
+      nullable: true
+    pointsRequired:
+      type: integer
+      column: points_required
+      nullable: true
+    timeToConduct:
+      type: integer
+      column: time_to_conduct
+      nullable: true
+    notes:
+      type: string
+      lenght: 500
+      nullable: true
   manyToMany:
     units:
       targetEntity: Core\Main\Domain\Model\Unit\Unit
@@ -31,4 +55,9 @@ Core\Main\Domain\Model\Test\Test:
       targetEntity: Core\Main\Domain\Model\Test\Methodology
       joinColumn:
         name: methodology_id
+        referencedColumnName: id
+    creator:
+      targetEntity: Core\Main\Domain\Model\User\User
+      joinColumn:
+        name: creator_id
         referencedColumnName: id

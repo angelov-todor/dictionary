@@ -25,6 +25,7 @@ use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\MethodologyController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\ResetPasswordController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\IdentityController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\StoredEventController;
+use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\TestController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\UnitController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\UserController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\WordController;
@@ -210,6 +211,7 @@ class Application
         $app->mount('/', new CognitiveTypeController());
         $app->mount('/', new CognitiveSkillController());
         $app->mount('/', new MethodologyController());
+        $app->mount('/', new TestController());
 
         // cors requests
         $app->after(function (Request $request, Response $response) {
