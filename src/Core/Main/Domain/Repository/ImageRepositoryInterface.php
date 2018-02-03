@@ -24,9 +24,10 @@ interface ImageRepositoryInterface
     public function remove(Image $image): void;
 
     /**
+     * @param string $criteria
      * @return Image
      */
-    public function getRandomImage(): Image;
+    public function getImageByCriteria(string $criteria): Image;
 
     /**
      * @param int $page

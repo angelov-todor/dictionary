@@ -247,7 +247,7 @@ class ImageController implements ControllerProviderInterface
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
-        // TODO: check for valid extensions
+
         $uuidName = $this->getToken(40) . '.' . $ext;
         $location = Image::IMAGE_LOCATION . DIRECTORY_SEPARATOR . $uuidName;
         $file = getcwd() . DIRECTORY_SEPARATOR . $location;

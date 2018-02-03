@@ -48,7 +48,7 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getRandomImage(): Image
+    public function getImageByCriteria(string $criteria): Image
     {
         $qb = $this->createQueryBuilder('i')
             ->select('count(i)');

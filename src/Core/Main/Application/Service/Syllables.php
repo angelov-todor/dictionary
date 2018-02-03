@@ -172,7 +172,7 @@ class Syllables extends Word
             }
 
             if (empty($groupConsonants)) {
-                //second vowel is found and no consonants in between
+                //  second vowel is found and no consonants in between
                 $output .= self::DELIMITER . $current;
             } else {
                 if ($firstVowel && $secondVowel) {

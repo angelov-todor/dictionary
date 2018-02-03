@@ -78,18 +78,20 @@ class UnitController implements ControllerProviderInterface
     public function generateUnit(Request $request): Response
     {
         $text = $request->get('text');
-        $cols = $request->get('cols');
+        $columns = $request->get('cols');
         $rows = $request->get('rows');
+        $criteria = $request->get('criteria');
+
         $cognitiveTypeId = $request->get('cognitive_type_id');
         $cognitiveType = $this->getCognitiveTypeRepository()->ofId($cognitiveTypeId);
 
-        $unit = new Unit(null, $text, $rows, $cols, $cognitiveType);
+        $unit = new Unit(null, $text, $rows, $columns, $cognitiveType);
 
         $this->getRepository()->add($unit);
 
-        for ($i = 0; $i < $cols; $i++) {
+        for ($i = 0; $i < $columns; $i++) {
             for ($j = 0; $j < $rows; $j++) {
-                $image = $this->getImageRepository()->getRandomImage();
+                $image = $this->getImageRepository()->getImageByCriteria($criteria);
                 $unitImage = new UnitImage(null, $image, new Position($i, $j), $unit);
                 $this->getUnitImageRepository()->add($unitImage);
             }

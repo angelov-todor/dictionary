@@ -18,7 +18,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class TestController implements ControllerProviderInterface
 {
-
     /**
      * @return User
      */

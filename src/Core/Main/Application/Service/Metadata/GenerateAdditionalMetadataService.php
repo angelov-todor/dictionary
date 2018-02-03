@@ -94,18 +94,9 @@ class GenerateAdditionalMetadataService implements ApplicationService
     public function execute($request = null): void
     {
         $processors = [
-            [
-                'name' => 'syllables',
-                'metadata' => 'Сричкоделение'
-            ],
-            [
-                'name' => 'phonemes',
-                'metadata' => 'Фонеми'
-            ],
-            [
-                'name' => 'rhymeform',
-                'metadata' => 'Римоформа'
-            ],
+            ['name' => 'syllables', 'metadata' => 'Сричкоделение'],
+            ['name' => 'phonemes', 'metadata' => 'Фонеми'],
+            ['name' => 'rhymeform', 'metadata' => 'Римоформа'],
         ];
         Rollbar::debug(sprintf("Image id: `%s`", $request->getImageId()));
         $image = $this->getImageRepository()->ofId(intval($request->getImageId()));
