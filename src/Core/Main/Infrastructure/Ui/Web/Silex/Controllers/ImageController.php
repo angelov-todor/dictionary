@@ -8,6 +8,7 @@ use Core\Main\Domain\Model\ImageMetadata;
 use Core\Main\Domain\Model\ImageCreated;
 use Core\Main\Domain\Model\ImageMetadataAdded;
 use Core\Main\Domain\Model\Metadata;
+use Core\Main\Domain\Model\User\User;
 use Core\Main\Domain\Repository\ImageMetadataRepositoryInterface;
 use Core\Main\Domain\Repository\ImageRepositoryInterface;
 use Core\Main\Domain\Repository\MetadataRepositoryInterface;
@@ -52,6 +53,17 @@ class ImageController implements ControllerProviderInterface
             'allow_upscale' => true
         ],
     ];
+
+    /**
+     * @return User
+     */
+    protected function getUserContext(): User
+    {
+        /* @var $userToken \Core\Main\Infrastructure\Ui\Web\Silex\User\User */
+        $userToken = $this->app['security.token_storage']->getToken()->getUser();
+
+        return $userToken->getDomainUser();
+    }
 
     /**
      * @param Application $app
@@ -252,7 +264,7 @@ class ImageController implements ControllerProviderInterface
         $location = Image::IMAGE_LOCATION . DIRECTORY_SEPARATOR . $uuidName;
         $file = getcwd() . DIRECTORY_SEPARATOR . $location;
 
-        $image = new Image();
+        $image = new Image($this->getUserContext());
         $this->base64ToJpeg($data, $file);
         $image->setSrc($uuidName);
         $this->getRepository()->add($image);
@@ -438,7 +450,7 @@ class ImageController implements ControllerProviderInterface
         $file = getcwd() . DIRECTORY_SEPARATOR . $location;
 
         file_put_contents($file, file_get_contents($imageLink));
-        $image = new Image();
+        $image = new Image($this->getUserContext());
         $image->setSrc($uuidName);
         $this->getRepository()->add($image);
 

@@ -21,31 +21,16 @@ class UserCreateRequest
     protected $locale;
 
     /**
-     * @var string
-     */
-    protected $currency;
-
-    /**
      * UserCreateRequest constructor.
      * @param string $email
      * @param string $password
      * @param string $locale
-     * @param string $currency
      */
-    public function __construct(string $email, string $password, string $locale, string $currency)
+    public function __construct(string $email, string $password, string $locale)
     {
         $this->email = $email;
         $this->password = $password;
         $this->locale = $locale;
-        $this->currency = $currency;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCurrency(): string
-    {
-        return $this->currency;
     }
 
     /**

@@ -7,6 +7,9 @@ Core\Main\Domain\Model\Unit\Unit:
   table: units
   repositoryClass: Core\Main\Infrastructure\Domain\Model\Unit\DoctrineUnitRepository
   fields:
+    name:
+      type: string
+      length: 255
     text:
       type: string
       length: 255
@@ -14,6 +17,13 @@ Core\Main\Domain\Model\Unit\Unit:
       type: integer
     cols:
       type: integer
+    type:
+      type: string
+      length: 20
+    timeToConduct:
+      type: integer
+      column: time_to_conduct
+      nullable: true
   oneToMany:
     unitImages:
       targetEntity: Core\Main\Domain\Model\Unit\UnitImage

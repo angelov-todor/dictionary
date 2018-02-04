@@ -11,7 +11,16 @@ Core\Main\Domain\Model\Image:
   fields:
     src:
       type: string
+    createdAt:
+      type: datetime
+      column: created_at
   oneToMany:
     imageMetadata:
       targetEntity: Core\Main\Domain\Model\ImageMetadata
       mappedBy: image
+  manyToOne:
+    creator:
+      targetEntity: Core\Main\Domain\Model\User\User
+      joinColumn:
+        name: creator_id
+        referencedColumnName: id

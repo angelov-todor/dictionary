@@ -28,4 +28,16 @@ interface UserRepositoryInterface
      * @return User
      */
     public function ofId(string $id): ?User;
+
+    /**
+     * @param int $page
+     * @param int $limit
+     * @return array
+     */
+    public function viewBy(int $page, int $limit): array;
+
+    /**
+     * @return int
+     */
+    public function countBy(): int;
 }

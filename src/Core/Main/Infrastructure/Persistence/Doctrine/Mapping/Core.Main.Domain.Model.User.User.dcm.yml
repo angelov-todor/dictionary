@@ -25,8 +25,3 @@ Core\Main\Domain\Model\User\User:
     locale:
       type: string
       nullable: true
-    currency:
-      type: string
-      length: 20
-      options:
-        default: 'EUR'

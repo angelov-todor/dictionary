@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Core\Main\Domain\Model;
 
+use Core\Main\Domain\Model\User\User;
+
 class Image
 {
     const IMAGE_LOCATION = 'assets';
@@ -18,9 +20,47 @@ class Image
     protected $src;
 
     /**
+     * @var User
+     */
+    protected $creator;
+
+    /**
+     * @var \DateTime
+     */
+    protected $createdAt;
+
+    /**
      * @var ImageMetadata[]
      */
     protected $imageMetadata = [];
+
+    /**
+     * Image constructor.
+     * @param User $user
+     */
+    public function __construct(User $user)
+    {
+        $this->createdAt = new \DateTime();
+        $this->setCreator($user);
+    }
+
+    /**
+     * @param User $creator
+     * @return Image
+     */
+    public function setCreator(User $creator): Image
+    {
+        $this->creator = $creator;
+        return $this;
+    }
+
+    /**
+     * @return User
+     */
+    public function getCreator(): User
+    {
+        return $this->creator;
+    }
 
     /**
      * @return int
@@ -80,6 +120,14 @@ class Image
             $this->imageMetadata->removeElement($iMeta);
         }
         return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getCreatedAt(): \DateTime
+    {
+        return $this->createdAt;
     }
 
     /**

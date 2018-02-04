@@ -57,7 +57,7 @@ class UserCreateService implements ApplicationService
         $password = new Password($this->encryptionService);
         $password->setPassword($request->getPassword());
 
-        $user = User::create($email, $password, $request->getLocale(), $request->getCurrency());
+        $user = User::create($email, $password, $request->getLocale());
 
         $this->repository->add($user);
 

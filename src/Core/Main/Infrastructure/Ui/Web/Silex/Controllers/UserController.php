@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace Core\Main\Infrastructure\Ui\Web\Silex\Controllers;
 
 use Core\Main\Application\Helper\Locale;
+use Core\Main\Domain\Repository\UserRepositoryInterface;
+use Core\Main\Infrastructure\DataTransformer\PaginatedCollection;
+use Hateoas\Representation\CollectionRepresentation;
 use Silex\Application;
 use Silex\Api\ControllerProviderInterface;
 use Silex\ControllerCollection;
@@ -32,8 +35,17 @@ class UserController implements ControllerProviderInterface
         $factory = $this->app['controllers_factory'];
         $factory->post('/users', [$this, 'createUser']);
         $factory->get('/users/{id}', [$this, 'getUser']);
+        $factory->get('/users', [$this, 'getUsers']);
 
         return $factory;
+    }
+
+    /**
+     * @return UserRepositoryInterface
+     */
+    protected function getRepository(): UserRepositoryInterface
+    {
+        return $this->app[UserRepositoryInterface::class];
     }
 
     /**
@@ -57,11 +69,42 @@ class UserController implements ControllerProviderInterface
             new UserCreateRequest(
                 $request->get('email', ''),
                 $request->get('password', ''),
-                $request->get('locale', Locale::DEFAULT_LOCALE),
-                $request->get('currency', Locale::DEFAULT_CURRENCY)
+                $request->get('locale', Locale::DEFAULT_LOCALE)
             )
         );
 
         return $this->app['haljson']($user, Response::HTTP_CREATED);
     }
+
+    /**
+     * @param Request $request
+     * @return Response
+     */
+    public function getUsers(Request $request): Response
+    {
+        $page = intval($request->get('page', 1));
+        $limit = intval($request->get('limit', 20));
+
+        $results = $this->getRepository()->viewBy($page, $limit);
+        $count = $this->getRepository()->countBy();
+
+        $paginatedCollection = new PaginatedCollection(
+            new CollectionRepresentation(
+                $results,
+                'users' // embedded rel
+            ),
+            'users', // route
+            $request->query->all(), // route parameters
+            $page,       // page number
+            $limit,      // limit
+            ceil($count / $limit), // total pages
+            'page', // page route parameter name, optional, defaults to 'page'
+            'limit', // limit route parameter name, optional, defaults to 'limit'
+            false, // generate relative URIs, optional, defaults to `false`
+            $count,       // total collection size, optional, defaults to `null`
+            count($results)//  current element count
+        );
+        return $this->app['haljson']($paginatedCollection);
+    }
+
 }

@@ -8,10 +8,21 @@ use Ramsey\Uuid\Uuid;
 
 class Unit
 {
+    const TYPE_TRUE_FALSE = 'true_false;';
+    const TYPE_SHORT_ANSWER = 'short_answer';
+    const TYPE_ESSAY = 'essay';
+    const TYPE_MULTI_CHOICE = 'multi_choice';
+    const TYPE_BLANKS_FILL = 'blanks_fill';
+
     /**
      * @var string
      */
     protected $id;
+
+    /**
+     * @var string
+     */
+    protected $name;
 
     /**
      * @var string
@@ -29,6 +40,11 @@ class Unit
     protected $rows;
 
     /**
+     * @var string
+     */
+    protected $type = self::TYPE_MULTI_CHOICE;
+
+    /**
      * @var UnitImage[]
      */
     protected $unitImages;
@@ -44,20 +60,51 @@ class Unit
     protected $cognitiveSubtype;
 
     /**
+     * @var int
+     */
+    protected $timeToConduct = 0;
+
+    /**
      * Unit constructor.
      * @param null|string $id
+     * @param string $name
      * @param string $text
      * @param int $rows
      * @param int $cols
      * @param CognitiveType $cognitiveType
      */
-    public function __construct(?string $id, string $text, int $rows, int $cols, CognitiveType $cognitiveType)
-    {
+    public function __construct(
+        ?string $id,
+        string $name,
+        string $text,
+        int $rows,
+        int $cols,
+        CognitiveType $cognitiveType
+    ) {
         $this->id = $id ?? Uuid::uuid4()->toString();
-        $this->setText($text)
+        $this->setName($name)
+            ->setText($text)
             ->setRows($rows)
             ->setCols($cols)
             ->setCognitiveType($cognitiveType);
+    }
+
+    /**
+     * @param string $name
+     * @return Unit
+     */
+    public function setName(string $name): Unit
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
     /**
@@ -66,6 +113,24 @@ class Unit
     public function getText(): string
     {
         return $this->text;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimeToConduct(): int
+    {
+        return $this->timeToConduct;
+    }
+
+    /**
+     * @param int $timeToConduct
+     * @return Unit
+     */
+    public function setTimeToConduct(int $timeToConduct): Unit
+    {
+        $this->timeToConduct = $timeToConduct;
+        return $this;
     }
 
     /**

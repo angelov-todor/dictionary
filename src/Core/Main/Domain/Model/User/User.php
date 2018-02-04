@@ -11,6 +11,9 @@ use Assert\Assertion;
 class User
 {
     const ROLE_USER = 'ROLE_USER';
+    const ROLE_ADMIN = 'ROLE_ADMIN';
+    const ROLE_CREATOR = 'ROLE_CREATOR';
+
     /**
      * @var string
      */
@@ -50,11 +53,6 @@ class User
      * @var string
      */
     private $locale;
-
-    /**
-     * @var string
-     */
-    protected $currency;
 
     /**
      * User constructor.
@@ -245,44 +243,18 @@ class User
     }
 
     /**
-     * @return string
-     */
-    public function getCurrency(): string
-    {
-        return $this->currency;
-    }
-
-    /**
-     * @param string $currency
-     * @return User
-     * @throws AssertionFailedException
-     */
-    public function setCurrency(string $currency): User
-    {
-        Assertion::true(
-            Locale::isValidaCurrency($currency),
-            'Value "%s" is not valid currency.',
-            'currency'
-        );
-        $this->currency = $currency;
-        return $this;
-    }
-
-    /**
      * @param string $email
      * @param Password $password
      * @param string $locale
-     * @param string $currency
      * @return User
      *
      * @throws AssertionFailedException
      */
-    public static function create(string $email, Password $password, string $locale, string $currency): User
+    public static function create(string $email, Password $password, string $locale): User
     {
         $user = new User(null, $email, $password);
-        $user->setLocale($locale);
-        $user->setCurrency($currency);
-        $user->setRoles([self::ROLE_USER]);
+        $user->setLocale($locale)
+            ->setRoles([self::ROLE_USER]);
 
         return $user;
     }
