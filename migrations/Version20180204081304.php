@@ -22,7 +22,7 @@ class Version20180204081304 extends AbstractMigration
         );
 
         $this->addSql('ALTER TABLE images ADD creator_id CHAR(36) DEFAULT NULL COMMENT \'(DC2Type:guid)\',
-                            ADD created_at DATETIME NOT NULL');
+                            ADD created_at DATETIME DEFAULT NULL');
         $this->addSql('ALTER TABLE images ADD CONSTRAINT FK_E01FBE6A61220EA6 FOREIGN KEY (creator_id) REFERENCES users (id)');
         $this->addSql('CREATE INDEX IDX_E01FBE6A61220EA6 ON images (creator_id)');
         $this->addSql('ALTER TABLE units ADD name VARCHAR(255) NOT NULL,
