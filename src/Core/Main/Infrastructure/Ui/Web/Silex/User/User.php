@@ -119,12 +119,4 @@ class User implements UserInterface
     {
         return $this->domainUser->getLocale();
     }
-
-    /**
-     * @return string
-     */
-    public function getCurrency(): string
-    {
-        return $this->domainUser->getCurrency();
-    }
 }

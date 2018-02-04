@@ -15,9 +15,6 @@ Core\Main\Domain\Model\User\User:
     locale:
       type: string
       exclude: false
-    currency:
-      type: string
-      exclude: false
   relations:
     -
       rel: self

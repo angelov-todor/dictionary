@@ -9,7 +9,6 @@ class Locale
      * @var string The default locale to use
      */
     const DEFAULT_LOCALE = 'en-GB';
-    const DEFAULT_CURRENCY = 'EUR';
 
     /**
      * @var array
@@ -268,23 +267,6 @@ class Locale
         'es',
         'fr'
     ];
-
-    /**
-     * @var array
-     */
-    protected static $currencies = [
-        'EUR',
-        'GBP'
-    ];
-
-    /**
-     * @param string $currency
-     * @return bool
-     */
-    public static function isValidaCurrency(string $currency): bool
-    {
-        return in_array($currency, self::$currencies);
-    }
 
     /**
      * @param string $locale

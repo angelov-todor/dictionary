@@ -109,7 +109,6 @@ class JwtEncodeService
         if ($user instanceof User) {
             $payload['user_id'] = $user->getId();
             $payload['locale'] = $user->getLocale();
-            $payload['currency'] = $user->getCurrency();
         }
 
         return JWT::encode(
