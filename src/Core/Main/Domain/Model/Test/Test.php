@@ -150,6 +150,17 @@ class Test
     }
 
     /**
+     * @param Unit $unit
+     * @return Test
+     */
+    public function addUnit(Unit $unit): Test
+    {
+
+        $this->units[] = $unit;
+        return $this;
+    }
+
+    /**
      * @return CognitiveSkill
      */
     public function getCognitiveSkill(): CognitiveSkill

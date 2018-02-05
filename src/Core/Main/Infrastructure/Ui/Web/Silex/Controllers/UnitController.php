@@ -77,16 +77,18 @@ class UnitController implements ControllerProviderInterface
 
     public function generateUnit(Request $request): Response
     {
-        $name = $request->get('name','');
+        $name = $request->get('name', '');
         $text = $request->get('text');
         $columns = $request->get('cols');
         $rows = $request->get('rows');
         $criteria = $request->get('criteria');
+        $timeToConduct = $request->get('time_to_conduct');
 
         $cognitiveTypeId = $request->get('cognitive_type_id');
         $cognitiveType = $this->getCognitiveTypeRepository()->ofId($cognitiveTypeId);
 
         $unit = new Unit(null, $name, $text, $rows, $columns, $cognitiveType);
+        $unit->setTimeToConduct($timeToConduct);
 
         $this->getRepository()->add($unit);
 

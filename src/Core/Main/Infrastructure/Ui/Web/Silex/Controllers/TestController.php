@@ -7,6 +7,7 @@ use Core\Main\Domain\Model\Test\Test;
 use Core\Main\Domain\Repository\CognitiveSkillRepositoryInterface;
 use Core\Main\Domain\Repository\MethodologyRepositoryInterface;
 use Core\Main\Domain\Repository\TestRepositoryInterface;
+use Core\Main\Domain\Repository\UnitRepositoryInterface;
 use Core\Main\Infrastructure\DataTransformer\PaginatedCollection;
 use Core\Main\Domain\Model\User\User;
 use Hateoas\Representation\CollectionRepresentation;
@@ -59,6 +60,14 @@ class TestController implements ControllerProviderInterface
     }
 
     /**
+     * @return UnitRepositoryInterface
+     */
+    protected function getUnitRepository(): UnitRepositoryInterface
+    {
+        return $this->app[UnitRepositoryInterface::class];
+    }
+
+    /**
      * @param Application $app
      * @return ControllerCollection
      */
@@ -72,6 +81,7 @@ class TestController implements ControllerProviderInterface
         $factory->put('/tests/{id}', [$this, 'updateTest']);
         $factory->delete('/tests/{id}', [$this, 'removeTest']);
         $factory->get('/tests/{id}', [$this, 'viewTest']);
+        $factory->post('/tests/{id}/units', [$this, 'assignUnit']);
 
         return $factory;
     }
@@ -158,10 +168,33 @@ class TestController implements ControllerProviderInterface
     public function updateTest($id, Request $request): Response
     {
         $name = $request->get('name');
+        $cognitiveSkillId = $request->get('cognitive_skill_id');
+        $cognitiveSkill = $this->getCognitiveSkillRepository()->ofId($cognitiveSkillId);
+
+        $gradingScale = $request->get('grading_scale');
+        $maxAge = $request->get('max_age');
+        $minAge = $request->get('min_age');
+
+        $methodologyId = $request->get('methodology_id');
+        $methodology = null;
+        if ($methodologyId) {
+            $methodology = $this->getMethodologyRepository()->ofId($methodologyId);
+        }
+        $pointsRequired = $request->get('points_required');
+        $timeToConduct = $request->get('time_to_conduct');
+        $notes = $request->get('notes');
 
         /** @var Test $test */
         $test = $this->getRepository()->ofId($id);
-        $test->setName($name);
+        $test->setName($name)
+            ->setTimeToConduct($timeToConduct)
+            ->setCognitiveSkill($cognitiveSkill)
+            ->setGradingScale($gradingScale)
+            ->setMaxAge($maxAge)
+            ->setMinAge($minAge)
+            ->setMethodology($methodology)
+            ->setPointsRequired($pointsRequired)
+            ->setNotes($notes);
 
         $this->getRepository()->update($test);
 
@@ -190,6 +223,19 @@ class TestController implements ControllerProviderInterface
     public function viewTest($id): Response
     {
         $test = $this->getRepository()->ofId($id);
+        return $this->app['haljson']($test);
+    }
+
+    public function assignUnit($id, Request $request): Response
+    {
+        /** @var Test $test */
+        $test = $this->getRepository()->ofId($id);
+        $unitId = $request->get('unit_id');
+        $unit = $this->getUnitRepository()->ofId($unitId);
+
+        $test->addUnit($unit);
+        $this->getRepository()->update($test);
+
         return $this->app['haljson']($test);
     }
 }
