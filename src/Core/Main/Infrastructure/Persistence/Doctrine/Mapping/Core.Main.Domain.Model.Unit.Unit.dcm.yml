@@ -19,6 +19,7 @@ Core\Main\Domain\Model\Unit\Unit:
       type: integer
     type:
       type: string
+      column: "`type`"
       length: 20
     timeToConduct:
       type: integer

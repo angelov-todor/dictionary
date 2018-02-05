@@ -35,6 +35,7 @@ class UnitController implements ControllerProviderInterface
         /* @var $factory ControllerCollection */
         $factory = $this->app['controllers_factory'];
         $factory->post('/units', [$this, 'generateUnit']);
+        $factory->put('/units/{id}', [$this, 'updateUnit']);
         $factory->get('/units', [$this, 'viewUnits']);
         $factory->get('/units/{id}', [$this, 'viewUnit']);
         $factory->delete('/units/{id}', [$this, 'deleteUnit']);
@@ -77,7 +78,7 @@ class UnitController implements ControllerProviderInterface
 
     public function generateUnit(Request $request): Response
     {
-        $name = $request->get('name', '');
+        $name = $request->get('name');
         $text = $request->get('text');
         $columns = $request->get('cols');
         $rows = $request->get('rows');
@@ -103,6 +104,34 @@ class UnitController implements ControllerProviderInterface
         $this->getRepository()->update($unit);
 
         return $this->app['haljson']($unit);
+    }
+
+    public function updateUnit($id, Request $request): Response
+    {
+        $name = $request->get('name');
+        $text = $request->get('text');
+
+        $timeToConduct = $request->get('time_to_conduct');
+
+        $cognitiveTypeId = $request->get('cognitive_type_id');
+        $cognitiveType = $this->getCognitiveTypeRepository()->ofId($cognitiveTypeId);
+
+        $cognitiveSubtypeId = $request->get('cognitive_subtype_id');
+        $cognitiveSubtype = null;
+        if ($cognitiveSubtypeId) {
+            $cognitiveSubtype = $this->getCognitiveTypeRepository()->ofId($cognitiveSubtypeId);
+        }
+
+        $unit = $this->getRepository()->ofId($id);
+
+        $unit->setName($name)
+            ->setCognitiveType($cognitiveType)
+            ->setCognitiveSubtype($cognitiveSubtype)
+            ->setText($text)
+            ->setTimeToConduct($timeToConduct);
+        $this->getRepository()->update($unit);
+
+        return $this->app['haljson']($unit, Response::HTTP_NO_CONTENT);
     }
 
     public function viewUnit($id): Response
