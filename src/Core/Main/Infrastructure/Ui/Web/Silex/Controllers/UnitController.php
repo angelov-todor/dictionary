@@ -11,6 +11,7 @@ use Core\Main\Domain\Repository\ImageRepositoryInterface;
 use Core\Main\Domain\Repository\UnitImageRepositoryInterface;
 use Core\Main\Domain\Repository\UnitRepositoryInterface;
 use Core\Main\Infrastructure\DataTransformer\PaginatedCollection;
+use Doctrine\ORM\EntityManager;
 use Hateoas\Representation\CollectionRepresentation;
 use Silex\Application;
 use Silex\Api\ControllerProviderInterface;
@@ -162,16 +163,33 @@ class UnitController implements ControllerProviderInterface
     /**
      * @param $id
      * @return Response
+     * @throws \Throwable
      */
     public function deleteUnit($id): Response
     {
         $unit = $this->getRepository()->ofId($id);
+        $unitImageRepository = $this->getUnitImageRepository();
+        $unitRepository = $this->getRepository();
+        $this->getEntityManager()->transactional(function () use (
+            $unit,
+            $unitImageRepository,
+            $unitRepository
+        ) {
+            foreach ($unit->getUnitImages() as $unitImage) {
+                $unitImageRepository->remove($unitImage);
+            }
+            $unitRepository->remove($unit);
+        });
 
-        foreach ($unit->getUnitImages() as $unitImage) {
-            $this->getUnitImageRepository()->remove($unitImage);
-        }
-        $this->getRepository()->remove($unit);
         return $this->app['haljson'](null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @return EntityManager
+     */
+    protected function getEntityManager()
+    {
+        return $this->app['em'];
     }
 
     /**
