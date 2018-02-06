@@ -7,7 +7,7 @@ use Core\Main\Domain\Model\Image;
 use Core\Main\Domain\Repository\ImageRepositoryInterface;
 use Core\Main\Infrastructure\Persistence\Doctrine\LikeQueryHelpers;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 class DoctrineImageRepository extends EntityRepository implements ImageRepositoryInterface
 {
@@ -24,7 +24,7 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
     /**
      * @param Image $image
      * @return Image
-     * @throws OptimisticLockException
+     * @throws ORMException
      */
     public function add(Image $image): Image
     {
@@ -35,7 +35,7 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
 
     /**
      * @param Image $image
-     * @throws OptimisticLockException
+     * @throws ORMException
      */
     public function remove(Image $image): void
     {
@@ -45,7 +45,6 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
 
     /**
      * @return Image
-     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getImageByCriteria(string $criteria): Image
@@ -82,7 +81,7 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
             ->setMaxResults($limit)
             ->setFirstResult($offset);
         if ($term) {
-            $qb->leftJoin('i.imageMetadata', 'im')
+            $qb->innerJoin('i.imageMetadata', 'im')
                 ->where("im.value LIKE :term ESCAPE '!'")
                 ->setParameter('term', $this->makeLikeParam($term));
         }
@@ -93,7 +92,6 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
     /**
      * @param null|string $term
      * @return int
-     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countBy(?string $term): int
@@ -101,7 +99,7 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
         $qb = $this->createQueryBuilder('i')
             ->select('count(i)');
         if ($term) {
-            $qb->leftJoin('i.imageMetadata', 'im')
+            $qb->innerJoin('i.imageMetadata', 'im')
                 ->where("im.value LIKE :term ESCAPE '!'")
                 ->setParameter('term', $this->makeLikeParam($term));
         }

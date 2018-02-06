@@ -18,6 +18,7 @@ use Core\Main\Infrastructure\Domain\Model\DoctrineImageRepository;
 use Core\Main\Infrastructure\Domain\Model\DoctrineMetadataRepository;
 use Ddd\Domain\DomainEventPublisher;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
 use Hateoas\Representation\CollectionRepresentation;
 use Imagine\Filter\Transformation;
 use Imagine\Image\Box;
@@ -171,7 +172,6 @@ class ImageController implements ControllerProviderInterface
     /**
      * @param Request $request
      * @return Response
-     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function getImages(Request $request): Response
@@ -211,6 +211,7 @@ class ImageController implements ControllerProviderInterface
      * @param $id
      * @return Response
      * @throws \Exception
+     * @throws \Throwable
      */
     public function deleteImage($id): Response
     {
@@ -241,7 +242,7 @@ class ImageController implements ControllerProviderInterface
     /**
      * @param Request $request
      * @return Response
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
      */
     public function imageUpload(Request $request): Response
     {
@@ -438,7 +439,7 @@ class ImageController implements ControllerProviderInterface
     /**
      * @param Request $request
      * @return Response
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
      */
     public function uploadExternalImage(Request $request): Response
     {

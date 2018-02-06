@@ -29,18 +29,25 @@ class UnitImage
     protected $unit;
 
     /**
+     * @var bool
+     */
+    protected $isCorrect;
+
+    /**
      * UnitImage constructor.
      * @param string $id
      * @param Image $image
      * @param Position $position
      * @param Unit $unit
+     * @param bool $isCorrect
      */
-    public function __construct(?string $id, Image $image, Position $position, Unit $unit)
+    public function __construct(?string $id, Image $image, Position $position, Unit $unit, bool $isCorrect)
     {
         $this->id = $id ?? Uuid::uuid4()->toString();
         $this->image = $image;
         $this->position = $position;
         $this->unit = $unit;
+        $this->isCorrect = $isCorrect;
     }
 
     /**
@@ -94,6 +101,24 @@ class UnitImage
     public function setPosition(Position $position): UnitImage
     {
         $this->position = $position;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCorrect(): bool
+    {
+        return $this->isCorrect;
+    }
+
+    /**
+     * @param bool $isCorrect
+     * @return UnitImage
+     */
+    public function setIsCorrect(bool $isCorrect): UnitImage
+    {
+        $this->isCorrect = $isCorrect;
         return $this;
     }
 }

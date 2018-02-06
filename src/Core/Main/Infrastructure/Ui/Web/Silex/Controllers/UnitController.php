@@ -40,6 +40,7 @@ class UnitController implements ControllerProviderInterface
         $factory->get('/units/{id}', [$this, 'viewUnit']);
         $factory->delete('/units/{id}', [$this, 'deleteUnit']);
         $factory->put('/unit_images/{id}', [$this, 'updateUnitImage']);
+        $factory->put('/unit_images/{id}/correct', [$this, 'changeCorrect']);
 
         return $factory;
     }
@@ -76,6 +77,10 @@ class UnitController implements ControllerProviderInterface
         return $this->app[UnitImageRepositoryInterface::class];
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function generateUnit(Request $request): Response
     {
         $name = $request->get('name');
@@ -96,7 +101,13 @@ class UnitController implements ControllerProviderInterface
         for ($i = 0; $i < $columns; $i++) {
             for ($j = 0; $j < $rows; $j++) {
                 $image = $this->getImageRepository()->getImageByCriteria($criteria);
-                $unitImage = new UnitImage(null, $image, new Position($i, $j), $unit);
+                $unitImage = new UnitImage(
+                    null,
+                    $image,
+                    new Position($i, $j),
+                    $unit,
+                    false
+                );
                 $this->getUnitImageRepository()->add($unitImage);
             }
         }
@@ -106,6 +117,11 @@ class UnitController implements ControllerProviderInterface
         return $this->app['haljson']($unit);
     }
 
+    /**
+     * @param $id
+     * @param Request $request
+     * @return Response
+     */
     public function updateUnit($id, Request $request): Response
     {
         $name = $request->get('name');
@@ -134,11 +150,19 @@ class UnitController implements ControllerProviderInterface
         return $this->app['haljson']($unit, Response::HTTP_NO_CONTENT);
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function viewUnit($id): Response
     {
         return $this->app['haljson']($this->getRepository()->ofId($id));
     }
 
+    /**
+     * @param $id
+     * @return Response
+     */
     public function deleteUnit($id): Response
     {
         $unit = $this->getRepository()->ofId($id);
@@ -150,6 +174,10 @@ class UnitController implements ControllerProviderInterface
         return $this->app['haljson'](null, Response::HTTP_NO_CONTENT);
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function viewUnits(Request $request): Response
     {
         $page = intval($request->get('page', 1));
@@ -177,6 +205,11 @@ class UnitController implements ControllerProviderInterface
         return $this->app['haljson']($paginatedCollection);
     }
 
+    /**
+     * @param $id
+     * @param Request $request
+     * @return Response
+     */
     public function updateUnitImage($id, Request $request): Response
     {
         $image = $request->get('image');
@@ -189,5 +222,21 @@ class UnitController implements ControllerProviderInterface
         $this->getUnitImageRepository()->update($unitImage);
 
         return $this->app['haljson'](null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return Response
+     */
+    public function changeCorrect($id, Request $request): Response
+    {
+        $correct = boolval($request->get('correct'));
+
+        $unitImage = $this->getUnitImageRepository()->ofId($id);
+        $unitImage->setIsCorrect($correct);
+        $this->getUnitImageRepository()->update($unitImage);
+
+        return $this->app['haljson']($unitImage);
     }
 }

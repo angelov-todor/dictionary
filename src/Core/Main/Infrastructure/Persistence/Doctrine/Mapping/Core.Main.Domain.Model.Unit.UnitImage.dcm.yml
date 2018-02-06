@@ -9,6 +9,11 @@ Core\Main\Domain\Model\Unit\UnitImage:
   fields:
     position:
       type: position
+    isCorrect:
+      type: boolean
+      column: is_correct
+      options:
+        default: false
   manyToOne:
     image:
       targetEntity: Core\Main\Domain\Model\Image

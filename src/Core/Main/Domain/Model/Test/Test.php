@@ -161,6 +161,22 @@ class Test
     }
 
     /**
+     * @param Unit $unit
+     * @return Test
+     */
+    public function removeUnit(Unit $unit): Test
+    {
+        foreach ($this->units as $k => $u) {
+            if ($unit->getId() == $u->getId()) {
+                unset($this->units[$k]);
+                break;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return CognitiveSkill
      */
     public function getCognitiveSkill(): CognitiveSkill

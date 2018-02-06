@@ -174,7 +174,7 @@ class Application
                 ['^/image/', 'IS_AUTHENTICATED_ANONYMOUSLY'],
                 [new RequestMatcher('^/users$', null, ['POST']), 'IS_AUTHENTICATED_ANONYMOUSLY'],
                 [new RequestMatcher('^.*$', null, ['OPTIONS']), 'IS_AUTHENTICATED_ANONYMOUSLY'],
-                ['^.*$', 'ROLE_USER'],
+                ['^.*$', ['ROLE_USER', 'ROLE_ADMIN']],
             ]
         ]);
         $app->register(new JwtServiceProvider());

@@ -82,6 +82,7 @@ class TestController implements ControllerProviderInterface
         $factory->delete('/tests/{id}', [$this, 'removeTest']);
         $factory->get('/tests/{id}', [$this, 'viewTest']);
         $factory->post('/tests/{id}/units', [$this, 'assignUnit']);
+        $factory->delete('/tests/{id}/units/{unitId}', [$this, 'removeUnit']);
 
         return $factory;
     }
@@ -234,6 +235,20 @@ class TestController implements ControllerProviderInterface
         $unit = $this->getUnitRepository()->ofId($unitId);
 
         $test->addUnit($unit);
+        $this->getRepository()->update($test);
+
+        return $this->app['haljson']($test);
+    }
+
+    public function removeUnit($id, $unitId): Response
+    {
+        /** @var Test $test */
+        $test = $this->getRepository()->ofId($id);
+
+        $unit = $this->getUnitRepository()->ofId($unitId);
+
+        $test->removeUnit($unit);
+
         $this->getRepository()->update($test);
 
         return $this->app['haljson']($test);
