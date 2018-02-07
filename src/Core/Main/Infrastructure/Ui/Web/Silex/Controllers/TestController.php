@@ -248,9 +248,8 @@ class TestController implements ControllerProviderInterface
         $unit = $this->getUnitRepository()->ofId($unitId);
 
         $test->removeUnit($unit);
-
         $this->getRepository()->update($test);
 
-        return $this->app['haljson']($test);
+        return $this->app['haljson'](null, Response::HTTP_NO_CONTENT);
     }
 }
