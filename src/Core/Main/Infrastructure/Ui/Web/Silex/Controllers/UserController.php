@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Core\Main\Infrastructure\Ui\Web\Silex\Controllers;
 
 use Core\Main\Application\Helper\Locale;
+use Core\Main\Domain\Model\User\User;
 use Core\Main\Domain\Repository\UserRepositoryInterface;
 use Core\Main\Infrastructure\DataTransformer\PaginatedCollection;
 use Hateoas\Representation\CollectionRepresentation;
@@ -34,6 +35,7 @@ class UserController implements ControllerProviderInterface
         /* @var $factory ControllerCollection */
         $factory = $this->app['controllers_factory'];
         $factory->post('/users', [$this, 'createUser']);
+        $factory->put('/users/{id}', [$this, 'updateUser']);
         $factory->get('/users/{id}', [$this, 'getUser']);
         $factory->get('/users', [$this, 'getUsers']);
 
@@ -57,6 +59,16 @@ class UserController implements ControllerProviderInterface
         $user = $this->app[UserViewService::class]->execute(new UserViewRequest($id));
 
         return $this->app['haljson']($user);
+    }
+
+    public function updateUser(string $id, Request $request): Response
+    {
+        /** @var User $user */
+        $user = $this->app[UserViewService::class]->execute(new UserViewRequest($id));
+
+        $user->setRoles((array)$request->get('role'));
+        $this->getRepository()->update($user);
+        return $this->app['haljson'](null, Response::HTTP_NO_CONTENT);
     }
 
     /**

@@ -14,6 +14,12 @@ class User
     const ROLE_ADMIN = 'ROLE_ADMIN';
     const ROLE_CREATOR = 'ROLE_CREATOR';
 
+    protected $availableRoles = [
+        self::ROLE_USER,
+        self::ROLE_ADMIN,
+        self::ROLE_CREATOR
+    ];
+
     /**
      * @var string
      */
@@ -115,6 +121,9 @@ class User
      */
     public function setRoles(array $roles): User
     {
+        foreach ($roles as $role) {
+            Assertion::inArray($role, $this->availableRoles, null, 'role');
+        }
         $this->roles = $roles;
         return $this;
     }
