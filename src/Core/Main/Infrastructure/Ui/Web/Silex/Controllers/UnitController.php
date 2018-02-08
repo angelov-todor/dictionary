@@ -90,12 +90,21 @@ class UnitController implements ControllerProviderInterface
         $rows = $request->get('rows');
         $criteria = $request->get('criteria');
         $timeToConduct = $request->get('time_to_conduct');
+        $type = $request->get('type');
 
         $cognitiveTypeId = $request->get('cognitive_type_id');
         $cognitiveType = $this->getCognitiveTypeRepository()->ofId($cognitiveTypeId);
 
-        $unit = new Unit(null, $name, $text, $rows, $columns, $cognitiveType);
-        $unit->setTimeToConduct($timeToConduct);
+        $unit = new Unit(
+            null,
+            $name,
+            $text,
+            $type,
+            $rows,
+            $columns,
+            $cognitiveType,
+            $timeToConduct
+        );
 
         $this->getRepository()->add($unit);
 

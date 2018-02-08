@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Core\Main\Domain\Model\Unit;
 
+use Assert\Assertion;
 use Core\Main\Domain\Model\Test\CognitiveType;
 use Ramsey\Uuid\Uuid;
 
@@ -13,6 +14,14 @@ class Unit
     const TYPE_ESSAY = 'essay';
     const TYPE_MULTI_CHOICE = 'multi_choice';
     const TYPE_BLANKS_FILL = 'blanks_fill';
+    const TYPE_SELECT = 'select';
+
+    /**
+     * @var array Available types
+     */
+    protected $availableTypes = [
+        self::TYPE_SELECT
+    ];
 
     /**
      * @var string
@@ -69,24 +78,30 @@ class Unit
      * @param null|string $id
      * @param string $name
      * @param string $text
+     * @param string $type
      * @param int $rows
      * @param int $cols
      * @param CognitiveType $cognitiveType
+     * @param int $timeToConduct
      */
     public function __construct(
         ?string $id,
         string $name,
         string $text,
+        string $type,
         int $rows,
         int $cols,
-        CognitiveType $cognitiveType
+        CognitiveType $cognitiveType,
+        int $timeToConduct
     ) {
         $this->id = $id ?? Uuid::uuid4()->toString();
         $this->setName($name)
             ->setText($text)
+            ->setType($type)
             ->setRows($rows)
             ->setCols($cols)
-            ->setCognitiveType($cognitiveType);
+            ->setCognitiveType($cognitiveType)
+            ->setTimeToConduct($timeToConduct);
     }
 
     /**
@@ -113,6 +128,25 @@ class Unit
     public function getText(): string
     {
         return $this->text;
+    }
+
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    /**
+     * @param string $type
+     * @return Unit
+     */
+    public function setType(string $type): Unit
+    {
+        Assertion::inArray($type, $this->availableTypes, null, 'type');
+        $this->type = $type;
+        return $this;
     }
 
     /**

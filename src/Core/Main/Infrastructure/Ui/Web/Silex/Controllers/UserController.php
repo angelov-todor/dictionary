@@ -118,5 +118,4 @@ class UserController implements ControllerProviderInterface
         );
         return $this->app['haljson']($paginatedCollection);
     }
-
 }
