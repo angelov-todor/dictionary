@@ -7,8 +7,6 @@ use Core\Main\Infrastructure\Ui\ProblemDetails\ProblemDetailsFromException\Probl
 use Core\Main\Infrastructure\Ui\ProblemDetails\ProblemDetailsFromException\GenericProblemDetailsFromException;
 use Core\Main\Infrastructure\Ui\ProblemDetails\ProblemDetailsFromException\ProblemDetailsFromSymfonyHttpException;
 use Core\Main\Infrastructure\Ui\ProblemDetails\ProblemDetailsFromException\ProblemDetailsFromAssertionException;
-use Core\Main\Application\Service\Payment\DisconnectedAccountException;
-use Core\Main\Infrastructure\Ui\ProblemDetails\ProblemDetailsFromException\DisconnectedAccountProblemDetails;
 
 return [
     \Core\Main\Application\Exception\ResourceNotFoundExceptionInterface::class

@@ -9,11 +9,10 @@ use Ramsey\Uuid\Uuid;
 
 class Unit
 {
-    const TYPE_TRUE_FALSE = 'true_false;';
+    const TYPE_BOOLEAN = 'boolean';
     const TYPE_SHORT_ANSWER = 'short_answer';
     const TYPE_ESSAY = 'essay';
-    const TYPE_MULTI_CHOICE = 'multi_choice';
-    const TYPE_BLANKS_FILL = 'blanks_fill';
+    const TYPE_MULTI_SELECT = 'multi_select';
     const TYPE_SELECT = 'select';
 
     /**
@@ -51,7 +50,7 @@ class Unit
     /**
      * @var string
      */
-    protected $type = self::TYPE_MULTI_CHOICE;
+    protected $type;
 
     /**
      * @var UnitImage[]

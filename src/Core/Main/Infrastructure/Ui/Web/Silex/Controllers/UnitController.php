@@ -136,6 +136,7 @@ class UnitController implements ControllerProviderInterface
     {
         $name = $request->get('name');
         $text = $request->get('text');
+        $type = $request->get('type');
 
         $timeToConduct = $request->get('time_to_conduct');
 
@@ -154,7 +155,9 @@ class UnitController implements ControllerProviderInterface
             ->setCognitiveType($cognitiveType)
             ->setCognitiveSubtype($cognitiveSubtype)
             ->setText($text)
-            ->setTimeToConduct($timeToConduct);
+            ->setTimeToConduct($timeToConduct)
+            ->setType($type);
+
         $this->getRepository()->update($unit);
 
         return $this->app['haljson']($unit, Response::HTTP_NO_CONTENT);

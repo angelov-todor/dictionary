@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Persistence\Doctrine;
 
+use Core\Main\Infrastructure\Persistence\Doctrine\Type\AnswerType;
 use Core\Main\Infrastructure\Persistence\Doctrine\Type\PositionType;
 use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Logging\EchoSQLLogger;
@@ -52,7 +53,8 @@ class EntityManagerProvider implements ServiceProviderInterface
     {
         $types = [
             'password' => Password::class,
-            'position' => PositionType::class
+            'position' => PositionType::class,
+            'answer' => AnswerType::class
         ];
         foreach ($types as $type => $className) {
             if (!Type::hasType($type)) {
