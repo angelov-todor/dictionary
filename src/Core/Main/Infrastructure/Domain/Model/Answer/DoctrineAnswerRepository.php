@@ -18,8 +18,8 @@ class DoctrineAnswerRepository extends EntityRepository implements AnswerReposit
      */
     public function countBy(string $testId): int
     {
-        $qb = $this->createQueryBuilder('а')
-            ->select('count(а)')
+        $qb = $this->createQueryBuilder('a')
+            ->select('count(a)')
             ->where('a.test = :test')
             ->setParameter('test', $testId);
 
