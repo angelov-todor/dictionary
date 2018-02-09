@@ -294,8 +294,10 @@ class TestController implements ControllerProviderInterface
         /** @var AnswerRepositoryInterface $answerRepository */
         $answerRepository = $this->app[AnswerRepositoryInterface::class];
 
-        $results = $answerRepository->viewBy($id, $page, $limit);
-        $count = $answerRepository->countBy($id);
+//        $results = $answerRepository->viewBy($id, $page, $limit);
+//        $count = $answerRepository->countBy($id);
+        $results = [];
+        $count = 0;
 
         $paginatedCollection = new PaginatedCollection(
             new CollectionRepresentation(
