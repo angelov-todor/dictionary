@@ -44,6 +44,7 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
     }
 
     /**
+     * @param string $criteria
      * @return Image
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
@@ -84,6 +85,7 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
             $qb->innerJoin('i.imageMetadata', 'im')
                 ->where("im.value LIKE :term ESCAPE '!'")
                 ->setParameter('term', $this->makeLikeParam($term));
+            $qb->groupBy('i');
         }
 
         return $qb->getQuery()->getResult();
@@ -97,7 +99,7 @@ class DoctrineImageRepository extends EntityRepository implements ImageRepositor
     public function countBy(?string $term): int
     {
         $qb = $this->createQueryBuilder('i')
-            ->select('count(i)');
+            ->select('count(distinct i)');
         if ($term) {
             $qb->innerJoin('i.imageMetadata', 'im')
                 ->where("im.value LIKE :term ESCAPE '!'")
