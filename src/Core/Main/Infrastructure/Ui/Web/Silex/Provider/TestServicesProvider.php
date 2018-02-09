@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Ui\Web\Silex\Provider;
 
+use Core\Main\Domain\Model\Answer\Answer;
 use Core\Main\Domain\Model\Test\CognitiveSkill;
 use Core\Main\Domain\Model\Test\CognitiveType;
 use Core\Main\Domain\Model\Test\Methodology;
 use Core\Main\Domain\Model\Test\Test;
+use Core\Main\Domain\Repository\AnswerRepositoryInterface;
 use Core\Main\Domain\Repository\CognitiveSkillRepositoryInterface;
 use Core\Main\Domain\Repository\CognitiveTypeRepositoryInterface;
 use Core\Main\Domain\Repository\MethodologyRepositoryInterface;
@@ -37,6 +39,9 @@ class TestServicesProvider implements ServiceProviderInterface
         };
         $app[TestRepositoryInterface::class] = function () use ($app) {
             return $app['em']->getRepository(Test::class);
+        };
+        $app[AnswerRepositoryInterface::class] = function () use ($app) {
+            return $app['em']->getRepository(Answer::class);
         };
     }
 }
