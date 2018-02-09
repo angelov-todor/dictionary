@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Ui\Web\Silex\Controllers;
 
+use Core\Main\Domain\Model\Answer\Answer;
 use Core\Main\Domain\Model\Test\Test;
+use Core\Main\Domain\Model\Unit\Unit;
+use Core\Main\Domain\Repository\AnswerRepositoryInterface;
 use Core\Main\Domain\Repository\CognitiveSkillRepositoryInterface;
 use Core\Main\Domain\Repository\MethodologyRepositoryInterface;
 use Core\Main\Domain\Repository\TestRepositoryInterface;
@@ -82,6 +85,7 @@ class TestController implements ControllerProviderInterface
         $factory->delete('/tests/{id}', [$this, 'removeTest']);
         $factory->get('/tests/{id}', [$this, 'viewTest']);
         $factory->post('/tests/{id}/units', [$this, 'assignUnit']);
+        $factory->post('/tests/{id}/answers', [$this, 'saveAnswer']);
         $factory->delete('/tests/{id}/units/{unitId}', [$this, 'removeUnit']);
 
         return $factory;
@@ -250,6 +254,34 @@ class TestController implements ControllerProviderInterface
         $test->removeUnit($unit);
         $this->getRepository()->update($test);
 
+        return $this->app['haljson'](null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return Response
+     */
+    public function saveAnswer($id, Request $request): Response
+    {
+        /** @var Test $test */
+        $test = $this->getRepository()->ofId($id);
+
+        $answers = $request->get('answers');
+        /** @var AnswerRepositoryInterface $answerRepository */
+        $answerRepository = $this->app[AnswerRepositoryInterface::class];
+        foreach ($answers as $answer) {
+            /** @var Unit $unit */
+            $unit = $this->getUnitRepository()->ofId($answer['unit_id']);
+            $answerObj = Answer::createSelectAnswer(
+                $test,
+                $unit,
+                $this->getUserContext(),
+                $answer['unit_image_id'],
+                $answer['is_correct']
+            );
+            $answerRepository->add($answerObj);
+        }
         return $this->app['haljson'](null, Response::HTTP_NO_CONTENT);
     }
 }

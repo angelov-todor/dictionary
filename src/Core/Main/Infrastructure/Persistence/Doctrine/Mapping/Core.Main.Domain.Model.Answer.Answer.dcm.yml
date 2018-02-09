@@ -1,0 +1,30 @@
+Core\Main\Domain\Model\Answer\Answer:
+  type: entity
+  id:
+    id:
+      column: id
+      type: guid
+  table: answers
+  repositoryClass: Core\Main\Infrastructure\Domain\Model\Answer\DoctrineAnswerRepository
+  fields:
+    answer:
+      type: answer
+    occurredAt:
+      column: occurred_at
+      type: datetime
+  manyToOne:
+    test:
+      targetEntity: Core\Main\Domain\Model\Test\Test
+      joinColumn:
+        name: test_id
+        referencedColumnName: id
+    unit:
+      targetEntity: Core\Main\Domain\Model\Unit\Unit
+      joinColumn:
+        name: unit_id
+        referencedColumnName: id
+    user:
+      targetEntity: Core\Main\Domain\Model\User\User
+      joinColumn:
+        name: user_id
+        referencedColumnName: id

@@ -1,0 +1,11 @@
+Core\Main\Domain\Model\Answer\SelectAnswer:
+  properties:
+    unitImageId:
+      exclude: false
+      type: string
+    isCorrect:
+      exclude: false
+      type: boolean
+    type:
+      exclude: false
+      type: string

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Core\Main\Domain\Model\Answer;
 
+use Core\Main\Domain\Model\Test\Test;
 use Core\Main\Domain\Model\Unit\Unit;
 use Core\Main\Domain\Model\User\User;
 use Ramsey\Uuid\Uuid;
@@ -41,6 +42,11 @@ class Answer
     protected $user;
 
     /**
+     * @var Test
+     */
+    protected $test;
+
+    /**
      * @var AnswerInterface
      */
     protected $answer;
@@ -52,13 +58,19 @@ class Answer
 
     /**
      * Answer constructor.
+     * @param Test $test
      * @param Unit $unit
      * @param User $user
      * @param AnswerInterface $answer
      */
-    public function __construct(Unit $unit, User $user, AnswerInterface $answer)
-    {
+    public function __construct(
+        Test $test,
+        Unit $unit,
+        User $user,
+        AnswerInterface $answer
+    ) {
         $this->id = Uuid::uuid4()->toString();
+        $this->test = $test;
         $this->unit = $unit;
         $this->user = $user;
         $this->answer = $answer;
@@ -66,6 +78,7 @@ class Answer
     }
 
     /**
+     * @param Test $test
      * @param Unit $unit
      * @param User $user
      * @param string $unitImageId
@@ -73,24 +86,27 @@ class Answer
      * @return Answer
      */
     public static function createSelectAnswer(
+        Test $test,
         Unit $unit,
         User $user,
         string $unitImageId,
         bool $isCorrect
     ) {
         $answerBody = new SelectAnswer($unitImageId, $isCorrect);
-        $answer = new Answer($unit, $user, $answerBody);
+        $answer = new Answer($test, $unit, $user, $answerBody);
 
         return $answer;
     }
 
     /**
+     * @param Test $test
      * @param Unit $unit
      * @param User $user
      * @param array $answers
      * @return Answer
      */
     public static function createMultiSelectAnswer(
+        Test $test,
         Unit $unit,
         User $user,
         array $answers
@@ -101,6 +117,6 @@ class Answer
         }
         $answerBody = new MultiSelectAnswer($selects);
 
-        return new Answer($unit, $user, $answerBody);
+        return new Answer($test, $unit, $user, $answerBody);
     }
 }
