@@ -12,22 +12,33 @@ use Doctrine\ORM\ORMException;
 class DoctrineAnswerRepository extends EntityRepository implements AnswerRepositoryInterface
 {
     /**
+     * @param string $testId
      * @return int
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function countBy(): int
+    public function countBy(string $testId): int
     {
-        $qb = $this->createQueryBuilder('u')
-            ->select('count(u)');
+        $qb = $this->createQueryBuilder('а')
+            ->select('count(а)')
+            ->where('a.test = :test')
+            ->setParameter('test', $testId);
 
         return intval($qb->getQuery()->getSingleScalarResult());
     }
 
-    public function viewBy(int $page, int $limit)
+    /**
+     * @param string $testId
+     * @param int $page
+     * @param int $limit
+     * @return mixed
+     */
+    public function viewBy(string $testId, int $page, int $limit)
     {
         $offset = ($page - 1) * $limit;
 
-        $qb = $this->createQueryBuilder('c')
+        $qb = $this->createQueryBuilder('a')
+            ->where('a.test = :test')
+            ->setParameter('test', $testId)
             ->setMaxResults($limit)
             ->setFirstResult($offset);
 

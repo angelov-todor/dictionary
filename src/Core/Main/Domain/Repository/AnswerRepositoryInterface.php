@@ -8,16 +8,18 @@ use Core\Main\Domain\Model\Answer\Answer;
 interface AnswerRepositoryInterface
 {
     /**
+     * @param string $testId
      * @param int $page
      * @param int $limit
      * @return mixed
      */
-    public function viewBy(int $page, int $limit);
+    public function viewBy(string $testId, int $page, int $limit);
 
     /**
+     * @param string $testId
      * @return int
      */
-    public function countBy(): int;
+    public function countBy(string $testId): int;
 
     /**
      * @param string $id

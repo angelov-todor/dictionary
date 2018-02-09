@@ -79,13 +79,14 @@ class TestController implements ControllerProviderInterface
         $this->app = $app;
         /* @var $factory ControllerCollection */
         $factory = $this->app['controllers_factory'];
-        $factory->get('/tests', [$this, 'getMethodologies']);
+        $factory->get('/tests', [$this, 'getTests']);
         $factory->post('/tests', [$this, 'addTest']);
         $factory->put('/tests/{id}', [$this, 'updateTest']);
         $factory->delete('/tests/{id}', [$this, 'removeTest']);
         $factory->get('/tests/{id}', [$this, 'viewTest']);
         $factory->post('/tests/{id}/units', [$this, 'assignUnit']);
         $factory->post('/tests/{id}/answers', [$this, 'saveAnswer']);
+        $factory->get('/tests/{id}/answers', [$this, 'viewAnswers']);
         $factory->delete('/tests/{id}/units/{unitId}', [$this, 'removeUnit']);
 
         return $factory;
@@ -95,7 +96,7 @@ class TestController implements ControllerProviderInterface
      * @param Request $request
      * @return Response
      */
-    public function getMethodologies(Request $request): Response
+    public function getTests(Request $request): Response
     {
         $page = intval($request->get('page', 1));
         $limit = intval($request->get('limit', 100));
@@ -283,5 +284,36 @@ class TestController implements ControllerProviderInterface
             $answerRepository->add($answerObj);
         }
         return $this->app['haljson'](null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function viewAnswers($id, Request $request): Response
+    {
+        $page = intval($request->get('page', 1));
+        $limit = intval($request->get('limit', 100));
+
+        /** @var AnswerRepositoryInterface $answerRepository */
+        $answerRepository = $this->app[AnswerRepositoryInterface::class];
+
+        $results = $answerRepository->viewBy($id, $page, $limit);
+        $count = $answerRepository->countBy($id);
+
+        $paginatedCollection = new PaginatedCollection(
+            new CollectionRepresentation(
+                $results,
+                'answers' // embedded rel
+            ),
+            'answers', // TODO: route
+            $request->query->all(), // route parameters
+            $page,       // page number
+            $limit,      // limit
+            ceil($count / $limit), // total pages
+            'page', // page route parameter name, optional, defaults to 'page'
+            'limit', // limit route parameter name, optional, defaults to 'limit'
+            false, // generate relative URIs, optional, defaults to `false`
+            $count,       // total collection size, optional, defaults to `null`
+            count($results)//  current element count
+        );
+
+        return $this->app['haljson']($paginatedCollection);
     }
 }
