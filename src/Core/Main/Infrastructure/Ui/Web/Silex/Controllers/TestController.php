@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Ui\Web\Silex\Controllers;
 
+use Core\Main\Domain\Filter\AnswersFilter;
 use Core\Main\Domain\Model\Answer\Answer;
 use Core\Main\Domain\Model\Test\Test;
 use Core\Main\Domain\Model\Unit\Unit;
@@ -291,11 +292,16 @@ class TestController implements ControllerProviderInterface
         $page = intval($request->get('page', 1));
         $limit = intval($request->get('limit', 100));
 
+        $filter = new AnswersFilter(
+            $request->get('user'),
+            $request->get('unit')
+        );
+
         /** @var AnswerRepositoryInterface $answerRepository */
         $answerRepository = $this->app[AnswerRepositoryInterface::class];
 
-        $results = $answerRepository->viewBy($id, $page, $limit);
-        $count = $answerRepository->countBy($id);
+        $results = $answerRepository->viewBy($id, $page, $limit, $filter);
+        $count = $answerRepository->countBy($id, $filter);
 
         $paginatedCollection = new PaginatedCollection(
             new CollectionRepresentation(
