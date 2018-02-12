@@ -10,4 +10,15 @@ Core\Main\Domain\Model\Test\CognitiveSkill:
     name:
       type: string
       length: 500
+  manyToMany:
+    cognitiveTypes:
+      targetEntity: Core\Main\Domain\Model\Test\CognitiveType
+      joinTable:
+        name: cognitive_skill_types
+        joinColumns:
+          cognitive_skill_id:
+            referencedColumnName: id
+        inverseJoinColumns:
+          cognitive_type_id:
+            referencedColumnName: id
 

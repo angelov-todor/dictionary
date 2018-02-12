@@ -5,6 +5,7 @@ namespace Core\Main\Infrastructure\Ui\Web\Silex\Controllers;
 
 use Core\Main\Domain\Model\Test\CognitiveSkill;
 use Core\Main\Domain\Repository\CognitiveSkillRepositoryInterface;
+use Core\Main\Domain\Repository\CognitiveTypeRepositoryInterface;
 use Core\Main\Infrastructure\DataTransformer\PaginatedCollection;
 use Hateoas\Representation\CollectionRepresentation;
 use Silex\Application;
@@ -29,6 +30,14 @@ class CognitiveSkillController implements ControllerProviderInterface
     }
 
     /**
+     * @return CognitiveTypeRepositoryInterface
+     */
+    protected function getCognitiveTypeRepository(): CognitiveTypeRepositoryInterface
+    {
+        return $this->app[CognitiveTypeRepositoryInterface::class];
+    }
+
+    /**
      * @param Application $app
      * @return ControllerCollection
      */
@@ -41,6 +50,9 @@ class CognitiveSkillController implements ControllerProviderInterface
         $factory->post('/cognitive-skill', [$this, 'addCognitiveSkill']);
         $factory->put('/cognitive-skill/{id}', [$this, 'updateCognitiveSkill']);
         $factory->delete('/cognitive-skill/{id}', [$this, 'removeCognitiveSkill']);
+
+        $factory->post('/cognitive-skill/{$id}/cognitive-type', [$this, 'addCognitiveType']);
+        $factory->delete('/cognitive-skill/{$id}/cognitive-type/{$type}', [$this, 'removeCognitiveType']);
 
         return $factory;
     }
@@ -120,6 +132,41 @@ class CognitiveSkillController implements ControllerProviderInterface
         if ($cognitiveSkill) {
             $this->getRepository()->remove($cognitiveSkill);
         }
+
+        return $this->app['haljson'](null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return Response
+     */
+    public function addCognitiveType($id, Request $request): Response
+    {
+        $cognitiveSkill = $this->getRepository()->ofId($id);
+        $cognitiveTypeId = $request->get('cognitive_type_id');
+
+        $cognitiveType = $this->getCognitiveTypeRepository()->ofId($cognitiveTypeId);
+
+        $cognitiveSkill->addCognitiveType($cognitiveType);
+        $this->getRepository()->update($cognitiveSkill);
+
+        return $this->app['haljson'](null);
+    }
+
+    /**
+     * @param $id
+     * @param $type
+     * @return mixed
+     */
+    public function removeCognitiveType($id, $type)
+    {
+        $cognitiveSkill = $this->getRepository()->ofId($id);
+
+        $cognitiveType = $this->getCognitiveTypeRepository()->ofId($type);
+
+        $cognitiveSkill->removeCognitiveType($cognitiveType);
+        $this->getRepository()->update($cognitiveSkill);
 
         return $this->app['haljson'](null, Response::HTTP_NO_CONTENT);
     }

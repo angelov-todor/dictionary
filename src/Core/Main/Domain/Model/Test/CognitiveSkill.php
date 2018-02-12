@@ -18,6 +18,11 @@ class CognitiveSkill
     protected $name;
 
     /**
+     * @var CognitiveType[]
+     */
+    protected $cognitiveTypes;
+
+    /**
      * CognitiveSkill constructor.
      * @param string $id
      * @param string $name
@@ -51,6 +56,32 @@ class CognitiveSkill
     public function setName(string $name): CognitiveSkill
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @param CognitiveType $cognitiveType
+     * @return CognitiveSkill
+     */
+    public function addCognitiveType(CognitiveType $cognitiveType): CognitiveSkill
+    {
+        $this->cognitiveTypes[] = $cognitiveType;
+        return $this;
+    }
+
+    /**
+     * @param CognitiveType $cognitiveType
+     * @return CognitiveSkill
+     */
+    public function removeCognitiveType(CognitiveType $cognitiveType): CognitiveSkill
+    {
+        foreach ($this->cognitiveTypes as $k => $u) {
+            if ($cognitiveType->getId() == $u->getId()) {
+                unset($this->cognitiveTypes[$k]);
+                break;
+            }
+        }
+
         return $this;
     }
 }
