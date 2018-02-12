@@ -52,8 +52,8 @@ class CognitiveSkillController implements ControllerProviderInterface
         $factory->get('/cognitive-skill/{id}', [$this, 'viewCognitiveSkill']);
         $factory->delete('/cognitive-skill/{id}', [$this, 'removeCognitiveSkill']);
 
-        $factory->post('/cognitive-skill/{$id}/cognitive-type', [$this, 'addCognitiveType']);
-        $factory->delete('/cognitive-skill/{$id}/cognitive-type/{$type}', [$this, 'removeCognitiveType']);
+        $factory->post('/cognitive-skill/{$id}/cognitive-types', [$this, 'addCognitiveType']);
+        $factory->delete('/cognitive-skill/{$id}/cognitive-types/{$type}', [$this, 'removeCognitiveType']);
 
         return $factory;
     }

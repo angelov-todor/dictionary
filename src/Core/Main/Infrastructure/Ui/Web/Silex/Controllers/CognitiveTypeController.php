@@ -52,7 +52,7 @@ class CognitiveTypeController implements ControllerProviderInterface
     public function getCognitiveTypes(Request $request): Response
     {
         $page = intval($request->get('page', 1));
-        $limit = intval($request->get('limit', 100));
+        $limit = intval($request->get('limit', 20));
 
         $results = $this->getRepository()->viewBy($page, $limit);
         $count = $this->getRepository()->countBy();
