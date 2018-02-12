@@ -163,7 +163,7 @@ class CognitiveSkillController implements ControllerProviderInterface
         $cognitiveSkill->addCognitiveType($cognitiveType);
         $this->getRepository()->update($cognitiveSkill);
 
-        return $this->app['haljson'](null);
+        return $this->app['haljson']($cognitiveSkill);
     }
 
     /**
