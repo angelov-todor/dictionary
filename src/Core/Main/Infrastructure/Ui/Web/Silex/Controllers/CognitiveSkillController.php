@@ -49,6 +49,7 @@ class CognitiveSkillController implements ControllerProviderInterface
         $factory->get('/cognitive-skill', [$this, 'getCognitiveSkills']);
         $factory->post('/cognitive-skill', [$this, 'addCognitiveSkill']);
         $factory->put('/cognitive-skill/{id}', [$this, 'updateCognitiveSkill']);
+        $factory->get('/cognitive-skill/{id}', [$this, 'viewCognitiveSkill']);
         $factory->delete('/cognitive-skill/{id}', [$this, 'removeCognitiveSkill']);
 
         $factory->post('/cognitive-skill/{$id}/cognitive-type', [$this, 'addCognitiveType']);
@@ -101,6 +102,16 @@ class CognitiveSkillController implements ControllerProviderInterface
         $this->getRepository()->add($cognitiveSkill);
 
         return $this->app['haljson']($cognitiveSkill, Response::HTTP_CREATED);
+    }
+
+    /**
+     * @param $id
+     * @return Response
+     */
+    public function viewCognitiveSkill($id): Response
+    {
+        $cognitiveSkill = $this->getRepository()->ofId($id);
+        return $this->app['haljson']($cognitiveSkill);
     }
 
     /**
