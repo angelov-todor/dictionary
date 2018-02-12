@@ -8,6 +8,7 @@ Core\Main\Domain\Model\Metadata:
       exclude: false
     parent:
       exclude: false
+      max_depth: 1
     types:
       exclude: true
     values:

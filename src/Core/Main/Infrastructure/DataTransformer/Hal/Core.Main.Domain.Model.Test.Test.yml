@@ -1,0 +1,17 @@
+Core\Main\Domain\Model\Test\Test:
+  properties:
+    id:
+      type: string
+    gradingScale:
+      type: string
+    maxAge:
+      type: integer
+    creator:
+      exclude: true
+  relations:
+    -
+      rel: self
+      href:
+        route: tests
+        parameters:
+          id: expr(object.getId())

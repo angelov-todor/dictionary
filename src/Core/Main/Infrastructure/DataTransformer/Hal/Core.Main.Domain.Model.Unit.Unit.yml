@@ -1,0 +1,4 @@
+Core\Main\Domain\Model\Unit\Unit:
+  properties:
+    availableTypes:
+      exclude: true
