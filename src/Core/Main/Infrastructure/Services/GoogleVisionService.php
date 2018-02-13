@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Services;
 
-use Google\Cloud\Core\Exception\GoogleException;
-use Google\Cloud\Vision\Annotation;
 use Google\Cloud\Vision\VisionClient;
 
 class GoogleVisionService
@@ -46,10 +44,11 @@ class GoogleVisionService
     }
 
     /**
-     * @param string $fileName The name of the image file to annotate
-     * @return []
+     * @param string $imageFile The name of the image file to annotate
+     * @return array
+     * @throws
      */
-    public function execute($fileName)
+    public function execute($imageFile)
     {
         # Instantiates a client
         $vision = new VisionClient([
@@ -58,13 +57,13 @@ class GoogleVisionService
         ]);
 
         # Prepare the image to be annotated
-        $image = $vision->image(fopen($fileName, 'r'), [
+        $image = $vision->image(fopen($imageFile, 'r'), [
             'LABEL_DETECTION'
         ]);
 
         # Performs label detection on the image file
         $labels = $vision->annotate($image)->labels();
-        // translate the labels
+        # Translate the labels
         $translatedLabels = [];
         foreach ($labels as $entity) {
             $translatedLabels[] = $this->getGoogleTranslate()->execute($entity->description());
