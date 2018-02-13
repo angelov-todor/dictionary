@@ -6,7 +6,6 @@ namespace Core\Main\Infrastructure\Persistence\Doctrine;
 use Core\Main\Infrastructure\Persistence\Doctrine\Type\AnswerType;
 use Core\Main\Infrastructure\Persistence\Doctrine\Type\PositionType;
 use Doctrine\DBAL\DBALException;
-use Doctrine\DBAL\Logging\EchoSQLLogger;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\ORMException;
 use DoctrineExtensions\Query\Mysql\Month;
@@ -75,7 +74,7 @@ class EntityManagerProvider implements ServiceProviderInterface
         if ($entityManagerOptions['echosql']) {
             $em->getConnection()
                 ->getConfiguration()
-                ->setSQLLogger(new EchoSQLLogger());
+                ->setSQLLogger(new FileSQLLogger(__DIR__ . '/../../../../../../var/log/sql.log'));
         }
 
         $platform = $em->getConnection()->getDatabasePlatform();

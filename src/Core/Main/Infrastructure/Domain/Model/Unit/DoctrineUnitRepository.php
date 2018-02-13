@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Domain\Model\Unit;
 
+use Core\Main\Domain\Model\Test\Test;
 use Core\Main\Domain\Model\Unit\Unit;
 use Core\Main\Domain\Repository\UnitRepositoryInterface;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 
 class DoctrineUnitRepository extends EntityRepository implements UnitRepositoryInterface
 {
     /**
      * @return int
-     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
     public function countBy(): int
@@ -37,7 +37,7 @@ class DoctrineUnitRepository extends EntityRepository implements UnitRepositoryI
     /**
      * @param Unit $unit
      * @return Unit
-     * @throws OptimisticLockException
+     * @throws ORMException
      */
     public function add(Unit $unit): Unit
     {
@@ -49,7 +49,7 @@ class DoctrineUnitRepository extends EntityRepository implements UnitRepositoryI
     /**
      * @param Unit $unit
      * @return Unit
-     * @throws OptimisticLockException
+     * @throws ORMException
      */
     public function update(Unit $unit): Unit
     {
@@ -70,11 +70,32 @@ class DoctrineUnitRepository extends EntityRepository implements UnitRepositoryI
 
     /**
      * @param Unit $unit
-     * @throws OptimisticLockException
+     * @throws ORMException
      */
     public function remove(Unit $unit): void
     {
         $this->getEntityManager()->remove($unit);
         $this->getEntityManager()->flush($unit);
+    }
+
+    /**
+     * @param Test $test
+     * @param int $count
+     * @return Unit[]
+     */
+    public function getRandomByTest(Test $test, int $count)
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->where('u.cognitiveType IN (:cognitiveTypes)')
+            ->setMaxResults($count)
+            ->setParameter('cognitiveTypes', $test->getCognitiveSkill()->getCognitiveTypes());
+
+        if (count($test->getUnits())) {
+            $qb->andWhere('u NOT IN (:units)')
+                ->setParameter('units', $test->getUnits());
+        }
+        $units = $qb->getQuery()->getResult();
+
+        return $units;
     }
 }

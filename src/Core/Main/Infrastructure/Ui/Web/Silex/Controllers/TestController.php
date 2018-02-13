@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Core\Main\Infrastructure\Ui\Web\Silex\Controllers;
 
+use Assert\Assertion;
+use Assert\AssertionFailedException;
 use Core\Main\Domain\Filter\AnswersFilter;
 use Core\Main\Domain\Model\Answer\Answer;
 use Core\Main\Domain\Model\Test\Test;
@@ -89,6 +91,7 @@ class TestController implements ControllerProviderInterface
         $factory->post('/tests/{id}/answers', [$this, 'saveAnswer']);
         $factory->get('/tests/{id}/answers', [$this, 'viewAnswers']);
         $factory->delete('/tests/{id}/units/{unitId}', [$this, 'removeUnit']);
+        $factory->post('/tests/{id}/random-units', [$this, 'addRandomUnits']);
 
         return $factory;
     }
@@ -321,5 +324,30 @@ class TestController implements ControllerProviderInterface
         );
 
         return $this->app['haljson']($paginatedCollection);
+    }
+
+    /**
+     * @param $id
+     * @param Request $request
+     * @return Response
+     * @throws AssertionFailedException
+     */
+    public function addRandomUnits($id, Request $request): Response
+    {
+        $test = $this->getRepository()->ofId($id);
+
+        $count = intval($request->get('count'));
+        $units = $this->getUnitRepository()->getRandomByTest($test, $count);
+        $foundUnitsCount = count($units);
+
+        Assertion::eq($foundUnitsCount, $count, null, 'count');
+
+        foreach ($units as $unit) {
+            $test->addUnit($unit);
+        }
+
+        $this->getRepository()->update($test);
+
+        return $this->app['haljson']($test);
     }
 }

@@ -84,4 +84,12 @@ class CognitiveSkill
 
         return $this;
     }
+
+    /**
+     * @return CognitiveType[]
+     */
+    public function getCognitiveTypes()
+    {
+        return $this->cognitiveTypes;
+    }
 }

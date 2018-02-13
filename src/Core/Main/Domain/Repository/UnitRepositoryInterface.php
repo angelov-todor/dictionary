@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Core\Main\Domain\Repository;
 
+use Core\Main\Domain\Model\Test\Test;
 use Core\Main\Domain\Model\Unit\Unit;
 
 interface UnitRepositoryInterface
@@ -41,4 +42,11 @@ interface UnitRepositoryInterface
      * @param Unit $unit
      */
     public function remove(Unit $unit): void;
+
+    /**
+     * @param Test $test
+     * @param int $count
+     * @return Unit[]
+     */
+    public function getRandomByTest(Test $test, int $count);
 }

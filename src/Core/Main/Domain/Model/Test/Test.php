@@ -134,7 +134,7 @@ class Test
     /**
      * @return Unit[]
      */
-    public function getUnits(): array
+    public function getUnits()
     {
         return $this->units;
     }
