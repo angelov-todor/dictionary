@@ -30,11 +30,6 @@ class Test
     protected $cognitiveSkill;
 
     /**
-     * @var string
-     */
-    protected $gradingScale;
-
-    /**
      * @var null|int
      */
     protected $minAge;
@@ -55,11 +50,6 @@ class Test
     protected $pointsRequired;
 
     /**
-     * @var null|int
-     */
-    protected $timeToConduct;
-
-    /**
      * @var null|string
      */
     protected $notes;
@@ -75,12 +65,10 @@ class Test
      * @param string $name
      * @param Unit[] $units
      * @param CognitiveSkill $cognitiveSkill
-     * @param string $gradingScale
      * @param int|null $minAge
      * @param int|null $maxAge
      * @param Methodology|null $methodology
      * @param int|null $pointsRequired
-     * @param int|null $timeToConduct
      * @param null|string $notes
      * @param User $creator
      */
@@ -89,12 +77,10 @@ class Test
         string $name,
         array $units,
         CognitiveSkill $cognitiveSkill,
-        string $gradingScale,
         ?int $minAge,
         ?int $maxAge,
         ?Methodology $methodology,
         ?int $pointsRequired,
-        ?int $timeToConduct,
         ?string $notes,
         User $creator
     ) {
@@ -103,12 +89,10 @@ class Test
         $this->name = $name;
         $this->units = $units;
         $this->cognitiveSkill = $cognitiveSkill;
-        $this->gradingScale = $gradingScale;
         $this->minAge = $minAge;
         $this->maxAge = $maxAge;
         $this->methodology = $methodology;
         $this->pointsRequired = $pointsRequired;
-        $this->timeToConduct = $timeToConduct;
         $this->notes = $notes;
         $this->creator = $creator;
     }
@@ -195,24 +179,6 @@ class Test
     }
 
     /**
-     * @return string
-     */
-    public function getGradingScale(): string
-    {
-        return $this->gradingScale;
-    }
-
-    /**
-     * @param string $gradingScale
-     * @return Test
-     */
-    public function setGradingScale(string $gradingScale): Test
-    {
-        $this->gradingScale = $gradingScale;
-        return $this;
-    }
-
-    /**
      * @return int|null
      */
     public function getMinAge(): ?int
@@ -281,24 +247,6 @@ class Test
     public function setPointsRequired(?int $pointsRequired): Test
     {
         $this->pointsRequired = $pointsRequired;
-        return $this;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getTimeToConduct(): ?int
-    {
-        return $this->timeToConduct;
-    }
-
-    /**
-     * @param int|null $timeToConduct
-     * @return Test
-     */
-    public function setTimeToConduct(?int $timeToConduct): Test
-    {
-        $this->timeToConduct = $timeToConduct;
         return $this;
     }
 

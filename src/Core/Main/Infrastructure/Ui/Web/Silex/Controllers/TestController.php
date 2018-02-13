@@ -137,7 +137,6 @@ class TestController implements ControllerProviderInterface
         $cognitiveSkillId = $request->get('cognitive_skill_id');
         $cognitiveSkill = $this->getCognitiveSkillRepository()->ofId($cognitiveSkillId);
 
-        $gradingScale = $request->get('grading_scale');
         $maxAge = $request->get('max_age');
         $minAge = $request->get('min_age');
 
@@ -147,7 +146,6 @@ class TestController implements ControllerProviderInterface
             $methodology = $this->getMethodologyRepository()->ofId($methodologyId);
         }
         $pointsRequired = $request->get('points_required');
-        $timeToConduct = $request->get('time_to_conduct');
         $notes = $request->get('notes');
 
         $test = new Test(
@@ -155,12 +153,10 @@ class TestController implements ControllerProviderInterface
             $name,
             [],
             $cognitiveSkill,
-            $gradingScale,
             $minAge,
             $maxAge,
             $methodology,
             $pointsRequired,
-            $timeToConduct,
             $notes,
             $this->getUserContext()
         );
@@ -181,7 +177,6 @@ class TestController implements ControllerProviderInterface
         $cognitiveSkillId = $request->get('cognitive_skill_id');
         $cognitiveSkill = $this->getCognitiveSkillRepository()->ofId($cognitiveSkillId);
 
-        $gradingScale = $request->get('grading_scale');
         $maxAge = $request->get('max_age');
         $minAge = $request->get('min_age');
 
@@ -191,15 +186,12 @@ class TestController implements ControllerProviderInterface
             $methodology = $this->getMethodologyRepository()->ofId($methodologyId);
         }
         $pointsRequired = $request->get('points_required');
-        $timeToConduct = $request->get('time_to_conduct');
         $notes = $request->get('notes');
 
         /** @var Test $test */
         $test = $this->getRepository()->ofId($id);
         $test->setName($name)
-            ->setTimeToConduct($timeToConduct)
             ->setCognitiveSkill($cognitiveSkill)
-            ->setGradingScale($gradingScale)
             ->setMaxAge($maxAge)
             ->setMinAge($minAge)
             ->setMethodology($methodology)

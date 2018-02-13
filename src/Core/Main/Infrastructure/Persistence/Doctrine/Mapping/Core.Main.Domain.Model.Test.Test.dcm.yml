@@ -10,10 +10,6 @@ Core\Main\Domain\Model\Test\Test:
     name:
       type: string
       length: 255
-    gradingScale:
-      type: string
-      length: 255
-      column: grading_scale
     minAge:
       type: integer
       column: min_age
@@ -25,10 +21,6 @@ Core\Main\Domain\Model\Test\Test:
     pointsRequired:
       type: integer
       column: points_required
-      nullable: true
-    timeToConduct:
-      type: integer
-      column: time_to_conduct
       nullable: true
     notes:
       type: string
