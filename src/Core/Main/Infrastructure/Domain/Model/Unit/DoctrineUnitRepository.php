@@ -12,24 +12,50 @@ use Doctrine\ORM\ORMException;
 class DoctrineUnitRepository extends EntityRepository implements UnitRepositoryInterface
 {
     /**
+     * @param null|Test $test
      * @return int
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function countBy(): int
+    public function countBy(?Test $test): int
     {
         $qb = $this->createQueryBuilder('u')
             ->select('count(u)');
+        if ($test) {
+            $qb->where('u.cognitiveType IN (:cognitiveTypes)')
+                ->setParameter('cognitiveTypes', $test->getCognitiveSkill()->getCognitiveTypes());
+
+            if (count($test->getUnits())) {
+                $qb->andWhere('u NOT IN (:units)')
+                    ->setParameter('units', $test->getUnits());
+            }
+        }
 
         return intval($qb->getQuery()->getSingleScalarResult());
     }
 
-    public function viewBy(int $page, int $limit)
+    /**
+     * @param int $page
+     * @param int $limit
+     * @param null|Test $test
+     * @return array
+     */
+    public function viewBy(int $page, int $limit, ?Test $test)
     {
         $offset = ($page - 1) * $limit;
 
         $qb = $this->createQueryBuilder('u')
             ->setMaxResults($limit)
             ->setFirstResult($offset);
+
+        if ($test) {
+            $qb->where('u.cognitiveType IN (:cognitiveTypes)')
+                ->setParameter('cognitiveTypes', $test->getCognitiveSkill()->getCognitiveTypes());
+
+            if (count($test->getUnits())) {
+                $qb->andWhere('u NOT IN (:units)')
+                    ->setParameter('units', $test->getUnits());
+            }
+        }
 
         return $qb->getQuery()->getResult();
     }

@@ -8,6 +8,7 @@ use Core\Main\Domain\Model\Unit\Unit;
 use Core\Main\Domain\Model\Unit\UnitImage;
 use Core\Main\Domain\Repository\CognitiveTypeRepositoryInterface;
 use Core\Main\Domain\Repository\ImageRepositoryInterface;
+use Core\Main\Domain\Repository\TestRepositoryInterface;
 use Core\Main\Domain\Repository\UnitImageRepositoryInterface;
 use Core\Main\Domain\Repository\UnitRepositoryInterface;
 use Core\Main\Infrastructure\DataTransformer\PaginatedCollection;
@@ -79,6 +80,14 @@ class UnitController implements ControllerProviderInterface
     }
 
     /**
+     * @return TestRepositoryInterface
+     */
+    protected function getTestRepository(): TestRepositoryInterface
+    {
+        return $this->app[TestRepositoryInterface::class];
+    }
+
+    /**
      * @param Request $request
      * @return Response
      */
@@ -86,10 +95,10 @@ class UnitController implements ControllerProviderInterface
     {
         $name = $request->get('name');
         $text = $request->get('text');
-        $columns = $request->get('cols');
-        $rows = $request->get('rows');
+        $columns = $request->get('cols', 0);
+        $rows = $request->get('rows', 0);
         $criteria = $request->get('criteria');
-        $timeToConduct = $request->get('time_to_conduct');
+        $timeToConduct = $request->get('time_to_conduct', 0);
         $type = $request->get('type');
 
         $cognitiveTypeId = $request->get('cognitive_type_id');
@@ -97,11 +106,11 @@ class UnitController implements ControllerProviderInterface
 
         $unit = new Unit(
             null,
-            $name,
-            $text,
-            $type,
-            $rows,
-            $columns,
+            strval($name),
+            strval($text),
+            strval($type),
+            intval($rows),
+            intval($columns),
             $cognitiveType,
             $timeToConduct
         );
@@ -110,7 +119,7 @@ class UnitController implements ControllerProviderInterface
 
         for ($i = 0; $i < $columns; $i++) {
             for ($j = 0; $j < $rows; $j++) {
-                $image = $this->getImageRepository()->getImageByCriteria($criteria);
+                $image = $this->getImageRepository()->getImageByCriteria(strval($criteria));
                 $unitImage = new UnitImage(
                     null,
                     $image,
@@ -212,9 +221,15 @@ class UnitController implements ControllerProviderInterface
     {
         $page = intval($request->get('page', 1));
         $limit = intval($request->get('limit', 20));
+        $testId = $request->get('test_id');
 
-        $count = $this->getRepository()->countBy();
-        $results = $this->getRepository()->viewBy($page, $limit);
+        $test = null;
+        if ($testId) {
+            $test = $this->getTestRepository()->ofId($testId);
+        }
+
+        $count = $this->getRepository()->countBy($test);
+        $results = $this->getRepository()->viewBy($page, $limit, $test);
 
         $paginatedCollection = new PaginatedCollection(
             new CollectionRepresentation(

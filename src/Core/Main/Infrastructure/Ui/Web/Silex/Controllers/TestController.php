@@ -137,15 +137,15 @@ class TestController implements ControllerProviderInterface
         $cognitiveSkillId = $request->get('cognitive_skill_id');
         $cognitiveSkill = $this->getCognitiveSkillRepository()->ofId($cognitiveSkillId);
 
-        $maxAge = $request->get('max_age');
-        $minAge = $request->get('min_age');
+        $maxAge = intval($request->get('max_age', 0));
+        $minAge = intval($request->get('min_age', 0));
 
         $methodologyId = $request->get('methodology_id');
         $methodology = null;
         if ($methodologyId) {
             $methodology = $this->getMethodologyRepository()->ofId($methodologyId);
         }
-        $pointsRequired = $request->get('points_required');
+        $pointsRequired = intval($request->get('points_required', 0));
         $notes = $request->get('notes');
 
         $test = new Test(
@@ -157,7 +157,7 @@ class TestController implements ControllerProviderInterface
             $maxAge,
             $methodology,
             $pointsRequired,
-            $notes,
+            strval($notes),
             $this->getUserContext()
         );
 
@@ -191,12 +191,15 @@ class TestController implements ControllerProviderInterface
         /** @var Test $test */
         $test = $this->getRepository()->ofId($id);
         $test->setName($name)
-            ->setCognitiveSkill($cognitiveSkill)
             ->setMaxAge($maxAge)
             ->setMinAge($minAge)
             ->setMethodology($methodology)
             ->setPointsRequired($pointsRequired)
             ->setNotes($notes);
+        // we can change the cognitive skill only if no units
+        if (!count($test->getUnits())) {
+            $test->setCognitiveSkill($cognitiveSkill);
+        }
 
         $this->getRepository()->update($test);
 

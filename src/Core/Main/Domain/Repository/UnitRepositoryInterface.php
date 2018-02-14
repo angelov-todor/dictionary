@@ -9,16 +9,18 @@ use Core\Main\Domain\Model\Unit\Unit;
 interface UnitRepositoryInterface
 {
     /**
+     * @param null|Test $test
      * @return int
      */
-    public function countBy(): int;
+    public function countBy(?Test $test): int;
 
     /**
      * @param int $page
      * @param int $limit
-     * @return mixed
+     * @param null|Test $test
+     * @return array
      */
-    public function viewBy(int $page, int $limit);
+    public function viewBy(int $page, int $limit, ?Test $test);
 
     /**
      * @param Unit $unit
