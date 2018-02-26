@@ -23,6 +23,11 @@ Core\Main\Domain\Model\Metadata:
   manyToOne:
     parent:
       targetEntity: Core\Main\Domain\Model\Metadata
+      inversedBy: children
       joinColumn:
         name: parent_id
         referencedColumnName: id
+  oneToMany:
+    children:
+      targetEntity: Core\Main\Domain\Model\Metadata
+      mappedBy: parent

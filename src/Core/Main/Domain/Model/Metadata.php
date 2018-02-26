@@ -39,6 +39,11 @@ class Metadata
     protected $parent;
 
     /**
+     * @var Metadata[]
+     */
+    protected $children;
+
+    /**
      * @var string
      */
     protected $values;
