@@ -42,6 +42,7 @@ class MetadataController implements ControllerProviderInterface
         $factory->get('/metadata', [$this, 'getMetadata']);
         $factory->post('/metadata', [$this, 'addMetadata']);
         $factory->put('/metadata/{id}', [$this, 'updateMetadata']);
+        $factory->get('/metadata/{id}', [$this, 'viewMetadata']);
         $factory->delete('/metadata/{id}', [$this, 'removeMetadata']);
 
         return $factory;
@@ -58,8 +59,11 @@ class MetadataController implements ControllerProviderInterface
         $page = intval($request->get('page', 1));
         $limit = intval($request->get('limit', 20));
 
-        $results = $this->getRepository()->viewBy($nameFilter, $page, $limit);
-        $count = $this->getRepository()->countBy($nameFilter);
+        // null - default - no filter, false - no parent, int - parent
+        $parent = $request->get('parent');
+
+        $results = $this->getRepository()->viewBy($nameFilter, $page, $limit, $parent);
+        $count = $this->getRepository()->countBy($nameFilter, $parent);
 
         $paginatedCollection = new PaginatedCollection(
             new CollectionRepresentation(
@@ -81,6 +85,16 @@ class MetadataController implements ControllerProviderInterface
     }
 
     /**
+     * @param $id
+     * @return Response
+     */
+    public function viewMetadata($id): Response
+    {
+        $metadata = $this->getRepository()->find($id);
+        return $this->app['haljson']($metadata, Response::HTTP_CREATED);
+    }
+
+    /**
      * @param Request $request
      * @return Response
      * @throws \Doctrine\ORM\ORMException
@@ -90,7 +104,7 @@ class MetadataController implements ControllerProviderInterface
     {
         $name = $request->get('name');
         $type = $request->get('type');
-        $parent = $request->get('parent');
+        $parent = $request->get('parent_id');
         $values = $request->get('values');
         $parentMetadata = null;
         if ($parent) {
@@ -120,7 +134,7 @@ class MetadataController implements ControllerProviderInterface
     {
         $name = $request->get('name');
         $type = $request->get('type');
-        $parent = $request->get('parent');
+        $parent = $request->get('parent_id');
         $values = $request->get('values');
         $parentMetadata = null;
         if ($parent) {

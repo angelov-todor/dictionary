@@ -22,15 +22,17 @@ interface MetadataRepositoryInterface
      * @param null|string $string
      * @param int $page
      * @param int $limit
+     * @param null|int|bool $parent
      * @return array
      */
-    public function viewBy(?string $string, int $page, int $limit): array;
+    public function viewBy(?string $string, int $page, int $limit, $parent): array;
 
     /**
      * @param null|string $string
+     * @param null|int|bool $parent
      * @return int
      */
-    public function countBy(?string $string): int;
+    public function countBy(?string $string, $parent): int;
 
     /**
      * @param string $name

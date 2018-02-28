@@ -40,7 +40,14 @@ class DoctrineMetadataRepository extends EntityRepository implements MetadataRep
         $this->getEntityManager()->flush();
     }
 
-    public function viewBy(?string $string, int $page, int $limit): array
+    /**
+     * @param null|string $string
+     * @param int $page
+     * @param int $limit
+     * @param bool|int|null $parent
+     * @return array
+     */
+    public function viewBy(?string $string, int $page, int $limit, $parent): array
     {
         $offset = ($page - 1) * $limit;
 
@@ -51,20 +58,44 @@ class DoctrineMetadataRepository extends EntityRepository implements MetadataRep
             ->setFirstResult($offset)
             ->orderBy('m.name', Criteria::ASC);
 
+        $isFalse = filter_var($parent, FILTER_VALIDATE_BOOLEAN);
+        $isInt = filter_var($parent, FILTER_VALIDATE_INT);
+
+        if (!is_null($parent)) {
+            if (false === $isFalse) {
+                $qb->andWhere('m.parent IS NULL');
+            } elseif ($isInt) {
+                $qb->andWhere('m.parent = :parent')
+                    ->setParameter('parent', $parent);
+            }
+        }
+
         return $qb->getQuery()->getResult();
     }
 
     /**
      * @param null|string $string
+     * @param null|int|bool $parent
      * @return int
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function countBy(?string $string): int
+    public function countBy(?string $string, $parent): int
     {
         $qb = $this->createQueryBuilder('m')
             ->select('count(m)')
             ->where("m.name LIKE :term ESCAPE '!'")
             ->setParameter('term', $this->makeLikeParam($string));
+
+        $isFalse = filter_var($parent, FILTER_VALIDATE_BOOLEAN);
+        $isInt = filter_var($parent, FILTER_VALIDATE_INT);
+        if (!is_null($parent)) {
+            if (false === $isFalse) {
+                $qb->andWhere('m.parent IS NULL');
+            } elseif ($isInt) {
+                $qb->andWhere('m.parent = :parent')
+                    ->setParameter('parent', $parent);
+            }
+        }
 
         return intval($qb->getQuery()->getSingleScalarResult());
     }
