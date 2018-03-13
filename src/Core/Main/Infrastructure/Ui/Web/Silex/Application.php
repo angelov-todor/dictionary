@@ -10,25 +10,31 @@ use Core\Main\Application\Service\User\NotifyPasswordResetLinkService;
 use Core\Main\Application\Service\User\NotifyUserValidationService;
 use Core\Main\Domain\Event\AppendEventStoreSubscriber;
 use Core\Main\Domain\Model\StoredEvent;
+use Core\Main\Domain\Model\User\User;
+use Core\Main\Infrastructure\Application\Serialization\Jms\Serializer;
+use Core\Main\Infrastructure\DataTransformer\Provider\HALServiceProvider;
 use Core\Main\Infrastructure\Persistence\Doctrine\EntityManagerProvider;
 use Core\Main\Infrastructure\Ui\DomainEventSubscriber\ImageCreatedSubscriber;
 use Core\Main\Infrastructure\Ui\DomainEventSubscriber\ImageMetadataAddedSubscriber;
 use Core\Main\Infrastructure\Ui\DomainEventSubscriber\PasswordResetEmailSubscriber;
 use Core\Main\Infrastructure\Ui\DomainEventSubscriber\UserValidateEmailSubscriber;
+use Core\Main\Infrastructure\Ui\ProblemDetails\ProblemDetailsProvider;
 use Core\Main\Infrastructure\Ui\Rollbar\RollbarProvider;
+use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\AuthController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\CognitiveSkillController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\CognitiveTypeController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\DictionaryController;
+use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\IdentityController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\ImageController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\MetadataController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\MethodologyController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\ResetPasswordController;
-use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\IdentityController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\StoredEventController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\TestController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\UnitController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\UserController;
 use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\WordController;
+use Core\Main\Infrastructure\Ui\Web\Silex\Jwt\Provider\JwtServiceProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\ImageServicesProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\ImagineServiceProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\StoredEventsServicesProvider;
@@ -38,7 +44,11 @@ use Core\Main\Infrastructure\Ui\Web\Silex\Provider\TwigServiceProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\UnitServicesProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\UserServicesProvider;
 use Core\Main\Infrastructure\Ui\Web\Silex\Provider\WordServicesProvider;
+use Ddd\Domain\DomainEventPublisher;
+use Ddd\Infrastructure\Application\Service\DoctrineSession;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use JMS\Serializer\SerializerBuilder;
+use Silex\Provider\DoctrineServiceProvider;
 use Silex\Provider\LocaleServiceProvider;
 use Silex\Provider\SecurityServiceProvider;
 use Silex\Provider\TranslationServiceProvider;
@@ -46,15 +56,6 @@ use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcher;
-use Core\Main\Infrastructure\Ui\Web\Silex\Controllers\AuthController;
-use Core\Main\Infrastructure\Ui\Web\Silex\Jwt\Provider\JwtServiceProvider;
-use Core\Main\Infrastructure\DataTransformer\Provider\HALServiceProvider;
-use Core\Main\Infrastructure\Ui\ProblemDetails\ProblemDetailsProvider;
-use Ddd\Infrastructure\Application\Service\DoctrineSession;
-use Silex\Provider\DoctrineServiceProvider;
-use \Doctrine\Common\Annotations\AnnotationRegistry;
-use Ddd\Domain\DomainEventPublisher;
-use Core\Main\Infrastructure\Application\Serialization\Jms\Serializer;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Translation\Loader\YamlFileLoader;
 use Symfony\Component\Translation\Translator;
@@ -174,7 +175,13 @@ class Application
                 ['^/image/', 'IS_AUTHENTICATED_ANONYMOUSLY'],
                 [new RequestMatcher('^/users$', null, ['POST']), 'IS_AUTHENTICATED_ANONYMOUSLY'],
                 [new RequestMatcher('^.*$', null, ['OPTIONS']), 'IS_AUTHENTICATED_ANONYMOUSLY'],
-                ['^.*$', ['ROLE_USER', 'ROLE_ADMIN']],
+                ['^/tests', User::ROLE_USER],
+                ['^/users', User::ROLE_ADMIN],
+                ['^.*$', [User::ROLE_CREATOR]],
+            ],
+            'security.role_hierarchy' => [
+                User::ROLE_ADMIN => [User::ROLE_CREATOR, User::ROLE_USER],
+                User::ROLE_CREATOR => [User::ROLE_USER]
             ]
         ]);
         $app->register(new JwtServiceProvider());

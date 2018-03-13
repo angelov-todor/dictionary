@@ -31,6 +31,7 @@ services:
           - MYSQL_RANDOM_ROOT_PASSWORD=true
         volumes:
           - db-data:/var/lib/mysql:rw
+#          - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql:ro
 volumes:
     db-data: {}
 #        # In production, you may want to use a managed database service
