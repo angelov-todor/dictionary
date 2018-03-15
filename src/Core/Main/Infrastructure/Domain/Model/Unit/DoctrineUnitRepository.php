@@ -6,6 +6,7 @@ namespace Core\Main\Infrastructure\Domain\Model\Unit;
 use Core\Main\Domain\Model\Test\Test;
 use Core\Main\Domain\Model\Unit\Unit;
 use Core\Main\Domain\Repository\UnitRepositoryInterface;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\ORMException;
 
@@ -37,7 +38,7 @@ class DoctrineUnitRepository extends EntityRepository implements UnitRepositoryI
      * @param int $page
      * @param int $limit
      * @param null|Test $test
-     * @return array
+     * @return Unit[]
      */
     public function viewBy(int $page, int $limit, ?Test $test)
     {
@@ -56,6 +57,7 @@ class DoctrineUnitRepository extends EntityRepository implements UnitRepositoryI
                     ->setParameter('units', $test->getUnits());
             }
         }
+        $qb->orderBy('u.name', Criteria::ASC);
 
         return $qb->getQuery()->getResult();
     }
